@@ -1,31 +1,28 @@
-//package com.paymybuddy.model;
-//
-//import java.time.LocalDate;
-//
-//import javax.persistence.Entity;
-//import javax.persistence.GeneratedValue;
-//import javax.persistence.Id;
-//import javax.persistence.Table;
-//
-//import lombok.Getter;
-//import lombok.Setter;
-//
-///**
-// * Transaction model class.
-// *
-// * @author Ludovic Tuccio
-// */
-//@Entity
-//@Table(name = "transaction")
-//public class Transaction {
-//
-//    @Id
-//    @GeneratedValue
-//    private long id;
+package com.paymybuddy.model;
 
-//    private double amount;
+import java.time.LocalDate;
 
-//    private String description;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-//    private LocalDate transactionDate;
-//}
+/**
+ * Transaction model class.
+ *
+ * @author Ludovic Tuccio
+ */
+@Entity
+@Table(name = "transaction")
+public class Transaction {
+
+    @Id
+    @GeneratedValue
+    private long id;
+
+    private double amount;
+
+    private String description;
+
+    private LocalDate transactionDate;
+}

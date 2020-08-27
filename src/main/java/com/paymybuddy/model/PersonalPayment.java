@@ -22,9 +22,9 @@ public class PersonalPayment {
 
     private String cbNumber;
 
-    private String cbExpirationMonth;
+    private String cbExpirationDateMonth;
 
-    private String cbExpirationYear;
+    private String cbExpirationDateYear;
 
     private String cbSecurityKey;
 

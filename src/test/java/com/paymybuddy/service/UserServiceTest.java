@@ -18,7 +18,6 @@ import com.paymybuddy.model.AppAccount;
 import com.paymybuddy.model.User;
 import com.paymybuddy.repository.AppAccountRepository;
 import com.paymybuddy.repository.UserRepository;
-import com.paymybuddy.service.IUserService;
 
 @SpringBootTest
 @TestInstance(Lifecycle.PER_CLASS)
@@ -84,7 +83,7 @@ public class UserServiceTest {
         User result = userService.addNewUser(donaldTrump);
 
         // THEN
-        assertThat(result.getEmail()).isNull();
+        assertThat(result).isNull();
         assertThat(userRepository.count()).isEqualTo(0);
         assertThat(userRepository.findByEmail(donaldTrump.getEmail())).isNull();
     }

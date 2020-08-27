@@ -38,11 +38,15 @@ public class UserController {
      * @param user
      */
     @PostMapping("/registration")
-    public User createNewUser(@RequestBody User user, final HttpServletResponse response) {
+    public User createNewUser(@RequestBody final User user, final HttpServletResponse response) {
 
         User userCreated = userService.addNewUser(user);
 
-        if (userCreated != null) {
+        if (user.getEmail() == null) {
+            LOGGER.debug("FAIL: null email");
+            response.setStatus(Constants.ERROR_CONFLICT_409);
+            return null;
+        } else if (userCreated != null) {
             LOGGER.debug("SUCCESS - New user created for email: {}", userCreated.getEmail());
             response.setStatus(Constants.STATUS_CREATED_201);
             return userCreated;

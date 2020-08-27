@@ -34,21 +34,31 @@ public class UserService implements IUserService {
      */
     public User addNewUser(final User user) {
 
-        User userToCreate = userRepository.findByEmail(user.getEmail());
+        try {
+            User userToCreate = userRepository.findByEmail(user.getEmail());
 
-        if (userToCreate != null) {
-            LOGGER.info("ERROR: An user with this email already exists.");
-            return null;
-        } else {
-            User newUser = new User(user.getLastname(), user.getFirstname(), user.getEmail(), user.getPassword(),
-                    user.getPhone());
-            userRepository.save(newUser);
+            if (userToCreate != null) {
+                LOGGER.info("ERROR: An user already exists with the email entered.");
+                return null;
+            } else if (user.getEmail().isEmpty() || user.getEmail() == null || user.getEmail().trim().length() < 10
+                    || !user.getEmail().matches(
+                            "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$")) {
+                LOGGER.info("ERROR: Invalid email.");
+                return null;
+            } else {
+                User newUser = new User(user.getLastname(), user.getFirstname(), user.getEmail(), user.getPassword(),
+                        user.getPhone());
+                userRepository.save(newUser);
 
-            appAccount = new AppAccount(newUser, 0.00);
-            appAccountRepository.save(appAccount);
+                appAccount = new AppAccount(newUser, 0.00);
+                appAccountRepository.save(appAccount);
 
-            LOGGER.info("Succes new user acccount creation");
-            return newUser;
+                LOGGER.info("Succes new user acccount creation");
+                return newUser;
+            }
+        } catch (NullPointerException np) {
+            LOGGER.error("ERROR: Please verify email." + np);
         }
+        return null;
     }
 }

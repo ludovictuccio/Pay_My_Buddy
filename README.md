@@ -6,11 +6,11 @@
 
 - **Author:** Ludovic Tuccio
 
-- **Java version:** 11
+- **Java** 11
 
-- **MySql version:** 8.0
+- **MySql** 8.0
 
-- **Spring Boot version:** 2.3.2
+- **Spring Boot** 2.3.2
 
 - **Spring Data Jpa**
 
@@ -43,7 +43,8 @@ https://www.oracle.com/java/technologies/javase-jdk11-downloads.html
 
 https://maven.apache.org/install.html
 
-3. Install MySql:
+3.Install MySql:
+
 https://dev.mysql.com/downloads/installer/
 
 ## Testing
@@ -61,7 +62,7 @@ https://dev.mysql.com/downloads/installer/
 <ol>
 	<li>Install Postman https://www.postman.com/</li> 
 		OR
-<li>Use localhost http://localhost:8080/{}</li> 
+<li>Use localhost http://localhost:9090/{}</li> 
 </ol>
 
 ## UML 

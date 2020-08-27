@@ -4,13 +4,13 @@ USE pmb_database;
 
 CREATE TABLE user (
                 id BIGINT AUTO_INCREMENT NOT NULL,
-                firstname VARCHAR(50) NOT NULL,
                 lastname VARCHAR(50) NOT NULL,
+                firstname VARCHAR(50) NOT NULL,
                 email VARCHAR(80) NOT NULL,
                 password VARCHAR(60) NOT NULL,
                 phone VARCHAR(16) NOT NULL,
                 PRIMARY KEY (id)
-);
+) ENGINE = INNODB DEFAULT CHARSET=utf8mb4;
 
 
 CREATE TABLE app_account (
@@ -18,7 +18,7 @@ CREATE TABLE app_account (
                 user_id BIGINT NOT NULL,
                 balance DECIMAL(8,2) NOT NULL,
                 PRIMARY KEY (id)
-);
+) ENGINE = INNODB DEFAULT CHARSET=utf8mb4;
 
 
 CREATE TABLE personal_payment (
@@ -30,7 +30,7 @@ CREATE TABLE personal_payment (
                 cb_expiration_date_year CHAR(2) NOT NULL,
                 cb_security_key CHAR(3) NOT NULL,
                 PRIMARY KEY (id)
-);
+) ENGINE = INNODB DEFAULT CHARSET=utf8mb4;
 
 ALTER TABLE personal_payment MODIFY COLUMN cb_number CHAR(16) COMMENT 'Only numbers';
 
@@ -44,7 +44,7 @@ CREATE TABLE personal_transfer (
                 iban VARCHAR(31) NOT NULL,
                 bic VARCHAR(11) NOT NULL,
                 PRIMARY KEY (id)
-);
+) ENGINE = INNODB DEFAULT CHARSET=utf8mb4;
 
 
 CREATE TABLE transaction (
@@ -55,7 +55,7 @@ CREATE TABLE transaction (
                 description VARCHAR(80) NOT NULL,
                 transaction_date DATE NOT NULL,
                 PRIMARY KEY (id, app_account_sender_id, app_account_beneficiary_id)
-);
+) ENGINE = INNODB DEFAULT CHARSET=utf8mb4;
 
 
 CREATE INDEX transaction_idx
@@ -67,7 +67,7 @@ CREATE TABLE relation (
                 user_to_connect_id BIGINT NOT NULL,
                 user_id BIGINT NOT NULL,
                 PRIMARY KEY (id)
-);
+) ENGINE = INNODB DEFAULT CHARSET=utf8mb4;
 
 
 ALTER TABLE relation ADD CONSTRAINT user_connection_fk
@@ -116,19 +116,16 @@ ON UPDATE NO ACTION;
 
 CREATE DATABASE pmb_database_test CHARACTER SET utf8mb4;
 
-USE pmb_database_test;
-
 
 CREATE TABLE user (
                 id BIGINT AUTO_INCREMENT NOT NULL,
-                firstname VARCHAR(50) NOT NULL,
                 lastname VARCHAR(50) NOT NULL,
+                firstname VARCHAR(50) NOT NULL,
                 email VARCHAR(80) NOT NULL,
                 password VARCHAR(60) NOT NULL,
                 phone VARCHAR(16) NOT NULL,
                 PRIMARY KEY (id)
-);
-
+) ENGINE = INNODB DEFAULT CHARSET=utf8mb4;
 
 
 CREATE TABLE app_account (
@@ -136,7 +133,7 @@ CREATE TABLE app_account (
                 user_id BIGINT NOT NULL,
                 balance DECIMAL(8,2) NOT NULL,
                 PRIMARY KEY (id)
-);
+) ENGINE = INNODB DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=0;
 
 
 CREATE TABLE personal_payment (
@@ -148,11 +145,7 @@ CREATE TABLE personal_payment (
                 cb_expiration_date_year CHAR(2) NOT NULL,
                 cb_security_key CHAR(3) NOT NULL,
                 PRIMARY KEY (id)
-);
-
-ALTER TABLE personal_payment MODIFY COLUMN cb_number CHAR(16) COMMENT 'Only numbers';
-
-ALTER TABLE personal_payment MODIFY COLUMN cb_security_key CHAR(3) COMMENT 'Only numbers : between 000 & 999 include';
+) ENGINE = INNODB DEFAULT CHARSET=utf8mb4;
 
 
 CREATE TABLE personal_transfer (
@@ -162,7 +155,7 @@ CREATE TABLE personal_transfer (
                 iban VARCHAR(31) NOT NULL,
                 bic VARCHAR(11) NOT NULL,
                 PRIMARY KEY (id)
-);
+) ENGINE = INNODB DEFAULT CHARSET=utf8mb4;
 
 
 CREATE TABLE transaction (
@@ -173,7 +166,7 @@ CREATE TABLE transaction (
                 description VARCHAR(80) NOT NULL,
                 transaction_date DATE NOT NULL,
                 PRIMARY KEY (id, app_account_sender_id, app_account_beneficiary_id)
-);
+) ENGINE = INNODB DEFAULT CHARSET=utf8mb4;
 
 
 CREATE INDEX transaction_idx
@@ -185,7 +178,7 @@ CREATE TABLE relation (
                 user_to_connect_id BIGINT NOT NULL,
                 user_id BIGINT NOT NULL,
                 PRIMARY KEY (id)
-);
+) ENGINE = INNODB DEFAULT CHARSET=utf8mb4;
 
 
 ALTER TABLE relation ADD CONSTRAINT user_connection_fk

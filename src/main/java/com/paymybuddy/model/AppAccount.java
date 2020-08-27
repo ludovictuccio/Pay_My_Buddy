@@ -29,27 +29,27 @@ public class AppAccount implements Serializable {
 
     @OneToOne(targetEntity = User.class)
     @JoinColumn(name = "user_id")
-    private User user;
+    private User userId;
 
     private double balance;
 
     public AppAccount(final User userAccount, final double balanceAccount) {
-        this.user = userAccount;
+        this.userId = userAccount;
         this.balance = balanceAccount;
     }
 
     /**
      * @return the user
      */
-    public User getUser() {
-        return user;
+    public User getUserId() {
+        return userId;
     }
 
     /**
      * @param userAccount
      */
-    public void setUser(final User userAccount) {
-        this.user = userAccount;
+    public void setUserId(final User userAccount) {
+        this.userId = userAccount;
     }
 
     /**
@@ -78,6 +78,31 @@ public class AppAccount implements Serializable {
      */
     public void setBalance(final double accountBalance) {
         this.balance = accountBalance;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((userId == null) ? 0 : userId.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        AppAccount other = (AppAccount) obj;
+        if (userId == null) {
+            if (other.userId != null)
+                return false;
+        } else if (!userId.equals(other.userId))
+            return false;
+        return true;
     }
 
 }
