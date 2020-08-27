@@ -11,4 +11,6 @@ public interface IUserService {
 
     User addNewUser(final User user);
 
+    boolean updateUserInfos(final User user);
+
 }

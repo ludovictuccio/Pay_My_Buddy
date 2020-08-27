@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -57,4 +58,24 @@ public class UserController {
         return null;
     }
 
+    /**
+     * This method controller is used to update user informations (password or
+     * phone).
+     *
+     * @param user
+     * @return isUpdated boolean
+     */
+    @PutMapping("/user-space")
+    public void updateUserInfos(@RequestBody final User user, final HttpServletResponse response) {
+
+        boolean isUpdated = userService.updateUserInfos(user);
+
+        if (isUpdated) {
+            LOGGER.debug("SUCCESS - UpdateUserInfos PUT request");
+            response.setStatus(Constants.STATUS_OK_200);
+        } else {
+            LOGGER.error("FAIL - UpdateUserInfos PUT request");
+            response.setStatus(Constants.ERROR_CONFLICT_409);
+        }
+    }
 }

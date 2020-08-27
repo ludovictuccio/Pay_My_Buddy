@@ -88,4 +88,39 @@ public class UserServiceTest {
         assertThat(userRepository.findByEmail(donaldTrump.getEmail())).isNull();
     }
 
+    @Test
+    @Tag("UPDATE")
+    @DisplayName("Update user - OK - Phone and password changes")
+    public void given() {
+
+        // GIVEN
+        User user = new User("Trump", "Donald", "donald@gmail.com", "love-usa", "000111222");
+        userRepository.save(user);
+        User userToUpdate = new User("Trump", "Donald", "donald@gmail.com", "other", "9999");
+
+        // WHEN
+        when(userRepository.findByEmail("donald@gmail.com")).thenReturn(user);
+        boolean isUpdated = userService.updateUserInfos(userToUpdate);
+
+        // THEN
+        assertThat(isUpdated).isTrue();
+    }
+
+    @Test
+    @Tag("UPDATE")
+    @DisplayName("Update user - ERROR - Infos not allowed changes (name & email)")
+    public void aa() {
+        // GIVEN
+        User user = new User("Trump", "Donald", "donald@gmail.com", "love-usa", "000111222");
+        userRepository.save(user);
+        User userToUpdate = new User("Georges", "Bush", "georgybushi@gmail.com", "other", "9999");
+
+        // WHEN
+        when(userRepository.findByEmail("donald@gmail.com")).thenReturn(user);
+        boolean isUpdated = userService.updateUserInfos(userToUpdate);
+
+        // THEN
+        assertThat(isUpdated).isFalse();
+    }
+
 }

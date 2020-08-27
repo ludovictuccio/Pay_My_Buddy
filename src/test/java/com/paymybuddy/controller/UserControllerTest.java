@@ -37,7 +37,7 @@ public class UserControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @MockBean
+    @Autowired
     private UserRepository userRepository;
 
     @MockBean
@@ -53,8 +53,8 @@ public class UserControllerTest {
     }
 
     @Test
-    @Tag("CreatePerson")
-    @DisplayName("CreatePerson - OK")
+    @Tag("POST")
+    @DisplayName("ADD user - OK")
     public void givenUserCreation_whenValidEmail_thenReturnCreated() throws Exception {
         validUser.setId(100L);
         String jsonContentValid = objectMapper.writeValueAsString(validUser);
@@ -65,8 +65,8 @@ public class UserControllerTest {
     }
 
     @Test
-    @Tag("CreatePerson")
-    @DisplayName("CreatePerson - ERROR - Invalid email")
+    @Tag("POST")
+    @DisplayName("ADD user - ERROR - Invalid email")
     public void givenUserCreation_whenInvalidEmail_thenReturnErrorConflict() throws Exception {
 
         String jsonContentInvalid = objectMapper.writeValueAsString(invalidUserEmail);
@@ -77,8 +77,8 @@ public class UserControllerTest {
     }
 
     @Test
-    @Tag("CreatePerson")
-    @DisplayName("CreatePerson - ERROR - Null email")
+    @Tag("POST")
+    @DisplayName("ADD user - ERROR - Null email")
     public void givenUserCreation_whenNullEmail_thenReturnErrorConflict() throws Exception {
 
         String jsonContentInvalid = objectMapper.writeValueAsString(invalidUserNullEmail);
@@ -86,5 +86,33 @@ public class UserControllerTest {
         mockMvc.perform(
                 MockMvcRequestBuilders.post("/registration").contentType(APPLICATION_JSON).content(jsonContentInvalid))
                 .andDo(MockMvcResultHandlers.print()).andExpect(status().isConflict());
+    }
+
+    @Test
+    @Tag("PUT")
+    @DisplayName("Put infos - OK")
+    public void givenOnePersonInDb_whenUpdatePasswordAndPhone_thenReturnOk() throws Exception {
+        validUser.setId(1000L);
+        userRepository.save(validUser);
+
+        User userToUpdate = new User("Macron", "Emmanuel", "manu.macron@gmail.com", "newPassword", "0988774433");
+        userToUpdate.setId(2000L);
+        String jsonContentValid = objectMapper.writeValueAsString(userToUpdate);
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/user-space").contentType(APPLICATION_JSON)
+                .content(jsonContentValid).accept(APPLICATION_JSON)).andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @Tag("PUT")
+    @DisplayName("Put infos - ERROR - Unknow email")
+    public void givenUnknowEmailInDb_whenTryToUpdate_thenReturnConflict() throws Exception {
+
+        String jsonContentInvalid = objectMapper.writeValueAsString(validUser);
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/user-space").contentType(APPLICATION_JSON)
+                .content(jsonContentInvalid).accept(APPLICATION_JSON)).andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isConflict());
     }
 }
