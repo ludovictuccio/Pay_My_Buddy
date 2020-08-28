@@ -2,8 +2,10 @@ package com.paymybuddy.model;
 
 import java.io.Serializable;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -20,18 +22,25 @@ import javax.persistence.Table;
 @Table(name = "app_account")
 public class AppAccount implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -822275697470290777L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
-    @OneToOne(targetEntity = User.class)
-    @JoinColumn(name = "user_id")
+    @OneToOne(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User userId;
 
     private double balance;
+
+    /**
+     * Empty class constructor.
+     */
+    public AppAccount() {
+        super();
+    }
 
     public AppAccount(final User userAccount, final double balanceAccount) {
         this.userId = userAccount;

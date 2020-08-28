@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.paymybuddy.model.AppAccount;
 import com.paymybuddy.model.User;
@@ -12,15 +11,12 @@ import com.paymybuddy.repository.AppAccountRepository;
 import com.paymybuddy.repository.UserRepository;
 
 @Service
-@Transactional(rollbackFor = Exception.class)
 public class UserService implements IUserService {
 
     /**
      * Logger class.
      */
     private static final Logger LOGGER = LoggerFactory.getLogger("UserService");
-
-    private AppAccount appAccount;
 
     @Autowired
     private AppAccountRepository appAccountRepository;
@@ -52,7 +48,7 @@ public class UserService implements IUserService {
                         user.getPhone());
                 userRepository.save(newUser);
 
-                appAccount = new AppAccount(newUser, 0.00);
+                AppAccount appAccount = new AppAccount(newUser, 0.00);
                 appAccountRepository.save(appAccount);
 
                 LOGGER.info("Succes new user acccount creation");
@@ -80,11 +76,32 @@ public class UserService implements IUserService {
             userToFind.setPassword(user.getPassword());
             userToFind.setPhone(user.getPhone());
 
+            userRepository.save(userToFind);
+
             LOGGER.info("SUCCESS: Informations changes.");
             isUpdated = true;
             return isUpdated;
         }
         LOGGER.error("ERROR: Only password & phone changes are allowed.");
         return isUpdated;
+    }
+
+    /**
+     * This method service is used to delete an user.
+     *
+     * @param email
+     * @return isDeleted boolean
+     */
+    public boolean deleteUser(final String email) {
+        boolean isDeleted = false;
+        User userToFind = userRepository.findByEmail(email);
+
+        if (userToFind != null) {
+            userRepository.deleteUserByEmail(email);
+            LOGGER.info("SUCCESS: Deleted user from DB.");
+            isDeleted = true;
+            return isDeleted;
+        }
+        return isDeleted;
     }
 }

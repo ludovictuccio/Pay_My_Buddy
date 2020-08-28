@@ -4,8 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 
-import javax.transaction.Transactional;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -14,13 +12,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 
+import com.paymybuddy.model.AppAccount;
 import com.paymybuddy.model.User;
 
 @SpringBootTest
 @TestPropertySource(locations = "classpath:application.properties")
 @Sql(scripts = "classpath:dropAndCreate.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 @Sql(scripts = { "classpath:dbTest.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-@Transactional
 public class UserRepositoryTest {
 
     @Autowired
@@ -85,6 +83,40 @@ public class UserRepositoryTest {
         assertThat(userRepository.findById(1L)).isNotNull();
         assertThat(userRepository.findById(5L)).isNotNull();
         assertThat(userRepository.findById(999L)).isEmpty();
+    }
+
+    @Test
+    @Tag("deleteUserByEmail")
+    @DisplayName("deleteUserByEmail - OK")
+    public void givenUserInDb_whenDeleteAnEmail_thenReturnUserWithThisEmailDeleted() {
+        // GIVEN
+
+        // WHEN
+        userRepository.deleteUserByEmail("lady.gaga@gmail.com");
+
+        // THEN
+        List<User> users = userRepository.findAll();
+        assertThat(users.size()).isEqualTo(4); // 5 in dbTest
+
+        List<AppAccount> appAccounts = appAccountRepository.findAll();
+        assertThat(appAccounts.size()).isEqualTo(4); // 5 in dbTest
+    }
+
+    @Test
+    @Tag("deleteUserByEmail")
+    @DisplayName("deleteUserByEmail - ERROR - unknow email")
+    public void givenUsersInDb_whenDeleteUnknowEmail_thenReturnDbSizeUnchanged() {
+        // GIVEN
+
+        // WHEN
+        userRepository.deleteUserByEmail("UNKNOW-email@gmail.com");
+
+        // THEN
+        List<User> users = userRepository.findAll();
+        assertThat(users.size()).isEqualTo(5); // 5 in dbTest
+
+        List<AppAccount> appAccounts = appAccountRepository.findAll();
+        assertThat(appAccounts.size()).isEqualTo(5); // 5 in dbTest
     }
 
 }

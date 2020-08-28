@@ -1,4 +1,4 @@
-DROP DATABASE pmb_database_test;
+DROP DATABASE IF EXISTS pmb_database_test;
 
 CREATE DATABASE pmb_database_test CHARACTER SET utf8mb4;
 

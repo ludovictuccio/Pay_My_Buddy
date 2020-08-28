@@ -13,4 +13,6 @@ public interface IUserService {
 
     boolean updateUserInfos(final User user);
 
+    boolean deleteUser(final String email);
+
 }

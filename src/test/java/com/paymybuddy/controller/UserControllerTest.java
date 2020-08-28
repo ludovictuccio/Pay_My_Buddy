@@ -3,8 +3,6 @@ package com.paymybuddy.controller;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import javax.transaction.Transactional;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -28,7 +26,7 @@ import com.paymybuddy.repository.UserRepository;
 @AutoConfigureMockMvc
 @TestPropertySource(locations = "classpath:application.properties")
 @Sql(scripts = "classpath:dropAndCreate.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-@Transactional
+@Sql(scripts = { "classpath:dbTest.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 public class UserControllerTest {
 
     @Autowired
@@ -43,7 +41,7 @@ public class UserControllerTest {
     @MockBean
     private AppAccountRepository appAccountRepository;
 
-    public static User validUser = new User("Macron", "Emmanuel", "manu.macron@gmail.com", "love-france", "0212345678");
+    public static User validUser = new User("Valid", "User", "v.user@gmail.com", "love-france", "0212345678");
     public static User invalidUserNullEmail = new User("Invalid", "User", null, "abcd", "02");
     public static User invalidUserEmail = new User("Invalid", "User", "a@gg.fr", "abcd", "02");
 
@@ -109,10 +107,28 @@ public class UserControllerTest {
     @DisplayName("Put infos - ERROR - Unknow email")
     public void givenUnknowEmailInDb_whenTryToUpdate_thenReturnConflict() throws Exception {
 
-        String jsonContentInvalid = objectMapper.writeValueAsString(validUser);
+        String jsonContentInvalid = objectMapper.writeValueAsString(invalidUserEmail);
 
         mockMvc.perform(MockMvcRequestBuilders.put("/user-space").contentType(APPLICATION_JSON)
                 .content(jsonContentInvalid).accept(APPLICATION_JSON)).andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isConflict());
+    }
+
+    @Test
+    @Tag("DELETE")
+    @DisplayName("Delete user - OK - Valid email")
+    public void givenValidEmail_whenDelete_thenReturnOK() throws Exception {
+        // userRepository.save(validUser);
+        mockMvc.perform(MockMvcRequestBuilders.delete("/user-space").param("email", "kim.jong@gmail.com"))
+                .andDo(MockMvcResultHandlers.print()).andExpect(status().isOk());
+    }
+
+    @Test
+    @Tag("DELETE")
+    @DisplayName("Delete user - ERROR - Invalid email")
+    public void givenInvlidEmail_whenDelete_thenReturnConflict() throws Exception {
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/user-space").param("email", "UNKNOW-email@gmail.com"))
+                .andDo(MockMvcResultHandlers.print()).andExpect(status().isNotFound());
     }
 }

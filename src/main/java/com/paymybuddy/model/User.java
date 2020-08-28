@@ -2,10 +2,14 @@ package com.paymybuddy.model;
 
 import java.io.Serializable;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
@@ -17,27 +21,32 @@ import javax.persistence.Table;
 @Table(name = "user")
 public class User implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -7807272183458173452L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
     private String firstname;
 
     private String lastname;
 
+    @Column(unique = true, nullable = false)
     private String email;
 
     private String password;
 
     private String phone;
 
+    @OneToOne(cascade = CascadeType.REMOVE, mappedBy = "userId", fetch = FetchType.EAGER)
+    private AppAccount ownAppAccount;
+
     /**
      * Empty class constructor.
      */
     public User() {
-
+        super();
     }
 
     /**
@@ -55,6 +64,20 @@ public class User implements Serializable {
         this.email = personsEmail;
         this.password = personsPassword;
         this.phone = personsPhoneNumber;
+    }
+
+    /**
+     * @return the ownAppAccount
+     */
+    public AppAccount getOwnAppAccount() {
+        return ownAppAccount;
+    }
+
+    /**
+     * @param account the ownAppAccount to set
+     */
+    public void setOwnAppAccount(final AppAccount account) {
+        this.ownAppAccount = account;
     }
 
     /**

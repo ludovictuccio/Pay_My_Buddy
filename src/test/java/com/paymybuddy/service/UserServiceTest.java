@@ -91,7 +91,7 @@ public class UserServiceTest {
     @Test
     @Tag("UPDATE")
     @DisplayName("Update user - OK - Phone and password changes")
-    public void given() {
+    public void givenExistingUser_whenUpdateCorrectValues_thenReturnTrue() {
 
         // GIVEN
         User user = new User("Trump", "Donald", "donald@gmail.com", "love-usa", "000111222");
@@ -109,7 +109,7 @@ public class UserServiceTest {
     @Test
     @Tag("UPDATE")
     @DisplayName("Update user - ERROR - Infos not allowed changes (name & email)")
-    public void aa() {
+    public void givenExistingUser_whenUpdateBadValues_thenReturnFalse() {
         // GIVEN
         User user = new User("Trump", "Donald", "donald@gmail.com", "love-usa", "000111222");
         userRepository.save(user);
@@ -123,4 +123,34 @@ public class UserServiceTest {
         assertThat(isUpdated).isFalse();
     }
 
+    @Test
+    @Tag("DELETE")
+    @DisplayName("Delete user - OK - Existing email")
+    public void givenExistingUser_whenDeleteValidEmail_thenReturnTrue() {
+        // GIVEN
+        User user = new User("Trump", "Donald", "donald@gmail.com", "love-usa", "000111222");
+        userRepository.save(user);
+        AppAccount appAccount = new AppAccount(user, 0.0);
+        appAccountRepository.save(appAccount);
+
+        // WHEN
+        when(userRepository.findByEmail("donald@gmail.com")).thenReturn(user);
+        boolean isDeleted = userService.deleteUser(user.getEmail());
+
+        // THEN
+        assertThat(isDeleted).isTrue();
+    }
+
+    @Test
+    @Tag("DELETE")
+    @DisplayName("Delete user - ERROR - Unexisting email")
+    public void givenUnxistingUser_whenDeleteInvalidEmail_thenReturnFalse() {
+        // GIVEN
+
+        // WHEN
+        boolean isDeleted = userService.deleteUser("non-existantemail@gmail.fr");
+
+        // THEN
+        assertThat(isDeleted).isFalse();
+    }
 }
