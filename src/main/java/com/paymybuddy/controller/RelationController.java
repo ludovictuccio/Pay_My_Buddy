@@ -6,11 +6,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.paymybuddy.config.Constants;
+import com.paymybuddy.model.AppAccount;
 import com.paymybuddy.service.IRelationService;
 
 /**
@@ -74,6 +76,29 @@ public class RelationController {
             LOGGER.error("FAIL: unable to delete the connection with email: {}", emailToDelete);
             response.setStatus(Constants.ERROR_CONFLICT_409);
         }
+    }
+
+    /**
+     * This method service is used to get an user app account connection/relation
+     * with the service method.
+     *
+     * @param myEmail
+     * @param relationFriendEmail
+     */
+    @GetMapping("/connection")
+    public AppAccount getRelationAppAccount(@RequestParam final String myEmail,
+            @RequestParam final String relationFriendEmail, final HttpServletResponse response) {
+
+        AppAccount result = relationService.getRelationAppAccount(myEmail, relationFriendEmail);
+
+        if (result != null) {
+            LOGGER.info("SUCCESS - Get relation app account with: {}", relationFriendEmail);
+            response.setStatus(Constants.STATUS_OK_200);
+        } else {
+            LOGGER.error("FAIL: unable to get a connection with user:: {}", relationFriendEmail);
+            response.setStatus(Constants.ERROR_CONFLICT_409);
+        }
+        return null;
     }
 
 }

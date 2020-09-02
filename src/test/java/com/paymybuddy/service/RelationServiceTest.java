@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 
+import com.paymybuddy.model.AppAccount;
 import com.paymybuddy.model.User;
 import com.paymybuddy.repository.UserRepository;
 
@@ -97,7 +98,7 @@ public class RelationServiceTest {
     @Test
     @Tag("DELETE")
     @DisplayName("Delete relation - ERROR - Email non-existant in db")
-    public void a() {
+    public void givenBadEmail_whenDelete_thenReturnUnchangedRelationsAndFalse() {
         // GIVEN
         // all in db test
 
@@ -118,7 +119,7 @@ public class RelationServiceTest {
     @Test
     @Tag("DELETE")
     @DisplayName("Delete relation - ERROR - Email exists in db / not in the relation list")
-    public void aa() {
+    public void givenExistingDbUser_whenDeleteItButNotInTheUsersRelationsList_thenReturnFalse() {
         // GIVEN
         // all in db test
 
@@ -134,6 +135,39 @@ public class RelationServiceTest {
         assertThat(userRepository.findById(3L).get().getRelations().size()).isEqualTo(0);
         assertThat(userRepository.findById(4L).get().getRelations().size()).isEqualTo(1);
         assertThat(userRepository.findById(5L).get().getRelations().size()).isEqualTo(1);
+    }
+
+    @Test
+    @Tag("GET")
+    @DisplayName("Get relation - Ok")
+    public void givenExistingRelation_whenGetRelation_thenReturnRelation() {
+        // GIVEN
+        // all in db test
+
+        // WHEN
+        AppAccount connectionToRetrieve = relationService.getRelationAppAccount("manu.macron@gmail.com",
+                "vlad.poutine@gmail.com");
+
+        // THEN
+        assertThat(userRepository.count()).isEqualTo(5); // 5 in dbTest
+        assertThat(connectionToRetrieve).isNotNull();
+        assertThat(connectionToRetrieve.getBalance()).isEqualTo(2000); // poutine balance
+    }
+
+    @Test
+    @Tag("GET")
+    @DisplayName("Get relation - Error - Not in the user's relations list")
+    public void givenUnexistingRelation_whenGetRelation_thenReturnNull() {
+        // GIVEN
+        // all in db test
+
+        // WHEN
+        AppAccount connectionToRetrieve = relationService.getRelationAppAccount("manu.macron@gmail.com",
+                "UNKNOW@gmail.com");
+
+        // THEN
+        assertThat(userRepository.count()).isEqualTo(5); // 5 in dbTest
+        assertThat(connectionToRetrieve).isNull();
     }
 
 }

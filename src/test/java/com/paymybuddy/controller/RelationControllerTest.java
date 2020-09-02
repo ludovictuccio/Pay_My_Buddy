@@ -82,8 +82,6 @@ public class RelationControllerTest {
     @Tag("DELETE")
     @DisplayName("DELETE relation - OK")
     public void givenARelation_whenDeleteRelation_thenReturnOk() throws Exception {
-        userRepository.save(myUserAccount);
-        userRepository.save(friend);
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/connection").contentType(APPLICATION_JSON)
                 .param("myEmail", "manu.macron@gmail.com").param("emailToDelete", "vlad.poutine@gmail.com")
@@ -94,12 +92,31 @@ public class RelationControllerTest {
     @Tag("DELETE")
     @DisplayName("DELETE relation - ERROR - Email no in the relations list")
     public void givenEmailNoInARelation_whenDelete_thenReturnConflict() throws Exception {
-        userRepository.save(myUserAccount);
-        userRepository.save(friend);
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/connection").contentType(APPLICATION_JSON)
                 .param("myEmail", "manu.macron@gmail.com").param("emailToDelete", "NO-IN-RELATION-email@gmail.com")
                 .accept(APPLICATION_JSON)).andDo(MockMvcResultHandlers.print()).andExpect(status().isConflict());
+    }
+
+    @Test
+    @Tag("GET")
+    @DisplayName("Get relation - OK")
+    public void givenRelation_thenGetRelation_thenReturnOk() throws Exception {
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/connection").contentType(APPLICATION_JSON)
+                .param("myEmail", "manu.macron@gmail.com").param("relationFriendEmail", "vlad.poutine@gmail.com")
+                .accept(APPLICATION_JSON)).andDo(MockMvcResultHandlers.print()).andExpect(status().isOk());
+    }
+
+    @Test
+    @Tag("GET")
+    @DisplayName("Get relation - ERROR")
+    public void givenNoRelation_whenGetRelation_thenReturnConflict() throws Exception {
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/connection").contentType(APPLICATION_JSON)
+                .param("myEmail", "manu.macron@gmail.com")
+                .param("relationFriendEmail", "NO-IN-RELATION-email@gmail.com").accept(APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print()).andExpect(status().isConflict());
     }
 
 }

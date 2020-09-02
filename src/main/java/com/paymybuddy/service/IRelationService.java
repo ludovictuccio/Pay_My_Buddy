@@ -1,5 +1,7 @@
 package com.paymybuddy.service;
 
+import com.paymybuddy.model.AppAccount;
+
 /**
  * IConnectionService interface class.
  *
@@ -11,5 +13,6 @@ public interface IRelationService {
 
     boolean deleteRelation(String myEmail, String emailToConnect);
 
-//    User getRelationById(Long id);
+    AppAccount getRelationAppAccount(String myEmail, String relationFriendEmail);
+
 }

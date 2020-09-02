@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.paymybuddy.model.AppAccount;
 import com.paymybuddy.model.User;
 import com.paymybuddy.repository.UserRepository;
 
@@ -110,9 +111,30 @@ public class RelationService implements IRelationService {
         return isDeleted;
     }
 
-//    public Relation getRelationById(final Long id) {
-//
-//        return null;
-//    }
+    /**
+     * This method service is used to get an user app account connection/relation.
+     *
+     * @param myEmail
+     * @param relationFriendEmail
+     * @return connectionToRetrieve an AppAccount object
+     */
+    public AppAccount getRelationAppAccount(final String myEmail, final String relationFriendEmail) {
+
+        User myAccount = userRepository.findByEmail(myEmail);
+        User connectionToRetrieve = userRepository.findByEmail(relationFriendEmail);
+
+        if (connectionToRetrieve != null && myAccount != null) {
+
+            Set<User> allRelations = myAccount.getRelations();
+            for (User relation : allRelations) {
+                if (relation.getEmail().toString().contentEquals(relationFriendEmail)) {
+
+                    return connectionToRetrieve.getOwnAppAccount();
+                }
+            }
+        }
+        LOGGER.error("Fail to retrieve friend's connection. Please check the email entered.");
+        return null;
+    }
 
 }
