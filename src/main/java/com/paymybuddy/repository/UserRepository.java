@@ -20,25 +20,26 @@ import com.paymybuddy.model.User;
 public interface UserRepository extends JpaRepository<User, Long> {
 
     /**
-     * Method used to find an user by email.
+     * Method repository used to find an user by email.
      *
      * @param email
      */
     User findByEmail(String email);
 
     /**
-     * Method used to find an user by id.
+     * Method repository used to find an user by id.
      *
      * @param id
      */
     Optional<User> findById(Long id);
 
     /**
-     * Method used to delete an user by email.
+     * Method repository used to delete an user by email.
      *
      * @param email
      */
     @Modifying
+    @Transactional
     void deleteUserByEmail(String email);
 
 }

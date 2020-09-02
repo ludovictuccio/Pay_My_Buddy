@@ -1,6 +1,8 @@
 package com.paymybuddy.model;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -9,6 +11,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -21,7 +26,7 @@ import javax.persistence.Table;
 @Table(name = "user")
 public class User implements Serializable {
 
-    private static final long serialVersionUID = -7807272183458173452L;
+    private static final long serialVersionUID = 3445487792037720759L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,6 +46,24 @@ public class User implements Serializable {
 
     @OneToOne(cascade = CascadeType.REMOVE, mappedBy = "userId", fetch = FetchType.EAGER)
     private AppAccount ownAppAccount;
+
+    // @OneToMany(mappedBy = "userToConnect", cascade = CascadeType.ALL)
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(name = "relation", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "user_to_connect_id"))
+    private Set<User> relations = new HashSet<>();
+
+    public void addRelation(final User user) {
+        this.relations.add(user);
+    }
+
+    public Set<User> getRelations() {
+        return relations;
+    }
+
+    public void setRelations(final Set<User> userRelations) {
+        this.relations = userRelations;
+    }
 
     /**
      * Empty class constructor.

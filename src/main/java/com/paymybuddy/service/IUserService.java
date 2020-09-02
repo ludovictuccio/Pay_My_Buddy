@@ -15,4 +15,6 @@ public interface IUserService {
 
     boolean deleteUser(final String email);
 
+    // User login(String email, String password);
+
 }

@@ -18,9 +18,9 @@ CREATE TABLE user (
 CREATE TABLE app_account (
                 id BIGINT AUTO_INCREMENT NOT NULL,
                 user_id BIGINT NOT NULL,
-                balance DECIMAL(8,2) NOT NULL,
+                balance DECIMAL(8,2) DEFAULT NULL,
                 PRIMARY KEY (id)
-) ENGINE = INNODB DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=0;
+) ENGINE = INNODB DEFAULT CHARSET=utf8mb4;
 
 
 CREATE TABLE personal_payment (
@@ -67,7 +67,6 @@ CREATE TABLE relation (
                 PRIMARY KEY (id)
 ) ENGINE = INNODB DEFAULT CHARSET=utf8mb4;
 
-
 ALTER TABLE relation ADD CONSTRAINT user_connection_fk
 FOREIGN KEY (user_id)
 REFERENCES user (id)
@@ -83,7 +82,7 @@ ON UPDATE NO ACTION;
 ALTER TABLE app_account ADD CONSTRAINT user_app_account_fk1
 FOREIGN KEY (user_id)
 REFERENCES user (id)
-ON DELETE NO ACTION
+ON DELETE CASCADE
 ON UPDATE NO ACTION;
 
 ALTER TABLE transaction ADD CONSTRAINT app_account_transaction_fk
@@ -107,5 +106,5 @@ ON UPDATE NO ACTION;
 ALTER TABLE personal_payment ADD CONSTRAINT app_account_personal_payment_fk
 FOREIGN KEY (app_account_id)
 REFERENCES app_account (id)
-ON DELETE NO ACTION
+ON DELETE CASCADE
 ON UPDATE NO ACTION;

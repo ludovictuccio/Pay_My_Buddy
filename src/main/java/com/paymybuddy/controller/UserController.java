@@ -97,4 +97,26 @@ public class UserController {
             response.setStatus(Constants.ERROR_NOT_FOUND_404);
         }
     }
+
+//    /**
+//     * This method controller is used to login an user with email and password.
+//     *
+//     * @param email
+//     * @param password
+//     */
+//    @GetMapping("/login/{email}/{password}")
+//    public User login(@PathVariable final String email, final @PathVariable String password,
+//            final HttpServletResponse response) {
+//
+//        User userToLogin = userService.login(email, password);
+//        if (userToLogin != null) {
+//            LOGGER.debug("SUCCESS - login request");
+//            response.setStatus(Constants.STATUS_OK_200);
+//            return userToLogin;
+//        } else {
+//            LOGGER.error("FAIL - login request");
+//            response.setStatus(Constants.ERROR_NOT_FOUND_404);
+//        }
+//        return null;
+//    }
 }

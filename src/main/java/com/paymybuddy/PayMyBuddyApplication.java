@@ -9,6 +9,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author Ludovic Tuccio
  */
 @SpringBootApplication
+//@Configuration
+//@EncryptablePropertySource(name = "EncryptedProperties", value = "classpath:application.properties")
 public class PayMyBuddyApplication {
 
     /**

@@ -104,7 +104,7 @@ public class UserRepositoryTest {
 
     @Test
     @Tag("deleteUserByEmail")
-    @DisplayName("deleteUserByEmail - ERROR - unknow email")
+    @DisplayName("deleteUserByEmail - ERROR - Unknow email")
     public void givenUsersInDb_whenDeleteUnknowEmail_thenReturnDbSizeUnchanged() {
         // GIVEN
 

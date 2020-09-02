@@ -31,8 +31,9 @@ public class UserService implements IUserService {
      * @return newUser or null if email already exists or incorrect
      */
     public User addNewUser(final User user) {
-
         try {
+
+            // String password = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
             User userToCreate = userRepository.findByEmail(user.getEmail());
 
             if (userToCreate != null) {
@@ -45,6 +46,7 @@ public class UserService implements IUserService {
                 return null;
             } else {
                 User newUser = new User(user.getLastname(), user.getFirstname(), user.getEmail(), user.getPassword(),
+                        // password,
                         user.getPhone());
                 userRepository.save(newUser);
 
@@ -68,12 +70,15 @@ public class UserService implements IUserService {
      */
     public boolean updateUserInfos(final User user) {
         boolean isUpdated = false;
+        // String password = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
         LOGGER.info("Only password or phone number can and will be changed.");
         User userToFind = userRepository.findByEmail(user.getEmail());
 
         // if exists
         if (userToFind != null) {
-            userToFind.setPassword(user.getPassword());
+            userToFind.setPassword(user.getPassword()
+            // password
+            );
             userToFind.setPhone(user.getPhone());
 
             userRepository.save(userToFind);
@@ -104,4 +109,29 @@ public class UserService implements IUserService {
         }
         return isDeleted;
     }
+
+//    /**
+//     * This method service is used to login an user.
+//     *
+//     * @param email
+//     * @param password
+//     * @return userToLogin user or null
+//     */
+//    public User login(final String email, final String password) {
+//
+//        User userToLogin = userRepository.findByEmail(email);
+//
+//        if (userToLogin != null && BCrypt.checkpw(password, userToLogin.getPassword())) {
+//            LOGGER.info("Hello " + userToLogin.getFirstname() + " !");
+//            return userToLogin;
+//        } else if (userToLogin != null && !BCrypt.checkpw(password, userToLogin.getPassword())) {
+//            LOGGER.info("Invalid password. Please try again.");
+//            return null;
+//        } else if (userToLogin == null) {
+//            LOGGER.info("Invalid email. Please check the email entered.");
+//            return null;
+//        }
+//        return null;
+//    }
+
 }
