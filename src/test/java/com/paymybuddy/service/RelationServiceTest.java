@@ -74,4 +74,66 @@ public class RelationServiceTest {
         assertThat(userRepository.findById(myUserAccount.getId()).get().getRelations().size()).isEqualTo(0);
     }
 
+    @Test
+    @Tag("DELETE")
+    @DisplayName("Delete relation - OK - Existing relation")
+    public void givenOneRelation_whenDeleteIt_thenReturnDeletedRelation() {
+        // GIVEN
+        // all in db test
+
+        // WHEN
+        boolean isDeleted = relationService.deleteRelation("manu.macron@gmail.com", "vlad.poutine@gmail.com");
+
+        // THEN
+        assertThat(userRepository.count()).isEqualTo(5); // 5 in dbTest
+        assertThat(isDeleted).isTrue();
+        assertThat(userRepository.findById(1L).get().getRelations().size()).isEqualTo(1);
+        assertThat(userRepository.findById(2L).get().getRelations().size()).isEqualTo(1);// was 2
+        assertThat(userRepository.findById(3L).get().getRelations().size()).isEqualTo(0);
+        assertThat(userRepository.findById(4L).get().getRelations().size()).isEqualTo(1);
+        assertThat(userRepository.findById(5L).get().getRelations().size()).isEqualTo(1);
+    }
+
+    @Test
+    @Tag("DELETE")
+    @DisplayName("Delete relation - ERROR - Email non-existant in db")
+    public void a() {
+        // GIVEN
+        // all in db test
+
+        // WHEN
+        boolean isDeleted = relationService.deleteRelation("manu.macron@gmail.com", "UNKNOW-EMAIL");
+
+        // THEN
+        assertThat(userRepository.count()).isEqualTo(5); // 5 in dbTest
+        assertThat(isDeleted).isFalse();
+        // unchanged relations size
+        assertThat(userRepository.findById(1L).get().getRelations().size()).isEqualTo(1);
+        assertThat(userRepository.findById(2L).get().getRelations().size()).isEqualTo(2);
+        assertThat(userRepository.findById(3L).get().getRelations().size()).isEqualTo(0);
+        assertThat(userRepository.findById(4L).get().getRelations().size()).isEqualTo(1);
+        assertThat(userRepository.findById(5L).get().getRelations().size()).isEqualTo(1);
+    }
+
+    @Test
+    @Tag("DELETE")
+    @DisplayName("Delete relation - ERROR - Email exists in db / not in the relation list")
+    public void aa() {
+        // GIVEN
+        // all in db test
+
+        // WHEN
+        boolean isDeleted = relationService.deleteRelation("manu.macron@gmail.com", "donald.trump@gmail.com");
+
+        // THEN
+        assertThat(userRepository.count()).isEqualTo(5); // 5 in dbTest
+        assertThat(isDeleted).isFalse();
+        // unchanged relations size
+        assertThat(userRepository.findById(1L).get().getRelations().size()).isEqualTo(1);
+        assertThat(userRepository.findById(2L).get().getRelations().size()).isEqualTo(2);
+        assertThat(userRepository.findById(3L).get().getRelations().size()).isEqualTo(0);
+        assertThat(userRepository.findById(4L).get().getRelations().size()).isEqualTo(1);
+        assertThat(userRepository.findById(5L).get().getRelations().size()).isEqualTo(1);
+    }
+
 }

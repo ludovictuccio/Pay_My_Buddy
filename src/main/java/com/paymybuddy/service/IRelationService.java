@@ -9,7 +9,7 @@ public interface IRelationService {
 
     boolean addRelation(String myEmail, String email);
 
-//    User deleteRelation(String email);
-//
+    boolean deleteRelation(String myEmail, String emailToConnect);
+
 //    User getRelationById(Long id);
 }

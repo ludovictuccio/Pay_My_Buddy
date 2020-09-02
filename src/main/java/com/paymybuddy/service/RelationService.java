@@ -23,11 +23,11 @@ public class RelationService implements IRelationService {
      */
     private static final Logger LOGGER = LoggerFactory.getLogger("RelationService");
 
-//    @Autowired
-//    private RelationRepository relationRepository;
-
     @Autowired
     private UserRepository userRepository;
+
+//    @Autowired
+//    private RelationRepository relationRepository;
 
     /**
      * This method service is used to add a connection/relation between two users
@@ -79,11 +79,37 @@ public class RelationService implements IRelationService {
         return isAdded;
     }
 
-//    public Relation deleteRelation(final String email) {
-//
-//        return null;
-//    }
-//
+    /**
+     * This method service is used to delete a connection/relation
+     *
+     * @param myEmail
+     * @param emailToDelete
+     * @return boolean isDeleted true if relation's deleted
+     */
+    public boolean deleteRelation(final String myEmail, final String emailToDelete) {
+        boolean isDeleted = false;
+
+        User myAccount = userRepository.findByEmail(myEmail);
+        User connectionToDelete = userRepository.findByEmail(emailToDelete);
+
+        if (connectionToDelete != null && myAccount != null) {
+            Set<User> allRelations = myAccount.getRelations();
+            for (User relation : allRelations) {
+                if (relation.getEmail().toString().contentEquals(emailToDelete)) {
+
+                    myAccount.getRelations().remove(relation);
+
+                    userRepository.save(myAccount);
+                    LOGGER.info("Successful delete connection !");
+                    isDeleted = true;
+                    return isDeleted;
+                }
+            }
+        }
+        LOGGER.error("Fail to delete connection. Please check the email entered.");
+        return isDeleted;
+    }
+
 //    public Relation getRelationById(final Long id) {
 //
 //        return null;
