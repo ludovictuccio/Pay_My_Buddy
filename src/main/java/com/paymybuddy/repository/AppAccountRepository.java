@@ -23,4 +23,11 @@ public interface AppAccountRepository extends JpaRepository<AppAccount, Long> {
      */
     AppAccount findByUserId(Long userId);
 
+//    /**
+//     * Method used to find an user application account by email.
+//     *
+//     * @param email
+//     */
+//    AppAccount findByEmail(String email);
+
 }

@@ -3,7 +3,6 @@ package com.paymybuddy.controller;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -17,28 +16,19 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.paymybuddy.model.User;
 import com.paymybuddy.repository.AppAccountRepository;
 import com.paymybuddy.repository.UserRepository;
-import com.paymybuddy.service.RelationService;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestPropertySource(locations = "classpath:application.properties")
 @Sql(scripts = "classpath:dropAndCreate.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 @Sql(scripts = { "classpath:dbTest.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-
 public class RelationControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    @Autowired
-    private RelationService relationService;
 
     @Autowired
     private UserRepository userRepository;
@@ -48,11 +38,6 @@ public class RelationControllerTest {
 
     public static User myUserAccount = new User("GENERIC1", "USER1", "generic1@gmail.com", "gen1", "0101010101");
     public static User friend = new User("GENERIC2", "USER2", "generic2@gmail.com", "gen2", "0202020202");
-
-    @BeforeEach
-    public void setUpPerTest() {
-        objectMapper = new ObjectMapper();
-    }
 
     @Test
     @Tag("POST")

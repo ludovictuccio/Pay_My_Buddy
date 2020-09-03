@@ -14,8 +14,6 @@ import com.paymybuddy.model.AppAccount;
 import com.paymybuddy.model.User;
 import com.paymybuddy.repository.UserRepository;
 
-//@SpringBootTest
-//@TestInstance(Lifecycle.PER_CLASS)
 @SpringBootTest
 @TestPropertySource(locations = "classpath:application.properties")
 @Sql(scripts = "classpath:dropAndCreate.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
