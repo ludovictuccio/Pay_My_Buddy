@@ -42,13 +42,13 @@ public class RelationServiceTest {
         // THEN
         assertThat(userRepository.count()).isEqualTo(7); // 5 in dbTest
         assertThat(isAdded).isTrue();
-        assertThat(userRepository.findById(1L).get().getRelations().size()).isEqualTo(1);
-        assertThat(userRepository.findById(2L).get().getRelations().size()).isEqualTo(2);
-        assertThat(userRepository.findById(3L).get().getRelations().size()).isEqualTo(0);
-        assertThat(userRepository.findById(4L).get().getRelations().size()).isEqualTo(1);
-        assertThat(userRepository.findById(5L).get().getRelations().size()).isEqualTo(1);
-        assertThat(userRepository.findById(myUserAccount.getId()).get().getRelations().size()).isEqualTo(1);
-        assertThat(userRepository.findById(friendToConnect.getId()).get().getRelations().size()).isEqualTo(0);
+        assertThat(userRepository.findById(1L).get().getPmbFriends().size()).isEqualTo(1);
+        assertThat(userRepository.findById(2L).get().getPmbFriends().size()).isEqualTo(2);
+        assertThat(userRepository.findById(3L).get().getPmbFriends().size()).isEqualTo(0);
+        assertThat(userRepository.findById(4L).get().getPmbFriends().size()).isEqualTo(1);
+        assertThat(userRepository.findById(5L).get().getPmbFriends().size()).isEqualTo(1);
+        assertThat(userRepository.findById(myUserAccount.getId()).get().getPmbFriends().size()).isEqualTo(1);
+        assertThat(userRepository.findById(friendToConnect.getId()).get().getPmbFriends().size()).isEqualTo(0);
     }
 
     @Test
@@ -65,12 +65,12 @@ public class RelationServiceTest {
         // THEN
         assertThat(userRepository.count()).isEqualTo(6); // 5 in dbTest
         assertThat(isAdded).isFalse();
-        assertThat(userRepository.findById(1L).get().getRelations().size()).isEqualTo(1);
-        assertThat(userRepository.findById(2L).get().getRelations().size()).isEqualTo(2);
-        assertThat(userRepository.findById(3L).get().getRelations().size()).isEqualTo(0);
-        assertThat(userRepository.findById(4L).get().getRelations().size()).isEqualTo(1);
-        assertThat(userRepository.findById(5L).get().getRelations().size()).isEqualTo(1);
-        assertThat(userRepository.findById(myUserAccount.getId()).get().getRelations().size()).isEqualTo(0);
+        assertThat(userRepository.findById(1L).get().getPmbFriends().size()).isEqualTo(1);
+        assertThat(userRepository.findById(2L).get().getPmbFriends().size()).isEqualTo(2);
+        assertThat(userRepository.findById(3L).get().getPmbFriends().size()).isEqualTo(0);
+        assertThat(userRepository.findById(4L).get().getPmbFriends().size()).isEqualTo(1);
+        assertThat(userRepository.findById(5L).get().getPmbFriends().size()).isEqualTo(1);
+        assertThat(userRepository.findById(myUserAccount.getId()).get().getPmbFriends().size()).isEqualTo(0);
     }
 
     @Test
@@ -86,11 +86,11 @@ public class RelationServiceTest {
         // THEN
         assertThat(userRepository.count()).isEqualTo(5); // 5 in dbTest
         assertThat(isDeleted).isTrue();
-        assertThat(userRepository.findById(1L).get().getRelations().size()).isEqualTo(1);
-        assertThat(userRepository.findById(2L).get().getRelations().size()).isEqualTo(1);// was 2
-        assertThat(userRepository.findById(3L).get().getRelations().size()).isEqualTo(0);
-        assertThat(userRepository.findById(4L).get().getRelations().size()).isEqualTo(1);
-        assertThat(userRepository.findById(5L).get().getRelations().size()).isEqualTo(1);
+        assertThat(userRepository.findById(1L).get().getPmbFriends().size()).isEqualTo(1);
+        assertThat(userRepository.findById(2L).get().getPmbFriends().size()).isEqualTo(1);// was 2
+        assertThat(userRepository.findById(3L).get().getPmbFriends().size()).isEqualTo(0);
+        assertThat(userRepository.findById(4L).get().getPmbFriends().size()).isEqualTo(1);
+        assertThat(userRepository.findById(5L).get().getPmbFriends().size()).isEqualTo(1);
     }
 
     @Test
@@ -107,11 +107,11 @@ public class RelationServiceTest {
         assertThat(userRepository.count()).isEqualTo(5); // 5 in dbTest
         assertThat(isDeleted).isFalse();
         // unchanged relations size
-        assertThat(userRepository.findById(1L).get().getRelations().size()).isEqualTo(1);
-        assertThat(userRepository.findById(2L).get().getRelations().size()).isEqualTo(2);
-        assertThat(userRepository.findById(3L).get().getRelations().size()).isEqualTo(0);
-        assertThat(userRepository.findById(4L).get().getRelations().size()).isEqualTo(1);
-        assertThat(userRepository.findById(5L).get().getRelations().size()).isEqualTo(1);
+        assertThat(userRepository.findById(1L).get().getPmbFriends().size()).isEqualTo(1);
+        assertThat(userRepository.findById(2L).get().getPmbFriends().size()).isEqualTo(2);
+        assertThat(userRepository.findById(3L).get().getPmbFriends().size()).isEqualTo(0);
+        assertThat(userRepository.findById(4L).get().getPmbFriends().size()).isEqualTo(1);
+        assertThat(userRepository.findById(5L).get().getPmbFriends().size()).isEqualTo(1);
     }
 
     @Test
@@ -128,11 +128,11 @@ public class RelationServiceTest {
         assertThat(userRepository.count()).isEqualTo(5); // 5 in dbTest
         assertThat(isDeleted).isFalse();
         // unchanged relations size
-        assertThat(userRepository.findById(1L).get().getRelations().size()).isEqualTo(1);
-        assertThat(userRepository.findById(2L).get().getRelations().size()).isEqualTo(2);
-        assertThat(userRepository.findById(3L).get().getRelations().size()).isEqualTo(0);
-        assertThat(userRepository.findById(4L).get().getRelations().size()).isEqualTo(1);
-        assertThat(userRepository.findById(5L).get().getRelations().size()).isEqualTo(1);
+        assertThat(userRepository.findById(1L).get().getPmbFriends().size()).isEqualTo(1);
+        assertThat(userRepository.findById(2L).get().getPmbFriends().size()).isEqualTo(2);
+        assertThat(userRepository.findById(3L).get().getPmbFriends().size()).isEqualTo(0);
+        assertThat(userRepository.findById(4L).get().getPmbFriends().size()).isEqualTo(1);
+        assertThat(userRepository.findById(5L).get().getPmbFriends().size()).isEqualTo(1);
     }
 
     @Test

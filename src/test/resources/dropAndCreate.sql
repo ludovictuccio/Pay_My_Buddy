@@ -106,5 +106,5 @@ ON UPDATE NO ACTION;
 ALTER TABLE personal_payment ADD CONSTRAINT app_account_personal_payment_fk
 FOREIGN KEY (app_account_id)
 REFERENCES app_account (id)
-ON DELETE CASCADE
+ON DELETE NO ACTION
 ON UPDATE NO ACTION;

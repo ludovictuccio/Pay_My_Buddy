@@ -32,13 +32,6 @@ VALUES -- (id, app_account_id, amount, iban, bic)
 (4, 4, 4444.44, "FR040404040404040404FR", "BIC040404"),
 (5, 5, 700, "FR050505050505050550505051FR", "BIC050505");
 
-INSERT INTO transaction 
-VALUES -- (id, app_account_sender_id, app_account_beneficiary_id, amount, description, transaction_date) 
-(1, 1, 2, 10, "HBD", "2020-08-20 21:05:00"),
-(2, 2, 1, 30, "birthday", "2019-08-20 19:00:00"),
-(3, 4, 5, 100, "food", "2010-08-20 01:50:00"),
-(4, 5, 4, 10000, "restaurant", "2020-01-01 10:11:33"),
-(5, 4, 3, 1000, "icecream", "2020-05-03 23:46:23");
 
 INSERT INTO relation (user_to_connect_id, user_id)
 VALUES -- (id, user_to_connect_id, user_id)

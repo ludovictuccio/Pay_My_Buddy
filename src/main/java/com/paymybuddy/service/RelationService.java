@@ -67,9 +67,9 @@ public class RelationService implements IRelationService {
 
         if (userToConnect != null && user != null) {
 
-            Set<User> relations = user.getRelations();
-            user.addRelation(userToConnect);
-            user.setRelations(relations);
+            Set<User> relations = user.getPmbFriends();
+            user.addPmbFriends(userToConnect);
+            user.setPmbFriends(relations);
 
             userRepository.save(user);
             LOGGER.info("Successful add connection !");
@@ -94,11 +94,11 @@ public class RelationService implements IRelationService {
         User connectionToDelete = userRepository.findByEmail(emailToDelete);
 
         if (connectionToDelete != null && myAccount != null) {
-            Set<User> allRelations = myAccount.getRelations();
+            Set<User> allRelations = myAccount.getPmbFriends();
             for (User relation : allRelations) {
                 if (relation.getEmail().toString().contentEquals(emailToDelete)) {
 
-                    myAccount.getRelations().remove(relation);
+                    myAccount.getPmbFriends().remove(relation);
 
                     userRepository.save(myAccount);
                     LOGGER.info("Successful delete connection !");
@@ -125,7 +125,7 @@ public class RelationService implements IRelationService {
 
         if (connectionToRetrieve != null && myAccount != null) {
 
-            Set<User> allRelations = myAccount.getRelations();
+            Set<User> allRelations = myAccount.getPmbFriends();
             for (User relation : allRelations) {
                 if (relation.getEmail().toString().contentEquals(relationFriendEmail)) {
 

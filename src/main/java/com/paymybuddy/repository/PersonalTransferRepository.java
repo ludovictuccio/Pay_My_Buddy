@@ -6,22 +6,22 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.paymybuddy.model.AppAccount;
-import com.paymybuddy.model.PersonalPayment;
+import com.paymybuddy.model.PersonalTransfer;
 
 /**
- * PersonalPayment Repository class.
+ * PersonalTransfer Repository class.
  *
  * @author Ludovic Tuccio
  */
 @Repository
 @Transactional
-public interface PersonalPaymentRepository extends JpaRepository<PersonalPayment, Long> {
+public interface PersonalTransferRepository extends JpaRepository<PersonalTransfer, Long> {
 
     /**
-     * Method used to find a personal payment by appAccount.
+     * Method used to find a personal transfer by appAccount.
      *
      * @param myAppAccount AppAccount object
      */
-    PersonalPayment findByMyAppAccount(AppAccount myAppAccount);
+    PersonalTransfer findByMyAppAccount(AppAccount myAppAccount);
 
 }

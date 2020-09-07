@@ -90,16 +90,16 @@ public class UserRepositoryTest {
     @DisplayName("deleteUserByEmail - OK")
     public void givenUserInDb_whenDeleteAnEmail_thenReturnUserWithThisEmailDeleted() {
         // GIVEN
-
+        userRepository.save(userGeneric1);
         // WHEN
-        userRepository.deleteUserByEmail("lady.gaga@gmail.com");
+        userRepository.deleteUserByEmail("generic1@gmail.com");
 
         // THEN
         List<User> users = userRepository.findAll();
-        assertThat(users.size()).isEqualTo(4); // 5 in dbTest
+        assertThat(users.size()).isEqualTo(5); // 5 in dbTest
 
         List<AppAccount> appAccounts = appAccountRepository.findAll();
-        assertThat(appAccounts.size()).isEqualTo(4); // 5 in dbTest
+        assertThat(appAccounts.size()).isEqualTo(5); // 5 in dbTest
     }
 
     @Test

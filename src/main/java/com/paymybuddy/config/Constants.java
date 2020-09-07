@@ -19,6 +19,17 @@ public class Constants {
     public static final String AMOUNT_PATTERN = "^[+]?(\\\\d{0,4})+(\\\\.{0,1}(\\\\d{0,2}))?$";
 
     /**
+     * Final static String for IBAN pattern (letters & numbers, size: between 15 &
+     * 31)
+     */
+    public static final String EUROPEAN_IBAN_PATTERN = "^[0-9A-Z]{15,31}$";
+
+    /**
+     * Final static String for BIC pattern (letters & numbers, size: between 8 & 11)
+     */
+    public static final String EUROPEAN_BIC_PATTERN = "^[0-9A-Z]{8,11}$";
+
+    /**
      * Final static String for bank card number (between 13 for visa & 16 numbers
      * for mastercard allowed)
      */

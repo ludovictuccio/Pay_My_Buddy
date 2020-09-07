@@ -1,9 +1,12 @@
 package com.paymybuddy.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNullPointerException;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import java.math.BigDecimal;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -56,17 +59,24 @@ public class UserServiceTest {
 
         // GIVEN
         User donaldTrump = new User("Trump", "Donald", "donald.trump@gmail.com", "love-usa", "000111222");
-        userRepository.save(donaldTrump);
-        AppAccount appAccount = new AppAccount(donaldTrump, 0.0);
-        appAccountRepository.save(appAccount);
+        when(userRepository.save(donaldTrump)).thenReturn(donaldTrump);
+
+        BigDecimal initialAmountBalance = new BigDecimal("0.00");
+        AppAccount appAccount = new AppAccount(donaldTrump, initialAmountBalance);
+        when(appAccountRepository.save(appAccount)).thenReturn(appAccount);
 
         User existingEmailInDb = new User("Trumpidou", "Donaldidou", "donald.trump@gmail.com", "lovidou", "000111000");
 
         when(userRepository.findByEmail("donald.trump@gmail.com")).thenReturn(donaldTrump);
         // WHEN
-        userService.addNewUser(existingEmailInDb);
+        // User result = userService.addNewUser(existingEmailInDb);
 
         // THEN
+        assertThatNullPointerException().isThrownBy(() -> {
+            userService.addNewUser(existingEmailInDb);
+        });
+
+        // assertThat(result.getId()).isNull();
         assertThat(userRepository.findByEmail("unknow.email@gmail.com")).isNull();
         assertThat(userRepository.findByEmail("donald.trump@gmail.com")).isNotNull();
     }
@@ -130,7 +140,8 @@ public class UserServiceTest {
         // GIVEN
         User user = new User("Trump", "Donald", "donald@gmail.com", "love-usa", "000111222");
         userRepository.save(user);
-        AppAccount appAccount = new AppAccount(user, 0.0);
+        BigDecimal initialAmountBalance = new BigDecimal("0.00");
+        AppAccount appAccount = new AppAccount(user, initialAmountBalance);
         appAccountRepository.save(appAccount);
 
         // WHEN

@@ -1,5 +1,7 @@
 package com.paymybuddy.service;
 
+import java.math.BigDecimal;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,10 +50,18 @@ public class UserService implements IUserService {
                 User newUser = new User(user.getLastname(), user.getFirstname(), user.getEmail(), user.getPassword(),
                         // password,
                         user.getPhone());
+
                 userRepository.save(newUser);
 
-                AppAccount appAccount = new AppAccount(newUser, 0.00);
+                BigDecimal amountInitial = new BigDecimal(0.00);
+                AppAccount appAccount = new AppAccount(newUser, amountInitial);
                 appAccountRepository.save(appAccount);
+//                AppAccount appAccount = new AppAccount(newUser, 0.00);
+//
+//                newUser.setOwnAppAccount(appAccount);
+//
+//                appAccountRepository.save(appAccount);
+//                userRepository.save(newUser);
 
                 LOGGER.info("Succes new user acccount creation");
                 return newUser;

@@ -1,6 +1,9 @@
 package com.paymybuddy.model;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -10,8 +13,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 /**
  * AppAccount model class.
@@ -22,18 +29,26 @@ import javax.persistence.Table;
 @Table(name = "app_account")
 public class AppAccount implements Serializable {
 
-    private static final long serialVersionUID = -822275697470290777L;
+    private static final long serialVersionUID = 1641958077792413640L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long id;
+    private Long appAccountId;
 
     @OneToOne(cascade = { CascadeType.ALL, CascadeType.REMOVE }, fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User userId;
 
-    private double balance;
+    private BigDecimal balance;
+
+    @OneToMany(mappedBy = "appAccountSender")
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private List<Transaction> senderTransactions = new ArrayList<>();
+
+    @OneToMany(mappedBy = "appAccountBeneficiary")
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private List<Transaction> beneficiaryTransactions = new ArrayList<>();
 
     /**
      * Empty class constructor.
@@ -42,7 +57,7 @@ public class AppAccount implements Serializable {
         super();
     }
 
-    public AppAccount(final User userAccount, final double balanceAccount) {
+    public AppAccount(final User userAccount, final BigDecimal balanceAccount) {
         this.userId = userAccount;
         this.balance = balanceAccount;
     }
@@ -54,6 +69,38 @@ public class AppAccount implements Serializable {
         return userId;
     }
 
+    public void addTransactionForSender(final Transaction transaction) {
+        this.senderTransactions.add(transaction);
+    }
+
+    /**
+     * @return the senderTransactions
+     */
+    public List<Transaction> getSenderTransactions() {
+        return senderTransactions;
+    }
+
+    /**
+     * @param senderTransac the senderTransactions to set
+     */
+    public void setSenderTransactions(final List<Transaction> senderTransac) {
+        this.senderTransactions = senderTransac;
+    }
+
+    /**
+     * @return the beneficiaryTransactions
+     */
+    public List<Transaction> getBeneficiaryTransactions() {
+        return beneficiaryTransactions;
+    }
+
+    /**
+     * @param beneficiaryTransac the beneficiaryTransactions to set
+     */
+    public void setBeneficiaryTransactions(final List<Transaction> beneficiaryTransac) {
+        this.beneficiaryTransactions = beneficiaryTransac;
+    }
+
     /**
      * @param userAccount
      */
@@ -62,30 +109,30 @@ public class AppAccount implements Serializable {
     }
 
     /**
-     * @return the id
+     * @return the appAccountId
      */
-    public Long getId() {
-        return id;
+    public Long getAppAccountId() {
+        return appAccountId;
     }
 
     /**
-     * @param accountId the id to set
+     * @param appAccountId the id to set
      */
-    public void setId(final Long accountId) {
-        this.id = accountId;
+    public void setAppAccountId(final Long accountId) {
+        this.appAccountId = accountId;
     }
 
     /**
      * @return the balance
      */
-    public double getBalance() {
+    public BigDecimal getBalance() {
         return balance;
     }
 
     /**
      * @param accountBalance the balance to set
      */
-    public void setBalance(final double accountBalance) {
+    public void setBalance(final BigDecimal accountBalance) {
         this.balance = accountBalance;
     }
 

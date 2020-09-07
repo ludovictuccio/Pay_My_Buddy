@@ -47,22 +47,20 @@ public class User implements Serializable {
     @OneToOne(cascade = CascadeType.REMOVE, mappedBy = "userId", fetch = FetchType.EAGER)
     private AppAccount ownAppAccount;
 
-    // @OneToMany(mappedBy = "userToConnect", cascade = CascadeType.ALL)
-
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "relation", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "user_to_connect_id"))
-    private Set<User> relations = new HashSet<>();
+    private Set<User> pmbFriends = new HashSet<>();
 
-    public void addRelation(final User user) {
-        this.relations.add(user);
+    public void addPmbFriends(final User user) {
+        this.pmbFriends.add(user);
     }
 
-    public Set<User> getRelations() {
-        return relations;
+    public Set<User> getPmbFriends() {
+        return pmbFriends;
     }
 
-    public void setRelations(final Set<User> userRelations) {
-        this.relations = userRelations;
+    public void setPmbFriends(final Set<User> userRelations) {
+        this.pmbFriends = userRelations;
     }
 
     /**

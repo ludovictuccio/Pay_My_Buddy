@@ -1,6 +1,7 @@
 package com.paymybuddy.model;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -23,7 +24,7 @@ import javax.persistence.Table;
 @Table(name = "personal_payment")
 public class PersonalPayment implements Serializable {
 
-    private static final long serialVersionUID = -7673071251997299931L;
+    private static final long serialVersionUID = 1267461539173079092L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,7 +35,7 @@ public class PersonalPayment implements Serializable {
     @JoinColumn(name = "app_account_id", referencedColumnName = "id")
     private AppAccount myAppAccount;
 
-    private double amount;
+    private BigDecimal amount;
 
     private String cbNumber;
 
@@ -58,7 +59,7 @@ public class PersonalPayment implements Serializable {
      * @param cbExpirationYear
      * @param cbSecuKey
      */
-    public PersonalPayment(final AppAccount appAccount, final double myAmount, final String cardNumber,
+    public PersonalPayment(final AppAccount appAccount, final BigDecimal myAmount, final String cardNumber,
             final String cbExpirationMonth, final String cbExpirationYear, final String cbSecuKey) {
         super();
         this.myAppAccount = appAccount;
@@ -100,14 +101,14 @@ public class PersonalPayment implements Serializable {
     /**
      * @return the amount
      */
-    public double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
     /**
      * @param myAmount the amount to set
      */
-    public void setAmount(final double myAmount) {
+    public void setAmount(final BigDecimal myAmount) {
         this.amount = myAmount;
     }
 
