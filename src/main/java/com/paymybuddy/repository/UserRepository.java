@@ -5,7 +5,6 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Repository;
 
 import com.paymybuddy.model.User;
@@ -33,13 +32,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
      */
     Optional<User> findById(Long id);
 
-    /**
-     * Method repository used to delete an user by email.
-     *
-     * @param email
-     */
-    @Modifying
-    @Transactional
-    void deleteUserByEmail(String email);
+//    /**
+//     * Method repository used to delete an user by email.
+//     *
+//     * @param email
+//     */
+//    @Modifying
+//    void deleteUserByEmail(String email);
 
 }

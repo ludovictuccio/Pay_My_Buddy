@@ -9,11 +9,11 @@ import com.paymybuddy.model.User;
  */
 public interface IUserService {
 
-    User addNewUser(final User user);
+    User addNewUser(User user);
 
-    boolean updateUserInfos(final User user);
+    boolean updateUserInfos(User user);
 
-    boolean deleteUser(final String email);
+    // boolean deleteUser(String email);
 
     // User login(String email, String password);
 

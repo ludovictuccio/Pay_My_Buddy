@@ -2,6 +2,8 @@ package com.paymybuddy.service;
 
 import java.math.BigDecimal;
 
+import com.paymybuddy.model.Transaction;
+
 /**
  * ITransferService interface class.
  *
@@ -14,5 +16,5 @@ public interface ITransferService {
 
     public boolean makePersonalTransfer(String myEmail, BigDecimal amount, String iban, String bic);
 
-    public boolean makeTransaction(String myEmail, String emailBeneficiary, BigDecimal amount, String description);
+    public Transaction makeTransaction(String myEmail, String emailBeneficiary, BigDecimal amount, String description);
 }

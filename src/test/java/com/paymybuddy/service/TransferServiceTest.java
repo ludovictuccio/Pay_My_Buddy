@@ -3,6 +3,7 @@ package com.paymybuddy.service;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -12,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 
+import com.paymybuddy.model.Transaction;
 import com.paymybuddy.model.User;
 import com.paymybuddy.repository.AppAccountRepository;
 import com.paymybuddy.repository.TransactionRepository;
@@ -558,10 +560,14 @@ public class TransferServiceTest {
         userRepository.save(user);
 
         // WHEN
-        boolean result = transferService.makeTransaction(user.getEmail(), myFriend.getEmail(), amount,
+        Transaction result = transferService.makeTransaction(user.getEmail(), myFriend.getEmail(), amount,
                 "For my best friend");
         // THEN
-        assertThat(result).isTrue();
+        assertThat(result).isNotNull();
+        assertThat(result.getTransactionDate()).isEqualTo(LocalDate.now());
+        assertThat(result.getAmount()).isEqualTo(new BigDecimal("100.05"));
+        assertThat(result.getDescription()).isEqualTo("For my best friend");
+        assertThat(result.getId()).isNotNull();
         assertThat(appAccountRepository.findById(1L).get().getBalance()).isEqualTo(new BigDecimal("399.95")); // was 500
         assertThat(appAccountRepository.findById(4L).get().getBalance()).isEqualTo(new BigDecimal("2100.05"));// was
                                                                                                               // 2000
@@ -584,10 +590,10 @@ public class TransferServiceTest {
         BigDecimal amount = new BigDecimal(100.05);
 
         // WHEN
-        boolean result = transferService.makeTransaction(user.getEmail(), myFriend.getEmail(), amount,
+        Transaction result = transferService.makeTransaction(user.getEmail(), myFriend.getEmail(), amount,
                 "For my best friend");
         // THEN
-        assertThat(result).isFalse();
+        assertThat(result).isNull();
         assertThat(appAccountRepository.findById(1L).get().getBalance()).isEqualTo(new BigDecimal("500.00")); // unchanged
         assertThat(appAccountRepository.findById(4L).get().getBalance()).isEqualTo(new BigDecimal("2000.00"));
         assertThat(appAccountRepository.findById(1L).get().getSenderTransactions().size()).isEqualTo(0);
@@ -608,10 +614,10 @@ public class TransferServiceTest {
         userRepository.save(user);
 
         // WHEN
-        boolean result = transferService.makeTransaction(user.getEmail(), myFriend.getEmail(), amount,
+        Transaction result = transferService.makeTransaction(user.getEmail(), myFriend.getEmail(), amount,
                 "For my best friend");
         // THEN
-        assertThat(result).isFalse();
+        assertThat(result).isNull();
         assertThat(appAccountRepository.findById(1L).get().getBalance()).isEqualTo(new BigDecimal("500.00")); // unchanged
         assertThat(appAccountRepository.findById(4L).get().getBalance()).isEqualTo(new BigDecimal("2000.00"));// unchanged
         assertThat(appAccountRepository.findById(1L).get().getSenderTransactions().size()).isEqualTo(0);// trump

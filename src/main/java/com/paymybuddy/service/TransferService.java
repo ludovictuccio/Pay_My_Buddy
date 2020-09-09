@@ -3,8 +3,6 @@ package com.paymybuddy.service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
-import java.util.Iterator;
-import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +33,9 @@ public class TransferService implements ITransferService {
      * Logger class.
      */
     private static final Logger LOGGER = LoggerFactory.getLogger("TransferService");
+
+    @Autowired
+    private RelationService relationService;
 
     @Autowired
     private PersonalPaymentRepository personalPaymentRepository;
@@ -244,60 +245,48 @@ public class TransferService implements ITransferService {
      * @param amount
      * @param description
      * @param transactionDate
-     * @return isDone boolean, true if transaction success
+     * @return transaction a Transaction object
      */
-    public boolean makeTransaction(final String myEmail, final String emailBeneficiary, BigDecimal amount,
+    public Transaction makeTransaction(final String myEmail, final String emailBeneficiary, BigDecimal amount,
             final String description) {
-        boolean isDone = false;
         try {
             User user = userRepository.findByEmail(myEmail);
             AppAccount myAppAccount = user.getOwnAppAccount();
 
-            User myFriend = userRepository.findByEmail(emailBeneficiary);
-            AppAccount myFriendsAppAccount = myFriend.getOwnAppAccount();
+            AppAccount myFriendsAppAccount = relationService.getRelationAppAccount(myEmail, emailBeneficiary);
 
             if (myAppAccount != null && myFriendsAppAccount != null) {
-                Set<User> myFriendsList = user.getPmbFriends();
 
-                for (Iterator<User> iter = myFriendsList.iterator(); iter.hasNext();) {
-                    User existingFriend = iter.next();
-                    if (existingFriend.getEmail().matches(myFriend.getEmail())) {
+                amount = amount.setScale(2, RoundingMode.HALF_UP);
+                BigDecimal checkAccountAmountAvailable = myAppAccount.getBalance();
+                int compare = amount.compareTo(checkAccountAmountAvailable);
 
-                        amount = amount.setScale(2, RoundingMode.HALF_UP);
-                        BigDecimal checkAccountAmountAvailable = myAppAccount.getBalance();
-                        int compare = amount.compareTo(checkAccountAmountAvailable);
-
-                        // if amount > appAccount amount available
-                        if (compare == 1) {
-                            LOGGER.error(
-                                    "Transaction impossible: your account is not sufficiently funded. Amount available: {}"
-                                            + checkAccountAmountAvailable);
-                            return isDone;
-                        }
-                        LocalDate date = LocalDate.now();
-                        Transaction transaction = new Transaction(myAppAccount, myFriendsAppAccount, amount,
-                                description, date);
-                        transactionRepository.save(transaction);
-
-                        BigDecimal ownerBeforeBalance = myAppAccount.getBalance();
-                        myAppAccount.setBalance(ownerBeforeBalance.subtract(amount));
-                        appAccountRepository.save(myAppAccount);
-
-                        BigDecimal friendsBeforeBalance = myFriendsAppAccount.getBalance();
-                        myFriendsAppAccount.setBalance(friendsBeforeBalance.add(amount));
-                        appAccountRepository.save(myFriendsAppAccount);
-
-                        LOGGER.info("Transaction done ! {}€ will be credited to your friend's account.", amount);
-                        isDone = true;
-                        return isDone;
-                    }
+                // if amount > appAccount amount available
+                if (compare == 1) {
+                    LOGGER.error("Transaction impossible: your account is not sufficiently funded. Amount available: {}"
+                            + checkAccountAmountAvailable);
+                    return null;
                 }
+                LocalDate date = LocalDate.now();
+                Transaction transaction = new Transaction(myAppAccount, myFriendsAppAccount, amount, description, date);
+                transactionRepository.save(transaction);
+
+                BigDecimal ownerBeforeBalance = myAppAccount.getBalance();
+                myAppAccount.setBalance(ownerBeforeBalance.subtract(amount));
+                appAccountRepository.save(myAppAccount);
+
+                BigDecimal friendsBeforeBalance = myFriendsAppAccount.getBalance();
+                myFriendsAppAccount.setBalance(friendsBeforeBalance.add(amount));
+                appAccountRepository.save(myFriendsAppAccount);
+
+                LOGGER.info("Transaction done ! {}€ will be credited to your friend's account.", amount);
+                return transaction;
             }
         } catch (NullPointerException np) {
             LOGGER.error("Null Pointer Exception" + np);
         }
         LOGGER.error("Transaction failed. Please check the informations entered.");
-        return isDone;
+        return null;
     }
 
 }

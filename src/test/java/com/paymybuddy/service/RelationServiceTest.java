@@ -2,6 +2,8 @@ package com.paymybuddy.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.math.BigDecimal;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -149,7 +151,7 @@ public class RelationServiceTest {
         // THEN
         assertThat(userRepository.count()).isEqualTo(5); // 5 in dbTest
         assertThat(connectionToRetrieve).isNotNull();
-        assertThat(connectionToRetrieve.getBalance()).isEqualTo(2000); // poutine balance
+        assertThat(connectionToRetrieve.getBalance()).isEqualTo(new BigDecimal("2000.00")); // poutine balance
     }
 
     @Test

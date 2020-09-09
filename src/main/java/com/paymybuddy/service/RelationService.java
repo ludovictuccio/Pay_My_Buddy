@@ -27,31 +27,6 @@ public class RelationService implements IRelationService {
     @Autowired
     private UserRepository userRepository;
 
-//    @Autowired
-//    private RelationRepository relationRepository;
-
-    /**
-     * This method service is used to add a connection/relation between two users
-     * adding the email of the user's friend.
-     *
-     * @param myEmail
-     * @param emailToConnect
-     * @return relation saved in relationRepository or null
-     */
-//    public Relation addRelation(final String myEmail, final String emailToConnect) {
-//
-//        User user = userRepository.findByEmail(myEmail);
-//        User userToConnect = userRepository.findByEmail(emailToConnect);
-//
-//        if (userToConnect != null) {
-//            Relation relation = new Relation(user, userToConnect);
-//            LOGGER.info("Successful add connection !");
-//            return relationRepository.save(relation);
-//        }
-//        LOGGER.error("Fail to add connection. Please check the email entered.");
-//        return null;
-//    }
-
     /**
      * This method service is used to add a connection/relation between two users
      * adding the email of the user's friend.

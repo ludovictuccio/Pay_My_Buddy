@@ -12,7 +12,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 
-import com.paymybuddy.model.AppAccount;
 import com.paymybuddy.model.User;
 
 @SpringBootTest
@@ -23,9 +22,6 @@ public class UserRepositoryTest {
 
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private AppAccountRepository appAccountRepository;
 
     private static User userGeneric1 = new User("GENERIC1", "USER1", "generic1@gmail.com", "gen1", "0101010101");
     private static User userGeneric2 = new User("GENERIC2", "USER2", "generic2@gmail.com", "gen2", "0202020202");
@@ -79,44 +75,61 @@ public class UserRepositoryTest {
     @DisplayName("FindById - OK")
     public void givenPersonsInDb_whenFindById_thenReturnCorrectValues() {
 
-        // THEN
         assertThat(userRepository.findById(1L)).isNotNull();
         assertThat(userRepository.findById(5L)).isNotNull();
         assertThat(userRepository.findById(999L)).isEmpty();
     }
 
-    @Test
-    @Tag("deleteUserByEmail")
-    @DisplayName("deleteUserByEmail - OK")
-    public void givenUserInDb_whenDeleteAnEmail_thenReturnUserWithThisEmailDeleted() {
-        // GIVEN
-        userRepository.save(userGeneric1);
-        // WHEN
-        userRepository.deleteUserByEmail("generic1@gmail.com");
-
-        // THEN
-        List<User> users = userRepository.findAll();
-        assertThat(users.size()).isEqualTo(5); // 5 in dbTest
-
-        List<AppAccount> appAccounts = appAccountRepository.findAll();
-        assertThat(appAccounts.size()).isEqualTo(5); // 5 in dbTest
-    }
-
-    @Test
-    @Tag("deleteUserByEmail")
-    @DisplayName("deleteUserByEmail - ERROR - Unknow email")
-    public void givenUsersInDb_whenDeleteUnknowEmail_thenReturnDbSizeUnchanged() {
-        // GIVEN
-
-        // WHEN
-        userRepository.deleteUserByEmail("UNKNOW-email@gmail.com");
-
-        // THEN
-        List<User> users = userRepository.findAll();
-        assertThat(users.size()).isEqualTo(5); // 5 in dbTest
-
-        List<AppAccount> appAccounts = appAccountRepository.findAll();
-        assertThat(appAccounts.size()).isEqualTo(5); // 5 in dbTest
-    }
+//    @Test
+//    @Tag("deleteUserByEmail")
+//    @DisplayName("deleteUserByEmail - OK")
+//    public void givenUserInDb_whenDeleteAnEmail_thenReturnUserWithThisEmailDeleted() {
+//        // GIVEN
+//        userRepository.save(userGeneric1);
+//
+//        // WHEN
+//        userRepository.deleteUserByEmail("generic1@gmail.com");
+//
+//        // THEN
+//        List<User> users = userRepository.findAll();
+//        assertThat(users.size()).isEqualTo(5); // 5 in dbTest
+//
+//        List<AppAccount> appAccounts = appAccountRepository.findAll();
+//        assertThat(appAccounts.size()).isEqualTo(5); // 5 in dbTest
+//    }
+//
+//    @Test
+//    @Tag("deleteUserByEmail")
+//    @DisplayName("deleteUserByEmail - OK - AppAccount deleted")
+//    public void givenUserInDb_whenDeleteAnEmailInDb_thenReturnUserWithThisEmailDeleted() {
+//        // GIVEN
+//
+//        // WHEN
+//        userRepository.deleteUserByEmail("lady.gaga@gmail.com");
+//
+//        // THEN
+//        List<User> users = userRepository.findAll();
+//        assertThat(users.size()).isEqualTo(4); // was 5 in dbTest
+//
+//        List<AppAccount> appAccounts = appAccountRepository.findAll();
+//        assertThat(appAccounts.size()).isEqualTo(4); // was 5 in dbTest
+//    }
+//
+//    @Test
+//    @Tag("deleteUserByEmail")
+//    @DisplayName("deleteUserByEmail - ERROR - Unknow email")
+//    public void givenUsersInDb_whenDeleteUnknowEmail_thenReturnDbSizeUnchanged() {
+//        // GIVEN
+//
+//        // WHEN
+//        userRepository.deleteUserByEmail("UNKNOW-email@gmail.com");
+//
+//        // THEN
+//        List<User> users = userRepository.findAll();
+//        assertThat(users.size()).isEqualTo(5); // 5 in dbTest
+//
+//        List<AppAccount> appAccounts = appAccountRepository.findAll();
+//        assertThat(appAccounts.size()).isEqualTo(5); // 5 in dbTest
+//    }
 
 }
