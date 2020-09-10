@@ -16,6 +16,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.PositiveOrZero;
 
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
@@ -40,6 +41,7 @@ public class AppAccount implements Serializable {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User userId;
 
+    @PositiveOrZero
     private BigDecimal balance;
 
     @OneToMany(mappedBy = "appAccountSender")

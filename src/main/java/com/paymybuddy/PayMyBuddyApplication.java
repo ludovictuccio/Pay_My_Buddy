@@ -1,7 +1,14 @@
 package com.paymybuddy;
 
+import javax.validation.Validation;
+import javax.validation.Validator;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import com.ulisesbocchio.jasyptspringboot.annotation.EnableEncryptableProperties;
 
 /**
  * PayMyBuddyApplication class that contain method main.
@@ -9,9 +16,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author Ludovic Tuccio
  */
 @SpringBootApplication
-//@Configuration
-//@EncryptablePropertySource(name = "EncryptedProperties", value = "classpath:application.properties")
+@EnableEncryptableProperties
 public class PayMyBuddyApplication {
+
+    public PayMyBuddyApplication() {
+    }
 
     /**
      * Application method main.
@@ -20,6 +29,21 @@ public class PayMyBuddyApplication {
      */
     public static void main(String[] args) {
         SpringApplication.run(PayMyBuddyApplication.class, args);
+    }
+
+//    @Bean
+//    public static PasswordEncoder passwordEncoder() {
+//        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+//    }
+
+    @Bean
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public Validator validator() {
+        return Validation.buildDefaultValidatorFactory().getValidator();
     }
 
 }

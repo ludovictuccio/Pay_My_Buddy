@@ -5,7 +5,10 @@ import java.math.BigDecimal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import com.paymybuddy.model.AppAccount;
 import com.paymybuddy.model.User;
@@ -26,20 +29,26 @@ public class UserService implements IUserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
     /**
      * This method service is used to add a new user.
      *
      * @param user
      * @return newUser or null if email already exists or incorrect informations.
      */
-    public User addNewUser(final User user) {
+    @Validated
+    public User addNewUser(@Validated final User user) {
         try {
-            if (user.getEmail().isEmpty() || user.getEmail() == null || user.getEmail().trim().length() < 10
-                    || !user.getEmail().matches(
-                            "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$")) {
-                LOGGER.info("ERROR: Invalid email.");
-                return null;
-            } else if (user.getLastname() == null || user.getLastname().isEmpty() || user.getFirstname() == null
+//            if (user.getEmail().isEmpty() || user.getEmail() == null || user.getEmail().trim().length() < 10
+//                    || !user.getEmail().matches(
+//                            "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$")) {
+//                LOGGER.info("ERROR: Invalid email.");
+//                return null;
+//            } else 
+
+            if (user.getLastname() == null || user.getLastname().isEmpty() || user.getFirstname() == null
                     || user.getFirstname().isEmpty() || user.getPassword() == null || user.getPassword().isEmpty()
                     || user.getPhone() == null || user.getPhone().isEmpty() || user.getPhone().length() < 5
                     || user.getPhone().length() > 16) {
@@ -49,8 +58,8 @@ public class UserService implements IUserService {
                 LOGGER.error("ERROR: An user already exists with the email entered.");
                 return null;
             } else {
-                User newUser = new User(user.getLastname(), user.getFirstname(), user.getEmail(), user.getPassword(),
-                        user.getPhone());
+                User newUser = new User(user.getLastname(), user.getFirstname(), user.getEmail(),
+                        bCryptPasswordEncoder.encode(user.getPassword()), user.getPhone());
                 userRepository.save(newUser);
 
                 AppAccount appAccount = new AppAccount(newUser, new BigDecimal("0.00"));
@@ -94,47 +103,30 @@ public class UserService implements IUserService {
         return isUpdated;
     }
 
-//    /**
-//     * This method service is used to delete an user.
-//     *
-//     * @param email
-//     * @return isDeleted boolean
-//     */
-//    public boolean deleteUser(final String email) {
-//        boolean isDeleted = false;
-//        User userToFind = userRepository.findByEmail(email);
-//
-//        if (userToFind != null) {
-//            userRepository.deleteUserByEmail(email);
-//            LOGGER.info("SUCCESS: Deleted user from DB.");
-//            isDeleted = true;
-//            return isDeleted;
-//        }
-//        return isDeleted;
-//    }
+    /**
+     * This method service is used to login an user.
+     *
+     * @param email
+     * @param password
+     * @return userToLogin User or null
+     */
+    public User login(final String email, final String password) {
+        try {
+            User userToLogin = userRepository.findByEmail(email);
 
-//    /**
-//     * This method service is used to login an user.
-//     *
-//     * @param email
-//     * @param password
-//     * @return userToLogin user or null
-//     */
-//    public User login(final String email, final String password) {
-//
-//        User userToLogin = userRepository.findByEmail(email);
-//
-//        if (userToLogin != null && BCrypt.checkpw(password, userToLogin.getPassword())) {
-//            LOGGER.info("Hello " + userToLogin.getFirstname() + " !");
-//            return userToLogin;
-//        } else if (userToLogin != null && !BCrypt.checkpw(password, userToLogin.getPassword())) {
-//            LOGGER.info("Invalid password. Please try again.");
-//            return null;
-//        } else if (userToLogin == null) {
-//            LOGGER.info("Invalid email. Please check the email entered.");
-//            return null;
-//        }
-//        return null;
-//    }
-
+            if (userToLogin == null) {
+                LOGGER.info("Invalid email. Please check the email entered.");
+                return null;
+            } else if (BCrypt.checkpw(password, userToLogin.getPassword())) {
+                LOGGER.info("Hello " + userToLogin.getFirstname() + " !");
+                return userToLogin;
+            } else {
+                LOGGER.info("Invalid password. Please try again.");
+                return null;
+            }
+        } catch (NullPointerException np) {
+            LOGGER.info("Invalid password (Null). Please try again." + np);
+            return null;
+        }
+    }
 }

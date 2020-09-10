@@ -57,14 +57,6 @@ https://dev.mysql.com/downloads/installer/
 
 - **mvn site** : for checkstyle, findbugs & surefire reports (available in *"target/site"*).
 
-
-**To test endpoints:**
-<ol>
-	<li>Install Postman https://www.postman.com/</li> 
-		OR
-<li>Use localhost http://localhost:9090/{}</li> 
-</ol>
-
 ## UML 
 
 -
@@ -73,19 +65,4 @@ https://dev.mysql.com/downloads/installer/
 
 -
 
-## Features
 
-### Registration
-
-**POST** - http://localhost:9090/registration >>> add a new user. Conflict if email addree already exist in DB, or with a null value
-<pre><code>
-	[
-	    {
-			"lastname": "Prevert",
-			"firstname": "Jacques",
-			"email": "j.prevert@gmail.com",
-			"password": "love-france",
-			"phone": "0238440000"
-}
-	]
-</pre></code>

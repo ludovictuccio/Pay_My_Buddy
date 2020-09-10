@@ -15,6 +15,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.annotation.DirtiesContext;
 
 import com.paymybuddy.model.AppAccount;
@@ -36,6 +38,11 @@ public class UserServiceTest {
     @MockBean
     private AppAccountRepository appAccountRepository;
 
+    @MockBean
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    private static String encryptedPassword = "encrypted_password";
+
     @Test
     @Tag("CREATE")
     @DisplayName("Create new user - OK")
@@ -47,6 +54,7 @@ public class UserServiceTest {
 
         when(userRepository.save(donaldTrump)).thenReturn(donaldTrump);
         when(appAccountRepository.save(donaldAccount)).thenReturn(donaldAccount);
+        when(bCryptPasswordEncoder.encode(donaldTrump.getPassword())).thenReturn(encryptedPassword);
         // WHEN
         User result = userService.addNewUser(donaldTrump);
 
@@ -55,7 +63,8 @@ public class UserServiceTest {
         assertThat(result.getLastname()).isEqualTo("New");
         assertThat(result.getFirstname()).isEqualTo("User");
         assertThat(result.getEmail()).isEqualTo("new-user@gmail.com");
-        assertThat(result.getPassword()).isEqualTo("love");
+        assertThat(result.getPassword().equals("love")).isFalse();// encrypted
+        assertThat(result.getPassword()).isEqualTo(encryptedPassword);
         assertThat(result.getPhone()).isEqualTo("000111222");
         assertThat(result.getPmbFriends()).isEmpty();
         assertThat(donaldAccount.getBalance()).isEqualTo(new BigDecimal("0.00"));
@@ -105,7 +114,7 @@ public class UserServiceTest {
     @DisplayName("Create new user - ERROR - Invalid email insered")
     public void givenInvalidEmailAddressEntry_whenCreation_thenReturnNull() {
         // GIVEN
-        User donaldTrump = new User("Trump", "Donald", "donald", "love-usa", "000111222");
+        User donaldTrump = new User("Trump", "Donald", "dodo", "love-usa", "000111222");
 
         // WHEN
         User result = userService.addNewUser(donaldTrump);
@@ -268,36 +277,167 @@ public class UserServiceTest {
         assertThat(isUpdated).isFalse();
     }
 
-//    @Test
-//    @Tag("DELETE")
-//    @DisplayName("Delete user - OK - Existing email")
-//    public void givenExistingUser_whenDeleteValidEmail_thenReturnTrue() {
-//        // GIVEN
-//        User user = new User("Trump", "Donald", "donald@gmail.com", "love-usa", "000111222");
-//
-//        when(userService.addNewUser(user)).thenReturn(user);
-//        when(userRepository.findByEmail("donald@gmail.com")).thenReturn(user);
-//
-//        // WHEN
-//        boolean isDeleted = userService.deleteUser(user.getEmail());
-//
-//        // THEN
-//        assertThat(isDeleted).isTrue();
-//        verify(userRepository, times(1)).deleteUserByEmail(anyString());
-//    }
-//
-//    @Test
-//    @Tag("DELETE")
-//    @DisplayName("Delete user - ERROR - Unexisting email")
-//    public void givenUnxistingUser_whenDeleteInvalidEmail_thenReturnFalse() {
-//        // GIVEN
-//        when(userRepository.findByEmail("non-existantemail@gmail.fr")).thenReturn(null);
-//
-//        // WHEN
-//        boolean isDeleted = userService.deleteUser("non-existantemail@gmail.fr");
-//
-//        // THEN
-//        assertThat(isDeleted).isFalse();
-//        verify(userRepository, never()).deleteUserByEmail(anyString());
-//    }
+    @Test
+    @Tag("LOGIN")
+    @DisplayName("Login - OK - Existant user & correct id")
+    public void givenExistingUser_whenLoginWithCorrectId_thenReturnUser() {
+        // GIVEN
+        String password = BCrypt.hashpw("love", BCrypt.gensalt());
+
+        User donaldTrump = new User("Trump", "Donald", "d.trump@gmail.com", password, "000111222");
+        AppAccount donaldAccount = new AppAccount(donaldTrump, new BigDecimal("0.00"));
+        donaldAccount.setUserId(donaldTrump);
+
+        when(userRepository.save(donaldTrump)).thenReturn(donaldTrump);
+        when(appAccountRepository.save(donaldAccount)).thenReturn(donaldAccount);
+        when(userRepository.findByEmail("d.trump@gmail.com")).thenReturn(donaldTrump);
+
+        // WHEN
+        User result = userService.login("d.trump@gmail.com", "love");
+
+        // THEN
+        assertThat(result).isNotNull();
+        assertThat(result.getLastname()).isEqualTo("Trump");
+        assertThat(result.getFirstname()).isEqualTo("Donald");
+        assertThat(result.getEmail()).isEqualTo("d.trump@gmail.com");
+        assertThat(result.getPassword().equals("love")).isFalse();// encrypted
+        assertThat(result.getPassword().equals(password)).isTrue();// encrypted
+        assertThat(result.getPhone()).isEqualTo("000111222");
+        assertThat(result.getPmbFriends()).isEmpty();
+        assertThat(donaldAccount.getBalance()).isEqualTo(new BigDecimal("0.00"));
+        assertThat(donaldAccount.getAppAccountId()).isEqualTo(donaldTrump.getId());
+    }
+
+    @Test
+    @Tag("LOGIN")
+    @DisplayName("Login - Error - Bad email")
+    public void givenExistingUser_whenLoginWithBadEmail_thenReturnNull() {
+        // GIVEN
+        String password = BCrypt.hashpw("love", BCrypt.gensalt());
+
+        User donaldTrump = new User("Trump", "Donald", "d.trump@gmail.com", password, "000111222");
+        AppAccount donaldAccount = new AppAccount(donaldTrump, new BigDecimal("0.00"));
+        donaldAccount.setUserId(donaldTrump);
+
+        when(userRepository.save(donaldTrump)).thenReturn(donaldTrump);
+        when(appAccountRepository.save(donaldAccount)).thenReturn(donaldAccount);
+        when(userRepository.findByEmail("d.trump@gmail.com")).thenReturn(donaldTrump);
+
+        // WHEN
+        User result = userService.login("donald.trumpidou@gmail.com", "love");
+
+        // THEN
+        assertThat(result).isNull();
+    }
+
+    @Test
+    @Tag("LOGIN")
+    @DisplayName("Login - Error - Bad password")
+    public void givenExistingUser_whenLoginWithBadPassword_thenReturnNull() {
+        // GIVEN
+        String password = BCrypt.hashpw("love", BCrypt.gensalt());
+
+        User donaldTrump = new User("Trump", "Donald", "d.trump@gmail.com", password, "000111222");
+        AppAccount donaldAccount = new AppAccount(donaldTrump, new BigDecimal("0.00"));
+        donaldAccount.setUserId(donaldTrump);
+
+        when(userRepository.save(donaldTrump)).thenReturn(donaldTrump);
+        when(appAccountRepository.save(donaldAccount)).thenReturn(donaldAccount);
+        when(userRepository.findByEmail("d.trump@gmail.com")).thenReturn(donaldTrump);
+
+        // WHEN
+        User result = userService.login("d.trump@gmail.com", "bad-password");
+
+        // THEN
+        assertThat(result).isNull();
+    }
+
+    @Test
+    @Tag("LOGIN")
+    @DisplayName("Login - Error - Null email")
+    public void givenExistingUser_whenLoginWithNullEmail_thenReturnNull() {
+        // GIVEN
+        String password = BCrypt.hashpw("love", BCrypt.gensalt());
+
+        User donaldTrump = new User("Trump", "Donald", "d.trump@gmail.com", password, "000111222");
+        AppAccount donaldAccount = new AppAccount(donaldTrump, new BigDecimal("0.00"));
+        donaldAccount.setUserId(donaldTrump);
+
+        when(userRepository.save(donaldTrump)).thenReturn(donaldTrump);
+        when(appAccountRepository.save(donaldAccount)).thenReturn(donaldAccount);
+        when(userRepository.findByEmail("d.trump@gmail.com")).thenReturn(donaldTrump);
+
+        // WHEN
+        User result = userService.login(null, "love");
+
+        // THEN
+        assertThat(result).isNull();
+    }
+
+    @Test
+    @Tag("LOGIN")
+    @DisplayName("Login - Error - Empty email")
+    public void givenExistingUser_whenLoginWithEmptyEmail_thenReturnNull() {
+        // GIVEN
+        String password = BCrypt.hashpw("love", BCrypt.gensalt());
+
+        User donaldTrump = new User("Trump", "Donald", "d.trump@gmail.com", password, "000111222");
+        AppAccount donaldAccount = new AppAccount(donaldTrump, new BigDecimal("0.00"));
+        donaldAccount.setUserId(donaldTrump);
+
+        when(userRepository.save(donaldTrump)).thenReturn(donaldTrump);
+        when(appAccountRepository.save(donaldAccount)).thenReturn(donaldAccount);
+        when(userRepository.findByEmail("d.trump@gmail.com")).thenReturn(donaldTrump);
+
+        // WHEN
+        User result = userService.login("", "love");
+
+        // THEN
+        assertThat(result).isNull();
+    }
+
+    @Test
+    @Tag("LOGIN")
+    @DisplayName("Login - Error - Null password")
+    public void givenExistingUser_whenLoginWithNullPassword_thenReturnNull() {
+        // GIVEN
+        String password = BCrypt.hashpw("love", BCrypt.gensalt());
+
+        User donaldTrump = new User("Trump", "Donald", "d.trump@gmail.com", password, "000111222");
+        AppAccount donaldAccount = new AppAccount(donaldTrump, new BigDecimal("0.00"));
+        donaldAccount.setUserId(donaldTrump);
+
+        when(userRepository.save(donaldTrump)).thenReturn(donaldTrump);
+        when(appAccountRepository.save(donaldAccount)).thenReturn(donaldAccount);
+        when(userRepository.findByEmail("d.trump@gmail.com")).thenReturn(donaldTrump);
+
+        // WHEN
+        User result = userService.login("d.trump@gmail.com", null);
+
+        // THEN
+        assertThat(result).isNull();
+    }
+
+    @Test
+    @Tag("LOGIN")
+    @DisplayName("Login - Error - Empty password")
+    public void givenExistingUser_whenLoginWithEmptyPassword_thenReturnNull() {
+        // GIVEN
+        String password = BCrypt.hashpw("love", BCrypt.gensalt());
+
+        User donaldTrump = new User("Trump", "Donald", "d.trump@gmail.com", password, "000111222");
+        AppAccount donaldAccount = new AppAccount(donaldTrump, new BigDecimal("0.00"));
+        donaldAccount.setUserId(donaldTrump);
+
+        when(userRepository.save(donaldTrump)).thenReturn(donaldTrump);
+        when(appAccountRepository.save(donaldAccount)).thenReturn(donaldAccount);
+        when(userRepository.findByEmail("d.trump@gmail.com")).thenReturn(donaldTrump);
+
+        // WHEN
+        User result = userService.login("d.trump@gmail.com", "");
+
+        // THEN
+        assertThat(result).isNull();
+    }
+
 }

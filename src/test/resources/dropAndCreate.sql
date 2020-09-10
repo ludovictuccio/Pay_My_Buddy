@@ -9,7 +9,7 @@ CREATE TABLE user (
                 lastname VARCHAR(50) NOT NULL,
                 firstname VARCHAR(50) NOT NULL,
                 email VARCHAR(80) NOT NULL,
-                password VARCHAR(60) NOT NULL,
+				password BINARY(60) DEFAULT NULL,
                 phone VARCHAR(16) NOT NULL,
                 PRIMARY KEY (id)
 ) ENGINE = INNODB DEFAULT CHARSET=utf8mb4;

@@ -16,6 +16,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.Valid;
+import javax.validation.constraints.Email;
 
 /**
  * User model class.
@@ -26,7 +28,7 @@ import javax.persistence.Table;
 @Table(name = "user")
 public class User implements Serializable {
 
-    private static final long serialVersionUID = 3445487792037720759L;
+    private static final long serialVersionUID = 5727638570064420003L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,11 +39,22 @@ public class User implements Serializable {
 
     private String lastname;
 
-    @Column(unique = true, nullable = false)
+    // @Column(unique = true, nullable = false)
+    // @Valid
+    // @NotNull
+    // @NotEmpty
+    // @NotBlank
+    // @Length(min = 10, max = 80)
+    @Email(regexp = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$", message = "Invalid email entry.")
     private String email;
 
+    @Valid
+    // @Length(min = 1, max = 60, message = "Invalid password entry")
+    // @ColumnTransformer(forColumn = "password", read = "AES_DECRYPT(password,
+    // 'password')", write = "AES_ENCRYPT(?, 'password')")
     private String password;
 
+    // @Pattern(regexp = "^[0-9]{5-16}", message = "Invalid phone number entry")
     private String phone;
 
     @OneToOne(cascade = CascadeType.REMOVE, mappedBy = "userId", fetch = FetchType.EAGER)
@@ -77,7 +90,8 @@ public class User implements Serializable {
      * @param personsPassword
      * @param personsPhoneNumber
      */
-    public User(final String personsLastname, final String personsFirstname, final String personsEmail,
+    public User(final String personsLastname, final String personsFirstname,
+            @Email(regexp = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$", message = "Invalid email entry.") final String personsEmail,
             final String personsPassword, final String personsPhoneNumber) {
         super();
         this.firstname = personsFirstname;

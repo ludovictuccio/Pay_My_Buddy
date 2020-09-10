@@ -13,8 +13,6 @@ public interface IUserService {
 
     boolean updateUserInfos(User user);
 
-    // boolean deleteUser(String email);
-
-    // User login(String email, String password);
+    User login(String email, String password);
 
 }

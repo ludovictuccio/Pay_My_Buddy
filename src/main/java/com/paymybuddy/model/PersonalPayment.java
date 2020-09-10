@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Positive;
 
 /**
  * PersonalPayment model class, used to transfer money to their app account with
@@ -35,6 +36,7 @@ public class PersonalPayment implements Serializable {
     @JoinColumn(name = "app_account_id", referencedColumnName = "id")
     private AppAccount myAppAccount;
 
+    @Positive
     private BigDecimal amount;
 
     private String cbNumber;

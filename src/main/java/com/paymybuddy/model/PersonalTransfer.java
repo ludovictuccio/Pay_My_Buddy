@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Positive;
 
 /**
  * PersonalTransfer model class.
@@ -34,6 +35,7 @@ public class PersonalTransfer implements Serializable {
     @JoinColumn(name = "app_account_id", referencedColumnName = "id")
     private AppAccount myAppAccount;
 
+    @Positive
     private BigDecimal amount;
 
     private String iban;
