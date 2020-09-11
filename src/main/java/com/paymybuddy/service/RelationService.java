@@ -19,23 +19,22 @@ import com.paymybuddy.repository.UserRepository;
 @Service
 public class RelationService implements IRelationService {
 
-    /**
-     * Logger class.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger("RelationService");
+    private static final Logger LOGGER = LoggerFactory
+            .getLogger("RelationService");
 
     @Autowired
     private UserRepository userRepository;
 
     /**
-     * This method service is used to add a connection/relation between two users
-     * adding the email of the user's friend.
+     * This method service is used to add a connection/relation between two
+     * users adding the email of the user's friend.
      *
      * @param myEmail
      * @param emailToConnect
      * @return boolean isAdded true if relation's saved
      */
-    public boolean addRelation(final String myEmail, final String emailToConnect) {
+    public boolean addRelation(final String myEmail,
+            final String emailToConnect) {
         boolean isAdded = false;
         User user = userRepository.findByEmail(myEmail);
         User userToConnect = userRepository.findByEmail(emailToConnect);
@@ -62,7 +61,8 @@ public class RelationService implements IRelationService {
      * @param emailToDelete
      * @return boolean isDeleted true if relation's deleted
      */
-    public boolean deleteRelation(final String myEmail, final String emailToDelete) {
+    public boolean deleteRelation(final String myEmail,
+            final String emailToDelete) {
         boolean isDeleted = false;
 
         User myAccount = userRepository.findByEmail(myEmail);
@@ -71,7 +71,8 @@ public class RelationService implements IRelationService {
         if (connectionToDelete != null && myAccount != null) {
             Set<User> allRelations = myAccount.getPmbFriends();
             for (User relation : allRelations) {
-                if (relation.getEmail().toString().contentEquals(emailToDelete)) {
+                if (relation.getEmail().toString()
+                        .contentEquals(emailToDelete)) {
 
                     myAccount.getPmbFriends().remove(relation);
 
@@ -82,33 +83,39 @@ public class RelationService implements IRelationService {
                 }
             }
         }
-        LOGGER.error("Fail to delete connection. Please check the email entered.");
+        LOGGER.error(
+                "Fail to delete connection. Please check the email entered.");
         return isDeleted;
     }
 
     /**
-     * This method service is used to get an user app account connection/relation.
+     * This method service is used to get an user app account
+     * connection/relation.
      *
      * @param myEmail
      * @param relationFriendEmail
      * @return connectionToRetrieve an AppAccount object
      */
-    public AppAccount getRelationAppAccount(final String myEmail, final String relationFriendEmail) {
+    public AppAccount getRelationAppAccount(final String myEmail,
+            final String relationFriendEmail) {
 
         User myAccount = userRepository.findByEmail(myEmail);
-        User connectionToRetrieve = userRepository.findByEmail(relationFriendEmail);
+        User connectionToRetrieve = userRepository
+                .findByEmail(relationFriendEmail);
 
         if (connectionToRetrieve != null && myAccount != null) {
 
             Set<User> allRelations = myAccount.getPmbFriends();
             for (User relation : allRelations) {
-                if (relation.getEmail().toString().contentEquals(relationFriendEmail)) {
+                if (relation.getEmail().toString()
+                        .contentEquals(relationFriendEmail)) {
 
                     return connectionToRetrieve.getOwnAppAccount();
                 }
             }
         }
-        LOGGER.error("Fail to retrieve friend's connection. Please check the email entered.");
+        LOGGER.error(
+                "Fail to retrieve friend's connection. Please check the email entered.");
         return null;
     }
 

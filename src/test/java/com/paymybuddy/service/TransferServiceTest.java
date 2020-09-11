@@ -1,6 +1,7 @@
 package com.paymybuddy.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -16,7 +17,6 @@ import org.springframework.test.context.jdbc.Sql;
 import com.paymybuddy.model.Transaction;
 import com.paymybuddy.model.User;
 import com.paymybuddy.repository.AppAccountRepository;
-import com.paymybuddy.repository.TransactionRepository;
 import com.paymybuddy.repository.UserRepository;
 
 @SpringBootTest
@@ -30,9 +30,6 @@ public class TransferServiceTest {
 
     @Autowired
     private AppAccountRepository appAccountRepository;
-
-    @Autowired
-    private TransactionRepository transactionRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -600,6 +597,228 @@ public class TransferServiceTest {
         assertThat(appAccountRepository.findById(1L).get().getBeneficiaryTransactions().size()).isEqualTo(0);
         assertThat(appAccountRepository.findById(4L).get().getSenderTransactions().size()).isEqualTo(0);
         assertThat(appAccountRepository.findById(4L).get().getBeneficiaryTransactions().size()).isEqualTo(0);
+    }
+
+    @Test
+    @Tag("Transaction")
+    @DisplayName("Transaction - Error - Amount negative")
+    public void givenTwoFriends_whenTransactionWithNegativeAmount_thenReturnNull() {
+        // GIVEN
+        User user = userRepository.findByEmail("donald.trump@gmail.com");
+        User myFriend = userRepository.findByEmail("vlad.poutine@gmail.com");
+        BigDecimal amount = new BigDecimal("-100.05");
+        user.addPmbFriends(myFriend);
+        userRepository.save(user);
+
+        // WHEN
+        Transaction result = transferService.makeTransaction(user.getEmail(), myFriend.getEmail(), amount,
+                "For my best friend");
+        // THEN
+        assertThat(result).isNull();
+        assertThat(appAccountRepository.findById(1L).get().getBalance()).isEqualTo(new BigDecimal("500.00")); // unchanged
+        assertThat(appAccountRepository.findById(4L).get().getBalance()).isEqualTo(new BigDecimal("2000.00"));
+        assertThat(appAccountRepository.findById(1L).get().getSenderTransactions().size()).isEqualTo(0);
+        assertThat(appAccountRepository.findById(1L).get().getBeneficiaryTransactions().size()).isEqualTo(0);
+        assertThat(appAccountRepository.findById(4L).get().getSenderTransactions().size()).isEqualTo(0);
+        assertThat(appAccountRepository.findById(4L).get().getBeneficiaryTransactions().size()).isEqualTo(0);
+    }
+
+    @Test
+    @Tag("Transaction")
+    @DisplayName("Transaction - Error - Null Amount")
+    public void givenTwoFriends_whenTransactionWithNullAmount_thenReturnNull() {
+        // GIVEN
+        User user = userRepository.findByEmail("donald.trump@gmail.com");
+        User myFriend = userRepository.findByEmail("vlad.poutine@gmail.com");
+        user.addPmbFriends(myFriend);
+        userRepository.save(user);
+
+        // WHEN
+        Transaction result = transferService.makeTransaction(user.getEmail(), myFriend.getEmail(), null,
+                "For my best friend");
+        // THEN
+        assertThat(result).isNull();
+        assertThat(appAccountRepository.findById(1L).get().getBalance()).isEqualTo(new BigDecimal("500.00")); // unchanged
+        assertThat(appAccountRepository.findById(4L).get().getBalance()).isEqualTo(new BigDecimal("2000.00"));
+        assertThat(appAccountRepository.findById(1L).get().getSenderTransactions().size()).isEqualTo(0);
+        assertThat(appAccountRepository.findById(1L).get().getBeneficiaryTransactions().size()).isEqualTo(0);
+        assertThat(appAccountRepository.findById(4L).get().getSenderTransactions().size()).isEqualTo(0);
+        assertThat(appAccountRepository.findById(4L).get().getBeneficiaryTransactions().size()).isEqualTo(0);
+    }
+
+    @Test
+    @Tag("Transaction")
+    @DisplayName("Transaction - Error - Empty Amount")
+    public void givenTwoFriends_whenTransactionWithEmptyAmount_thenReturnNull() {
+        // GIVEN
+        User user = userRepository.findByEmail("donald.trump@gmail.com");
+        User myFriend = userRepository.findByEmail("vlad.poutine@gmail.com");
+        user.addPmbFriends(myFriend);
+        userRepository.save(user);
+
+        // WHEN
+        assertThatExceptionOfType(NumberFormatException.class).isThrownBy(() -> {
+            transferService.makeTransaction(user.getEmail(), myFriend.getEmail(), new BigDecimal(""),
+                    "For my best friend");
+        });
+        // THEN
+        assertThat(appAccountRepository.findById(1L).get().getBalance()).isEqualTo(new BigDecimal("500.00")); // unchanged
+        assertThat(appAccountRepository.findById(4L).get().getBalance()).isEqualTo(new BigDecimal("2000.00"));
+        assertThat(appAccountRepository.findById(1L).get().getSenderTransactions().size()).isEqualTo(0);
+        assertThat(appAccountRepository.findById(1L).get().getBeneficiaryTransactions().size()).isEqualTo(0);
+        assertThat(appAccountRepository.findById(4L).get().getSenderTransactions().size()).isEqualTo(0);
+        assertThat(appAccountRepository.findById(4L).get().getBeneficiaryTransactions().size()).isEqualTo(0);
+    }
+
+    @Test
+    @Tag("Transaction")
+    @DisplayName("Transaction - Error - Less than 1 euros")
+    public void givenTwoFriends_whenTransactionWithAmountLessThanMinSize_thenReturnNull() {
+        // GIVEN
+        User user = userRepository.findByEmail("donald.trump@gmail.com");
+        User myFriend = userRepository.findByEmail("vlad.poutine@gmail.com");
+        BigDecimal amount = new BigDecimal("0.12");
+        user.addPmbFriends(myFriend);
+        userRepository.save(user);
+
+        // WHEN
+        Transaction result = transferService.makeTransaction(user.getEmail(), myFriend.getEmail(), amount,
+                "For my best friend");
+        // THEN
+        assertThat(result).isNull();
+        assertThat(appAccountRepository.findById(1L).get().getBalance()).isEqualTo(new BigDecimal("500.00")); // unchanged
+        assertThat(appAccountRepository.findById(4L).get().getBalance()).isEqualTo(new BigDecimal("2000.00"));
+        assertThat(appAccountRepository.findById(1L).get().getSenderTransactions().size()).isEqualTo(0);
+        assertThat(appAccountRepository.findById(1L).get().getBeneficiaryTransactions().size()).isEqualTo(0);
+        assertThat(appAccountRepository.findById(4L).get().getSenderTransactions().size()).isEqualTo(0);
+        assertThat(appAccountRepository.findById(4L).get().getBeneficiaryTransactions().size()).isEqualTo(0);
+    }
+
+    @Test
+    @Tag("Transaction")
+    @DisplayName("Transaction - Error - 0 euros to tranfer")
+    public void givenTwoFriends_whenTransactionWithAmountZero_thenReturnNull() {
+        // GIVEN
+        User user = userRepository.findByEmail("donald.trump@gmail.com");
+        User myFriend = userRepository.findByEmail("vlad.poutine@gmail.com");
+        BigDecimal amount = new BigDecimal("0.00");
+        user.addPmbFriends(myFriend);
+        userRepository.save(user);
+
+        // WHEN
+        Transaction result = transferService.makeTransaction(user.getEmail(), myFriend.getEmail(), amount,
+                "For my best friend");
+        // THEN
+        assertThat(result).isNull();
+        assertThat(appAccountRepository.findById(1L).get().getBalance()).isEqualTo(new BigDecimal("500.00")); // unchanged
+        assertThat(appAccountRepository.findById(4L).get().getBalance()).isEqualTo(new BigDecimal("2000.00"));
+        assertThat(appAccountRepository.findById(1L).get().getSenderTransactions().size()).isEqualTo(0);
+        assertThat(appAccountRepository.findById(1L).get().getBeneficiaryTransactions().size()).isEqualTo(0);
+        assertThat(appAccountRepository.findById(4L).get().getSenderTransactions().size()).isEqualTo(0);
+        assertThat(appAccountRepository.findById(4L).get().getBeneficiaryTransactions().size()).isEqualTo(0);
+    }
+
+    @Test
+    @Tag("Transaction")
+    @DisplayName("Transaction - Error - Empty description ")
+    public void givenTwoFriends_whenTransactionWithEmptyDescription_thenReturnNull() {
+        // GIVEN
+        User user = userRepository.findByEmail("donald.trump@gmail.com");
+        User myFriend = userRepository.findByEmail("vlad.poutine@gmail.com");
+        BigDecimal amount = new BigDecimal("2.00");
+        user.addPmbFriends(myFriend);
+        userRepository.save(user);
+
+        // WHEN
+        Transaction result = transferService.makeTransaction(user.getEmail(), myFriend.getEmail(), amount, "");
+        // THEN
+        assertThat(result).isNull();
+        assertThat(appAccountRepository.findById(1L).get().getBalance()).isEqualTo(new BigDecimal("500.00")); // unchanged
+        assertThat(appAccountRepository.findById(4L).get().getBalance()).isEqualTo(new BigDecimal("2000.00"));
+        assertThat(appAccountRepository.findById(1L).get().getSenderTransactions().size()).isEqualTo(0);
+        assertThat(appAccountRepository.findById(1L).get().getBeneficiaryTransactions().size()).isEqualTo(0);
+        assertThat(appAccountRepository.findById(4L).get().getSenderTransactions().size()).isEqualTo(0);
+        assertThat(appAccountRepository.findById(4L).get().getBeneficiaryTransactions().size()).isEqualTo(0);
+    }
+
+    @Test
+    @Tag("Transaction")
+    @DisplayName("Transaction - Error - Null description ")
+    public void givenTwoFriends_whenTransactionWithNullDescription_thenReturnNull() {
+        // GIVEN
+        User user = userRepository.findByEmail("donald.trump@gmail.com");
+        User myFriend = userRepository.findByEmail("vlad.poutine@gmail.com");
+        BigDecimal amount = new BigDecimal("2.00");
+        user.addPmbFriends(myFriend);
+        userRepository.save(user);
+
+        // WHEN
+        Transaction result = transferService.makeTransaction(user.getEmail(), myFriend.getEmail(), amount, null);
+        // THEN
+        assertThat(result).isNull();
+        assertThat(appAccountRepository.findById(1L).get().getBalance()).isEqualTo(new BigDecimal("500.00")); // unchanged
+        assertThat(appAccountRepository.findById(4L).get().getBalance()).isEqualTo(new BigDecimal("2000.00"));
+        assertThat(appAccountRepository.findById(1L).get().getSenderTransactions().size()).isEqualTo(0);
+        assertThat(appAccountRepository.findById(1L).get().getBeneficiaryTransactions().size()).isEqualTo(0);
+        assertThat(appAccountRepository.findById(4L).get().getSenderTransactions().size()).isEqualTo(0);
+        assertThat(appAccountRepository.findById(4L).get().getBeneficiaryTransactions().size()).isEqualTo(0);
+    }
+
+    @Test
+    @Tag("Transaction")
+    @DisplayName("Transaction - Error - No own AppAccount")
+    public void givenNoOwnerAppAccount_whenTransaction_thenReturnNull() {
+        // GIVEN
+        User user = userRepository.findByEmail("donald.trump@gmail.com");
+        appAccountRepository.findById(1L).get().setUserId(null); // set null own app account
+        User myFriend = userRepository.findByEmail("vlad.poutine@gmail.com");
+        BigDecimal amount = new BigDecimal(100.05);
+        userRepository.save(user);
+
+        // WHEN
+        Transaction result = transferService.makeTransaction(user.getEmail(), myFriend.getEmail(), amount,
+                "For my best friend");
+        // THEN
+        assertThat(result).isNull();
+        assertThat(appAccountRepository.findById(1L).get().getBalance()).isEqualTo(new BigDecimal("500.00"));
+        assertThat(appAccountRepository.findById(4L).get().getBalance()).isEqualTo(new BigDecimal("2000.00"));
+        assertThat(appAccountRepository.findById(1L).get().getSenderTransactions().size()).isEqualTo(0);
+        assertThat(appAccountRepository.findById(1L).get().getBeneficiaryTransactions().size()).isEqualTo(0);
+        assertThat(appAccountRepository.findById(2L).get().getSenderTransactions().size()).isEqualTo(0);
+        assertThat(appAccountRepository.findById(3L).get().getSenderTransactions().size()).isEqualTo(0);
+        assertThat(appAccountRepository.findById(4L).get().getBeneficiaryTransactions().size()).isEqualTo(0);
+        assertThat(appAccountRepository.findById(4L).get().getSenderTransactions().size()).isEqualTo(0);
+        assertThat(appAccountRepository.findById(5L).get().getSenderTransactions().size()).isEqualTo(0);
+    }
+
+    @Test
+    @Tag("Transaction")
+    @DisplayName("Transaction - Error - No friend AppAccount")
+    public void givenNoFriendsAppAccount_whenTransaction_thenReturnNull() {
+        // GIVEN
+        User user = userRepository.findByEmail("donald.trump@gmail.com");
+        User myFriend = userRepository.findByEmail("vlad.poutine@gmail.com");
+        appAccountRepository.findById(4L).get().setUserId(null); // set null friends app account
+
+        BigDecimal amount = new BigDecimal(100.05);
+        userRepository.save(user);
+        userRepository.save(myFriend);
+
+        // WHEN
+        Transaction result = transferService.makeTransaction(user.getEmail(), myFriend.getEmail(), amount,
+                "For my best friend");
+
+        // THEN
+        assertThat(result).isNull();
+        assertThat(appAccountRepository.findById(1L).get().getBalance()).isEqualTo(new BigDecimal("500.00"));
+        assertThat(appAccountRepository.findById(4L).get().getBalance()).isEqualTo(new BigDecimal("2000.00"));
+        assertThat(appAccountRepository.findById(1L).get().getSenderTransactions().size()).isEqualTo(0);
+        assertThat(appAccountRepository.findById(1L).get().getBeneficiaryTransactions().size()).isEqualTo(0);
+        assertThat(appAccountRepository.findById(2L).get().getSenderTransactions().size()).isEqualTo(0);
+        assertThat(appAccountRepository.findById(3L).get().getSenderTransactions().size()).isEqualTo(0);
+        assertThat(appAccountRepository.findById(4L).get().getBeneficiaryTransactions().size()).isEqualTo(0);
+        assertThat(appAccountRepository.findById(4L).get().getSenderTransactions().size()).isEqualTo(0);
+        assertThat(appAccountRepository.findById(5L).get().getSenderTransactions().size()).isEqualTo(0);
     }
 
     @Test

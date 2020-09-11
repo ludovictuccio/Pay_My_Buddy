@@ -25,7 +25,6 @@ import com.paymybuddy.repository.AppAccountRepository;
 import com.paymybuddy.repository.UserRepository;
 
 @SpringBootTest
-//@TestInstance(Lifecycle.PER_CLASS)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 public class UserServiceTest {
 
@@ -42,30 +41,65 @@ public class UserServiceTest {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     private static String encryptedPassword = "encrypted_password";
+    private static String encryptedEmail = "encrypted_email";
 
     @Test
     @Tag("CREATE")
     @DisplayName("Create new user - OK")
     public void givenNewPerson_whenCreation_thenReturnPersonSavedInDb() {
         // GIVEN
-        User donaldTrump = new User("New", "User", "new-user@gmail.com", "love", "000111222");
-        AppAccount donaldAccount = new AppAccount(donaldTrump, new BigDecimal("0.00"));
-        donaldAccount.setUserId(donaldTrump);
+        User user = new User("New", "User", "new-user@gmail.com", "love5", "0676990578");
+        AppAccount userAccount = new AppAccount(user, new BigDecimal("0.00"));
+        userAccount.setUserId(user);
 
-        when(userRepository.save(donaldTrump)).thenReturn(donaldTrump);
-        when(appAccountRepository.save(donaldAccount)).thenReturn(donaldAccount);
-        when(bCryptPasswordEncoder.encode(donaldTrump.getPassword())).thenReturn(encryptedPassword);
+        when(userRepository.save(user)).thenReturn(user);
+        when(appAccountRepository.save(userAccount)).thenReturn(userAccount);
+        when(bCryptPasswordEncoder.encode(user.getEmail())).thenReturn(encryptedEmail);
+        when(bCryptPasswordEncoder.encode(user.getPassword())).thenReturn(encryptedPassword);
+
         // WHEN
-        User result = userService.addNewUser(donaldTrump);
+        User result = userService.addNewUser(user);
 
         // THEN
         assertThat(result).isNotNull();
         assertThat(result.getLastname()).isEqualTo("New");
         assertThat(result.getFirstname()).isEqualTo("User");
-        assertThat(result.getEmail()).isEqualTo("new-user@gmail.com");
         assertThat(result.getPassword().equals("love")).isFalse();// encrypted
         assertThat(result.getPassword()).isEqualTo(encryptedPassword);
-        assertThat(result.getPhone()).isEqualTo("000111222");
+        assertThat(result.getEmail().equals("new-user@gmail.com")).isFalse();// encrypted
+        assertThat(result.getEmail()).isEqualTo(encryptedEmail);
+        assertThat(result.getPhone()).isEqualTo("0676990578");
+        assertThat(result.getPmbFriends()).isEmpty();
+        assertThat(userAccount.getBalance()).isEqualTo(new BigDecimal("0.00"));
+        assertThat(userAccount.getAppAccountId()).isEqualTo(user.getId());
+    }
+
+    @Test
+    @Tag("CREATE")
+    @DisplayName("Create new user - Ok - + insered")
+    public void givenValidPhoneEntry_whenCreationWithSymbol_thenReturnNull() {
+        // GIVEN
+        User donaldTrump = new User("Trump", "Donald", "donald@gmail.com", "lovit", "+33679608456");
+        AppAccount donaldAccount = new AppAccount(donaldTrump, new BigDecimal("0.00"));
+        donaldAccount.setUserId(donaldTrump);
+
+        when(userRepository.save(donaldTrump)).thenReturn(donaldTrump);
+        when(appAccountRepository.save(donaldAccount)).thenReturn(donaldAccount);
+        when(bCryptPasswordEncoder.encode(donaldTrump.getEmail())).thenReturn(encryptedEmail);
+        when(bCryptPasswordEncoder.encode(donaldTrump.getPassword())).thenReturn(encryptedPassword);
+
+        // WHEN
+        User result = userService.addNewUser(donaldTrump);
+
+        // THEN
+        assertThat(result).isNotNull();
+        assertThat(result.getLastname()).isEqualTo("Trump");
+        assertThat(result.getFirstname()).isEqualTo("Donald");
+        assertThat(result.getEmail().equals("new-user@gmail.com")).isFalse();// encrypted
+        assertThat(result.getEmail()).isEqualTo(encryptedEmail);
+        assertThat(result.getPassword().equals("love")).isFalse();// encrypted
+        assertThat(result.getPassword()).isEqualTo(encryptedPassword);
+        assertThat(result.getPhone()).isEqualTo("+33679608456");
         assertThat(result.getPmbFriends()).isEmpty();
         assertThat(donaldAccount.getBalance()).isEqualTo(new BigDecimal("0.00"));
         assertThat(donaldAccount.getAppAccountId()).isEqualTo(donaldTrump.getId());
@@ -89,7 +123,7 @@ public class UserServiceTest {
 
         // THEN
         assertThat(result).isNull();
-        verify(userRepository, times(1)).findByEmail(anyString());
+        verify(userRepository, times(1)).findByEmail("donald.trump@gmail.com");
         verify(userRepository, never()).save(existingEmailInDb);
     }
 
@@ -105,7 +139,7 @@ public class UserServiceTest {
 
         // THEN
         assertThat(result).isNull();
-        verify(userRepository, never()).findByEmail(anyString());
+        verify(userRepository, times(1)).findByEmail(null);
         verify(userRepository, never()).save(donaldTrump);
     }
 
@@ -121,7 +155,23 @@ public class UserServiceTest {
 
         // THEN
         assertThat(result).isNull();
-        verify(userRepository, never()).findByEmail(anyString());
+        verify(userRepository, times(1)).findByEmail(anyString());
+        verify(userRepository, never()).save(donaldTrump);
+    }
+
+    @Test
+    @Tag("CREATE")
+    @DisplayName("Create new user - ERROR - Characters for phone number")
+    public void givenInvalidPhoneNumberEntry_whenCreation_thenReturnNull() {
+        // GIVEN
+        User donaldTrump = new User("Trump", "Donald", "dodo", "love-usa", "bad-number");
+
+        // WHEN
+        User result = userService.addNewUser(donaldTrump);
+
+        // THEN
+        assertThat(result).isNull();
+        verify(userRepository, times(1)).findByEmail(anyString());
         verify(userRepository, never()).save(donaldTrump);
     }
 
@@ -137,7 +187,7 @@ public class UserServiceTest {
 
         // THEN
         assertThat(result).isNull();
-        verify(userRepository, never()).findByEmail(anyString());
+        verify(userRepository, times(1)).findByEmail(anyString());
         verify(userRepository, never()).save(donaldTrump);
     }
 
@@ -153,7 +203,7 @@ public class UserServiceTest {
 
         // THEN
         assertThat(result).isNull();
-        verify(userRepository, never()).findByEmail(anyString());
+        verify(userRepository, times(1)).findByEmail(anyString());
         verify(userRepository, never()).save(donaldTrump);
     }
 
@@ -169,7 +219,7 @@ public class UserServiceTest {
 
         // THEN
         assertThat(result).isNull();
-        verify(userRepository, never()).findByEmail(anyString());
+        verify(userRepository, times(1)).findByEmail(anyString());
         verify(userRepository, never()).save(donaldTrump);
     }
 
@@ -185,7 +235,7 @@ public class UserServiceTest {
 
         // THEN
         assertThat(result).isNull();
-        verify(userRepository, never()).findByEmail(anyString());
+        verify(userRepository, times(1)).findByEmail(anyString());
         verify(userRepository, never()).save(donaldTrump);
     }
 
@@ -201,7 +251,7 @@ public class UserServiceTest {
 
         // THEN
         assertThat(result).isNull();
-        verify(userRepository, never()).findByEmail(anyString());
+        verify(userRepository, times(1)).findByEmail(anyString());
         verify(userRepository, never()).save(donaldTrump);
     }
 
@@ -217,7 +267,7 @@ public class UserServiceTest {
 
         // THEN
         assertThat(result).isNull();
-        verify(userRepository, never()).findByEmail(anyString());
+        verify(userRepository, times(1)).findByEmail(anyString());
         verify(userRepository, never()).save(donaldTrump);
     }
 
@@ -438,6 +488,24 @@ public class UserServiceTest {
 
         // THEN
         assertThat(result).isNull();
+    }
+
+    @Test
+    @Tag("ACCOUNT")
+    @DisplayName("AppAccount - OK - Hashcode and equals")
+    public void testEquals_Symmetric() {
+        // GIVEN
+        String password = BCrypt.hashpw("love", BCrypt.gensalt());
+        BigDecimal amount = new BigDecimal("0.00");
+        User user = new User("Trump", "Donald", "d.trump@gmail.com", password, "000111222");
+
+        // WHEN
+        AppAccount x = new AppAccount(user, amount); // equals and hashCode check name field value
+        AppAccount y = new AppAccount(user, amount);
+
+        // THEN
+        assertThat(x.equals(y) && y.equals(x)).isTrue();
+        assertThat(x.hashCode() == y.hashCode()).isTrue();
     }
 
 }

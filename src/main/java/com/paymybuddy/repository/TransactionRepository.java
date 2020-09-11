@@ -14,6 +14,7 @@ import com.paymybuddy.model.Transaction;
  */
 @Repository
 @Transactional
-public interface TransactionRepository extends JpaRepository<Transaction, Long> {
+public interface TransactionRepository
+        extends JpaRepository<Transaction, Long> {
 
 }

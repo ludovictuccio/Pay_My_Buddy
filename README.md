@@ -1,6 +1,9 @@
 # Pay_My_Buddy
 
-<p>The java application "Pay My Buddy" is run with Spring Boot and Maven.</p>
+<p>The java application "Pay My Buddy" is an app used to send money to friends.</p> 
+<p>The user can add friends with email (if exists in database), send money to friend's app account, make personal payments (bank account to app account, via bank card) or personal transfer (app account to bank account, via Iban). </p>
+<p>This app is run with Spring Boot and Maven.</p>
+<p>Only model, service and repository application layers are available for this version 1.0</p>
 
 ## Infos - Configuration
 
@@ -14,13 +17,17 @@
 
 - **Spring Data Jpa**
 
-- **Spring Security**
-
 - **Hibernate**
 
 - **Actuators in service:** health, info, httptrace & metrics
 
-- **Tests:** the app has unit tests and integration tests written.
+## Database
+
+- The application used a database named "pmb_database".
+
+- The file **schema.sql** (available in *"/src/main/resources"*) contains SQL Scrypt to create dev database.
+
+- The file **dropAndCreate.sql** (available in *"/src/test/resources"*) contains SQL Scrypt to create test database, and **dbTest.sql** contains data to use the db for tests.
 
 ## Endpoints
 
@@ -31,7 +38,7 @@
 
 ## Security
 
-- Database password encryption
+- Database password and username encryption with Jasypt. The user's email and password are encrypted with BCryptPasswordEncoder (Spring Security).
 
 ## Installing
 
@@ -49,13 +56,7 @@ https://dev.mysql.com/downloads/installer/
 
 ## Testing
 
-**Launch :**
- 
-- **mvn test** : for launch tests
-
-- **mvn jacoco:report** : for jacoco coverage report (available in *"target/site/jacoco"*).
-
-- **mvn site** : for checkstyle, findbugs & surefire reports (available in *"target/site"*).
+**Launch: mvn site** : for checkstyle, findbugs, surefire and jacoco reports (available in *"target/site"*).
 
 ## UML 
 

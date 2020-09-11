@@ -4,5 +4,6 @@ import java.math.BigDecimal;
 
 public interface IBillingService {
 
-    BigDecimal getInvoiceOfUsersTransactions(String email, String beginDate, String endDate);
+    BigDecimal getInvoiceOfUsersTransactions(String email, String beginDate,
+            String endDate);
 }

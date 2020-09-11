@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import com.paymybuddy.model.User;
 
 /**
- * UserDao repository class.
+ * User repository class.
  *
  * @author Ludovic Tuccio
  */
@@ -31,13 +31,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * @param id
      */
     Optional<User> findById(Long id);
-
-//    /**
-//     * Method repository used to delete an user by email.
-//     *
-//     * @param email
-//     */
-//    @Modifying
-//    void deleteUserByEmail(String email);
 
 }

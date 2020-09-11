@@ -22,28 +22,18 @@ public class PayMyBuddyApplication {
     public PayMyBuddyApplication() {
     }
 
-    /**
-     * Application method main.
-     *
-     * @param args
-     */
     public static void main(String[] args) {
         SpringApplication.run(PayMyBuddyApplication.class, args);
-    }
-
-//    @Bean
-//    public static PasswordEncoder passwordEncoder() {
-//        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-//    }
-
-    @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder() {
-        return new BCryptPasswordEncoder();
     }
 
     @Bean
     public Validator validator() {
         return Validation.buildDefaultValidatorFactory().getValidator();
+    }
+
+    @Bean
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
 }

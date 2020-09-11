@@ -37,10 +37,12 @@ public class AppAccount implements Serializable {
     @Column(name = "id")
     private Long appAccountId;
 
-    @OneToOne(cascade = { CascadeType.ALL, CascadeType.REMOVE }, fetch = FetchType.EAGER)
+    @OneToOne(cascade = { CascadeType.ALL,
+            CascadeType.REMOVE }, fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User userId;
 
+    @Column(columnDefinition = "DECIMAL(8,2)")
     @PositiveOrZero
     private BigDecimal balance;
 
@@ -52,9 +54,6 @@ public class AppAccount implements Serializable {
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<Transaction> beneficiaryTransactions = new ArrayList<>();
 
-    /**
-     * Empty class constructor.
-     */
     public AppAccount() {
         super();
     }
@@ -64,9 +63,6 @@ public class AppAccount implements Serializable {
         this.balance = balanceAccount;
     }
 
-    /**
-     * @return the user
-     */
     public User getUserId() {
         return userId;
     }
@@ -75,65 +71,39 @@ public class AppAccount implements Serializable {
         this.senderTransactions.add(transaction);
     }
 
-    /**
-     * @return the senderTransactions
-     */
     public List<Transaction> getSenderTransactions() {
         return senderTransactions;
     }
 
-    /**
-     * @param senderTransac the senderTransactions to set
-     */
     public void setSenderTransactions(final List<Transaction> senderTransac) {
         this.senderTransactions = senderTransac;
     }
 
-    /**
-     * @return the beneficiaryTransactions
-     */
     public List<Transaction> getBeneficiaryTransactions() {
         return beneficiaryTransactions;
     }
 
-    /**
-     * @param beneficiaryTransac the beneficiaryTransactions to set
-     */
-    public void setBeneficiaryTransactions(final List<Transaction> beneficiaryTransac) {
+    public void setBeneficiaryTransactions(
+            final List<Transaction> beneficiaryTransac) {
         this.beneficiaryTransactions = beneficiaryTransac;
     }
 
-    /**
-     * @param userAccount
-     */
     public void setUserId(final User userAccount) {
         this.userId = userAccount;
     }
 
-    /**
-     * @return the appAccountId
-     */
     public Long getAppAccountId() {
         return appAccountId;
     }
 
-    /**
-     * @param appAccountId the id to set
-     */
     public void setAppAccountId(final Long accountId) {
         this.appAccountId = accountId;
     }
 
-    /**
-     * @return the balance
-     */
     public BigDecimal getBalance() {
         return balance;
     }
 
-    /**
-     * @param accountBalance the balance to set
-     */
     public void setBalance(final BigDecimal accountBalance) {
         this.balance = accountBalance;
     }
@@ -147,7 +117,7 @@ public class AppAccount implements Serializable {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (this == obj)
             return true;
         if (obj == null)

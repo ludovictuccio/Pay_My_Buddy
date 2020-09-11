@@ -15,7 +15,8 @@ import com.paymybuddy.model.PersonalTransfer;
  */
 @Repository
 @Transactional
-public interface PersonalTransferRepository extends JpaRepository<PersonalTransfer, Long> {
+public interface PersonalTransferRepository
+        extends JpaRepository<PersonalTransfer, Long> {
 
     /**
      * Method used to find a personal transfer by appAccount.

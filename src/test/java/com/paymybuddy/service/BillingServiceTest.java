@@ -1,6 +1,7 @@
 package com.paymybuddy.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNullPointerException;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -48,8 +49,7 @@ public class BillingServiceTest {
 
     private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-    private static LocalDate localdate_10_07_20, localdate_05_06_20, localdate_31_07_20, localdate_invalidDateDay,
-            localdate_invalidDateMonth, localdate_invalidDateYear, localdate_invalidDateYearFuture;
+    private static LocalDate localdate_10_07_20, localdate_05_06_20, localdate_31_07_20;
 
     @BeforeEach
     public void setUp() {
@@ -71,8 +71,7 @@ public class BillingServiceTest {
         transactionRepository.save(transaction1);
 
         // WHEN
-        BigDecimal result = billingService.getInvoiceOfUsersTransactions(user.getEmail(), "41/07/2020",
-                "01/08/2020");
+        BigDecimal result = billingService.getInvoiceOfUsersTransactions(user.getEmail(), "41/07/2020", "01/08/2020");
         // THEN
         assertThat(result).isNull();
         assertThat(appAccountRepository.findById(1L).get().getBalance()).isEqualTo(new BigDecimal("490.00")); // was 500
@@ -99,8 +98,7 @@ public class BillingServiceTest {
         transactionRepository.save(transaction1);
 
         // WHEN
-        BigDecimal result = billingService.getInvoiceOfUsersTransactions(user.getEmail(), "01/13/2020",
-                "01/08/2020");
+        BigDecimal result = billingService.getInvoiceOfUsersTransactions(user.getEmail(), "01/13/2020", "01/08/2020");
         // THEN
         assertThat(result).isNull();
         assertThat(appAccountRepository.findById(1L).get().getBalance()).isEqualTo(new BigDecimal("490.00")); // was 500
@@ -144,6 +142,18 @@ public class BillingServiceTest {
 
     @Test
     @Tag("DATE")
+    @DisplayName("ERROR - Bad email entry")
+    public void givenOneTransaction_whenBadEmailEntry_thenReturnNullPointerException() {
+
+        User user = userRepository.findByEmail("bad-email@gmail.com");
+
+        assertThatNullPointerException().isThrownBy(() -> {
+            billingService.getInvoiceOfUsersTransactions(user.getEmail(), "01/07/20", "01/08/2020");
+        });
+    }
+
+    @Test
+    @Tag("DATE")
     @DisplayName("OK - 5 transaction - 3 between dates")
     public void givenFiveTransactions_whenTryToRetrieveThreeTransactions_thenReturnCorrectValues() {
         // GIVEN
@@ -176,8 +186,7 @@ public class BillingServiceTest {
         // total for dates: 173.60 & invoices 0.868 around 0.87
 
         // WHEN
-        BigDecimal result = billingService.getInvoiceOfUsersTransactions(user.getEmail(), "01/07/2020",
-                "01/08/2020");
+        BigDecimal result = billingService.getInvoiceOfUsersTransactions(user.getEmail(), "01/07/2020", "01/08/2020");
         // THEN
         assertThat(result).isNotNull();
         assertThat(result).isEqualTo(new BigDecimal("0.87"));
@@ -211,8 +220,7 @@ public class BillingServiceTest {
         // all total: 20.00 && invoice: 0.10
 
         // WHEN
-        BigDecimal result = billingService.getInvoiceOfUsersTransactions(user.getEmail(), "01/07/2020",
-                "01/08/2020");
+        BigDecimal result = billingService.getInvoiceOfUsersTransactions(user.getEmail(), "01/05/2020", "01/06/2020");
         // THEN
         assertThat(result).isNotNull();
         assertThat(result).isEqualTo(new BigDecimal("0.00"));
@@ -239,8 +247,7 @@ public class BillingServiceTest {
         transactionRepository.save(transaction1);
 
         // WHEN
-        BigDecimal result = billingService.getInvoiceOfUsersTransactions(user.getEmail(), "01/07/2020",
-                "01/08/2020");
+        BigDecimal result = billingService.getInvoiceOfUsersTransactions(user.getEmail(), "01/07/2020", "01/08/2020");
         // THEN
         assertThat(result).isNotNull();
         assertThat(result).isEqualTo(new BigDecimal("0.05"));
@@ -288,8 +295,7 @@ public class BillingServiceTest {
         // all total: 192.10 && invoice: 0.9605 , around to 0.96
 
         // WHEN
-        BigDecimal result = billingService.getInvoiceOfUsersTransactions(user.getEmail(), "01/07/2020",
-                "01/08/2020");
+        BigDecimal result = billingService.getInvoiceOfUsersTransactions(user.getEmail(), "01/07/2020", "01/08/2020");
         // THEN
         assertThat(result).isNotNull();
         assertThat(result).isEqualTo(new BigDecimal("0.96"));
@@ -311,8 +317,7 @@ public class BillingServiceTest {
         User user = userRepository.findByEmail("donald.trump@gmail.com");// relation with "kim.jong@gmail.com"
 
         // WHEN
-        BigDecimal result = billingService.getInvoiceOfUsersTransactions(user.getEmail(), "01/07/2020",
-                "01/08/2020");
+        BigDecimal result = billingService.getInvoiceOfUsersTransactions(user.getEmail(), "01/07/2020", "01/08/2020");
         // THEN
         assertThat(result).isNotNull();
         assertThat(result).isEqualTo(new BigDecimal("0.00"));

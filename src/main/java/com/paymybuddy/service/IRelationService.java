@@ -13,6 +13,7 @@ public interface IRelationService {
 
     boolean deleteRelation(String myEmail, String emailToConnect);
 
-    AppAccount getRelationAppAccount(String myEmail, String relationFriendEmail);
+    AppAccount getRelationAppAccount(String myEmail,
+            String relationFriendEmail);
 
 }

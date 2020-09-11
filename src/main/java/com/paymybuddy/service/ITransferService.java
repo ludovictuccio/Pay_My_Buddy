@@ -11,10 +11,13 @@ import com.paymybuddy.model.Transaction;
  */
 public interface ITransferService {
 
-    boolean makePersonalPayment(String myEmail, BigDecimal amount, String cbNumber, String cbExpirationDateMonth,
+    boolean makePersonalPayment(String myEmail, BigDecimal amount,
+            String cbNumber, String cbExpirationDateMonth,
             String cbExpirationDateYear, String cbSecurityKey);
 
-    public boolean makePersonalTransfer(String myEmail, BigDecimal amount, String iban, String bic);
+    boolean makePersonalTransfer(String myEmail, BigDecimal amount, String iban,
+            String bic);
 
-    public Transaction makeTransaction(String myEmail, String emailBeneficiary, BigDecimal amount, String description);
+    Transaction makeTransaction(String myEmail, String emailBeneficiary,
+            BigDecimal amount, String description);
 }

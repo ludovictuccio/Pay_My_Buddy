@@ -106,3 +106,29 @@ FOREIGN KEY (app_account_id)
 REFERENCES app_account (id)
 ON DELETE NO ACTION
 ON UPDATE NO ACTION;
+
+INSERT INTO user 
+VALUES -- (id, lastname, firstname, email, password, phone)
+(15, "Trump", "Donald", "trump@gmail.com", "password", "000-000-000"),
+(22, "Macron", "Emmanuel", "macron@gmail.com", "password", "111-111-111");
+
+INSERT INTO app_account 
+VALUES -- (id, user_id, balance)
+(15, 15, 500),
+(22, 22, 1000);
+
+INSERT INTO personal_payment (app_account_id, amount, cb_number, cb_expiration_date_month, cb_expiration_date_year, cb_security_key)
+VALUES -- (id, app_account_id, amount, cb_number, cb_expiration_date_month, cb_expiration_date_year, cb_security_key)
+(15, 15, "0000567891012134", "09","22", "789"),
+(22, 30, "1111567891012134", "01","20", "246");
+
+INSERT INTO personal_transfer
+VALUES -- (id, app_account_id, amount, iban, bic)
+(111, 15, 100, "FR01010101010101010101010101FR", "BIC010101"),
+(222, 22, 10, "FR020202020202020202FR", "BIC020202");
+
+
+INSERT INTO relation (user_to_connect_id, user_id)
+VALUES -- (id, user_to_connect_id, user_id)
+(15, 22),
+(22, 15);

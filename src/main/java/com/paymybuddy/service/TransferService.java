@@ -3,13 +3,19 @@ package com.paymybuddy.service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.util.Set;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.paymybuddy.config.Constants;
 import com.paymybuddy.model.AppAccount;
 import com.paymybuddy.model.PersonalPayment;
 import com.paymybuddy.model.PersonalTransfer;
@@ -29,13 +35,11 @@ import com.paymybuddy.repository.UserRepository;
 @Service
 public class TransferService implements ITransferService {
 
-    /**
-     * Logger class.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger("TransferService");
+    private static final Logger LOGGER = LoggerFactory
+            .getLogger("TransferService");
 
     @Autowired
-    private RelationService relationService;
+    private IRelationService relationService;
 
     @Autowired
     private PersonalPaymentRepository personalPaymentRepository;
@@ -53,62 +57,9 @@ public class TransferService implements ITransferService {
     private TransactionRepository transactionRepository;
 
     /**
-     * Method used to check that user's amount entry is between 1 & 9999,99
-     *
-     * @param amount
-     * @return isGood boolean
+     * Validator used to validate javax constraints in model classes.
      */
-    public static boolean checkValidAmountEntry(final BigDecimal amount) {
-        boolean isGood = true;
-
-        BigDecimal minimimAmount = new BigDecimal("1.00");
-        BigDecimal maximumAmount = new BigDecimal("9999.99");
-
-        int compareMinimum = amount.compareTo(minimimAmount);
-        int compareMaximum = amount.compareTo(maximumAmount);
-
-        // if amount > user's account balance available
-        if (compareMinimum == -1 || compareMaximum == 1) {
-            LOGGER.info("Invalid amount entry. Please entry an amount between 1€ & 9999,99€.");
-            isGood = false;
-        }
-        return isGood;
-    }
-
-    /**
-     * Method used to check if the bank card informations entered are corrects.
-     *
-     * @param amount
-     * @param cbNumber
-     * @param cbExpirationDateMonth
-     * @param cbExpirationDateYear
-     * @param cbSecurityKey
-     * @return isGood boolean, false if bad user entry
-     */
-    public static boolean checkValidBankCardInformations(final BigDecimal amount, final String cbNumber,
-            final String cbExpirationDateMonth, final String cbExpirationDateYear, final String cbSecurityKey) {
-        boolean isGood = true;
-        boolean isGoodAmount = checkValidAmountEntry(amount);
-
-        // if amount > user's account balance available
-        if (!isGoodAmount) {
-            LOGGER.info("Invalid amount entry. Please entry an amount between 1€ & 9999,99€.");
-            isGood = false;
-        } else if (!cbNumber.matches(Constants.BANK_CARD_NUMBER_PATTERN)) {
-            LOGGER.info("Invalid bank card number. Please entry between 13 & 16 numbers only.");
-            isGood = false;
-        } else if (!cbExpirationDateMonth.matches(Constants.CARD_EXPIRATION_MONTH_PATTERN)) {
-            LOGGER.info("Invalid expiration month entry. Please check the month entered (01-12 allowed only)");
-            isGood = false;
-        } else if (!cbExpirationDateYear.matches(Constants.CARD_EXPIRATION_YEAR_PATTERN)) {
-            LOGGER.info("Invalid expiration year entry. Please check the year entered (20-99 allowed only)");
-            isGood = false;
-        } else if (!cbSecurityKey.matches(Constants.CARD_SECURITY_KEY_PATTERN)) {
-            LOGGER.info("Invalid card security key. Please entry a number between 000 & 999.");
-            isGood = false;
-        }
-        return isGood;
-    }
+    private Validator validator;
 
     /**
      * This method service is used to make a personal payment with his bank card
@@ -122,8 +73,10 @@ public class TransferService implements ITransferService {
      * @param cbSecurityKey
      * @return isDone boolean, true if personal payment success
      */
-    public boolean makePersonalPayment(final String myEmail, BigDecimal amount, final String cbNumber,
-            final String cbExpirationDateMonth, final String cbExpirationDateYear, final String cbSecurityKey) {
+    @Transactional
+    public boolean makePersonalPayment(final String myEmail, BigDecimal amount,
+            final String cbNumber, final String cbExpirationDateMonth,
+            final String cbExpirationDateYear, final String cbSecurityKey) {
         boolean isDone = false;
 
         try {
@@ -131,56 +84,42 @@ public class TransferService implements ITransferService {
             AppAccount myAppAccount = user.getOwnAppAccount();
 
             if (myAppAccount != null) {
-                boolean isGood = checkValidBankCardInformations(amount, cbNumber, cbExpirationDateMonth,
-                        cbExpirationDateYear, cbSecurityKey);
-                if (isGood == false) {
-                    return isDone;
-                }
+
                 amount = amount.setScale(2, RoundingMode.HALF_UP);
 
-                PersonalPayment myPayment = new PersonalPayment(myAppAccount, amount, cbNumber, cbExpirationDateMonth,
+                PersonalPayment myPayment = new PersonalPayment(myAppAccount,
+                        amount, cbNumber, cbExpirationDateMonth,
                         cbExpirationDateYear, cbSecurityKey);
+
+                // Check constraints violations
+                ValidatorFactory factory = Validation
+                        .buildDefaultValidatorFactory();
+                validator = factory.getValidator();
+                Set<ConstraintViolation<PersonalPayment>> constraintViolations = validator
+                        .validate(myPayment);
+                if (constraintViolations.size() > 0) {
+                    LOGGER.error(
+                            "ERROR: a constraint was violated. Please check the informations entered.");
+                    return isDone;
+                }
                 personalPaymentRepository.save(myPayment);
 
                 BigDecimal beforeBalance = myAppAccount.getBalance();
                 myAppAccount.setBalance(beforeBalance.add(amount));
                 appAccountRepository.save(myAppAccount);
 
-                LOGGER.info("Personal payment done ! {}€ will be credited to your account.", amount);
+                LOGGER.info(
+                        "Personal payment done ! {}€ will be credited to your account.",
+                        amount);
                 isDone = true;
                 return isDone;
             }
         } catch (NullPointerException np) {
             LOGGER.error("Null Pointer Exception" + np);
+            return isDone;
         }
-        LOGGER.error("Personal payment failed. Please check the informations entered.");
-        return isDone;
-    }
-
-    /**
-     * Method used to check if the bank informations entered are corrects.
-     *
-     * @param amount
-     * @param iban
-     * @param bic
-     * @return isDone boolean
-     */
-    public static boolean checkValidBankCardInformations(final BigDecimal amount, final String iban, final String bic) {
-        boolean isDone = true;
-
-        boolean isGoodAmount = checkValidAmountEntry(amount);
-
-        // if amount > user's account balance available
-        if (!isGoodAmount) {
-            LOGGER.info("Invalid amount entry. Please entry an amount between 1€ & 9999,99€.");
-            isDone = false;
-        } else if (!iban.matches(Constants.EUROPEAN_IBAN_PATTERN)) {
-            LOGGER.info("Invalid IBAN. Please check your entry.");
-            isDone = false;
-        } else if (!bic.matches(Constants.EUROPEAN_BIC_PATTERN)) {
-            LOGGER.info("Invalid BIC entry. Please check your entry.");
-            isDone = false;
-        }
+        LOGGER.error(
+                "Personal payment failed. Please check the informations entered.");
         return isDone;
     }
 
@@ -194,45 +133,58 @@ public class TransferService implements ITransferService {
      * @param bic
      * @return isDone boolean, true if personal transfer success
      */
-    public boolean makePersonalTransfer(final String myEmail, BigDecimal amount, final String iban, final String bic) {
+    @Transactional
+    public boolean makePersonalTransfer(final String myEmail, BigDecimal amount,
+            final String iban, final String bic) {
         boolean isDone = false;
 
         try {
             User user = userRepository.findByEmail(myEmail);
             AppAccount myAppAccount = user.getOwnAppAccount();
 
-            if (myAppAccount != null) {
-                boolean isGood = checkValidBankCardInformations(amount, iban, bic);
-                if (!isGood) {
-                    return isDone;
-                }
+            amount = amount.setScale(2, RoundingMode.HALF_UP);
+            BigDecimal checkAccountAmountAvailable = myAppAccount.getBalance();
+            int compare = amount.compareTo(checkAccountAmountAvailable);
 
-                amount = amount.setScale(2, RoundingMode.HALF_UP);
-                BigDecimal checkAccountAmountAvailable = myAppAccount.getBalance();
-                int compare = amount.compareTo(checkAccountAmountAvailable);
-
-                // if amount > user's account balance available
-                if (compare == 1) {
-                    LOGGER.error("Transfer impossible: your account is not sufficiently funded. Amount available: {}"
-                            + checkAccountAmountAvailable);
-                    return isDone;
-                }
-
-                PersonalTransfer myTransfer = new PersonalTransfer(myAppAccount, amount, iban, bic);
-                personalTransferRepository.save(myTransfer);
-
-                BigDecimal beforeBalance = myAppAccount.getBalance();
-                myAppAccount.setBalance(beforeBalance.subtract(amount));
-                appAccountRepository.save(myAppAccount);
-
-                LOGGER.info("Personal transfer done ! {}€ will be credited to your bank account.", amount);
-                isDone = true;
+            // if amount > user's account balance available
+            if (compare == 1) {
+                LOGGER.error(
+                        "Transfer impossible: your account is not sufficiently funded. Amount available: {}"
+                                + checkAccountAmountAvailable);
                 return isDone;
             }
+
+            PersonalTransfer myTransfer = new PersonalTransfer(myAppAccount,
+                    amount, iban, bic);
+
+            // Check constraints violations
+            ValidatorFactory factory = Validation
+                    .buildDefaultValidatorFactory();
+            validator = factory.getValidator();
+            Set<ConstraintViolation<PersonalTransfer>> constraintViolations = validator
+                    .validate(myTransfer);
+            if (constraintViolations.size() > 0) {
+                LOGGER.error(
+                        "ERROR: a constraint was violated. Please check the informations entered.");
+                return isDone;
+            }
+            personalTransferRepository.save(myTransfer);
+
+            BigDecimal beforeBalance = myAppAccount.getBalance();
+            myAppAccount.setBalance(beforeBalance.subtract(amount));
+            appAccountRepository.save(myAppAccount);
+
+            LOGGER.info(
+                    "Personal transfer done ! {}€ will be credited to your bank account.",
+                    amount);
+            isDone = true;
+            return isDone;
+
         } catch (NullPointerException np) {
             LOGGER.error("Null Pointer Exception" + np);
         }
-        LOGGER.error("Personal transfer failed. Please check the informations entered.");
+        LOGGER.error(
+                "Personal transfer failed. Please check the informations entered.");
         return isDone;
     }
 
@@ -247,45 +199,69 @@ public class TransferService implements ITransferService {
      * @param transactionDate
      * @return transaction a Transaction object
      */
-    public Transaction makeTransaction(final String myEmail, final String emailBeneficiary, BigDecimal amount,
-            final String description) {
+    @Transactional
+    public Transaction makeTransaction(final String myEmail,
+            final String emailBeneficiary, BigDecimal amount,
+            final String description) throws NumberFormatException {
         try {
             User user = userRepository.findByEmail(myEmail);
             AppAccount myAppAccount = user.getOwnAppAccount();
 
-            AppAccount myFriendsAppAccount = relationService.getRelationAppAccount(myEmail, emailBeneficiary);
+            AppAccount myFriendsAppAccount = relationService
+                    .getRelationAppAccount(myEmail, emailBeneficiary);
 
             if (myAppAccount != null && myFriendsAppAccount != null) {
 
                 amount = amount.setScale(2, RoundingMode.HALF_UP);
-                BigDecimal checkAccountAmountAvailable = myAppAccount.getBalance();
+                BigDecimal checkAccountAmountAvailable = myAppAccount
+                        .getBalance();
                 int compare = amount.compareTo(checkAccountAmountAvailable);
 
                 // if amount > appAccount amount available
                 if (compare == 1) {
-                    LOGGER.error("Transaction impossible: your account is not sufficiently funded. Amount available: {}"
-                            + checkAccountAmountAvailable);
+                    LOGGER.error(
+                            "Transaction impossible: your account is not sufficiently funded. Amount available: {}"
+                                    + checkAccountAmountAvailable);
                     return null;
                 }
                 LocalDate date = LocalDate.now();
-                Transaction transaction = new Transaction(myAppAccount, myFriendsAppAccount, amount, description, date);
+                Transaction transaction = new Transaction(myAppAccount,
+                        myFriendsAppAccount, amount, description, date);
+
+                // Check constraints violations
+                ValidatorFactory factory = Validation
+                        .buildDefaultValidatorFactory();
+                validator = factory.getValidator();
+                Set<ConstraintViolation<Transaction>> constraintViolations = validator
+                        .validate(transaction);
+                if (constraintViolations.size() > 0) {
+                    LOGGER.error(
+                            "ERROR: a constraint was violated. Please check the informations entered.");
+                    return null;
+                }
                 transactionRepository.save(transaction);
 
                 BigDecimal ownerBeforeBalance = myAppAccount.getBalance();
                 myAppAccount.setBalance(ownerBeforeBalance.subtract(amount));
                 appAccountRepository.save(myAppAccount);
 
-                BigDecimal friendsBeforeBalance = myFriendsAppAccount.getBalance();
-                myFriendsAppAccount.setBalance(friendsBeforeBalance.add(amount));
+                BigDecimal friendsBeforeBalance = myFriendsAppAccount
+                        .getBalance();
+                myFriendsAppAccount
+                        .setBalance(friendsBeforeBalance.add(amount));
                 appAccountRepository.save(myFriendsAppAccount);
 
-                LOGGER.info("Transaction done ! {}€ will be credited to your friend's account.", amount);
+                LOGGER.info(
+                        "Transaction done ! {}€ will be credited to your friend's account.",
+                        amount);
                 return transaction;
             }
         } catch (NullPointerException np) {
             LOGGER.error("Null Pointer Exception" + np);
+            return null;
         }
-        LOGGER.error("Transaction failed. Please check the informations entered.");
+        LOGGER.error(
+                "Transaction failed. Please check the informations entered.");
         return null;
     }
 

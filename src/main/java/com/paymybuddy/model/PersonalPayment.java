@@ -13,6 +13,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Positive;
 
 /**
@@ -36,33 +41,46 @@ public class PersonalPayment implements Serializable {
     @JoinColumn(name = "app_account_id", referencedColumnName = "id")
     private AppAccount myAppAccount;
 
+    @NotNull
     @Positive
+    @DecimalMax(value = "9999.99")
+    @DecimalMin(value = "0.10")
+    @Column(columnDefinition = "DECIMAL(7,2)")
     private BigDecimal amount;
 
+    @NotNull
+    @NotEmpty
+    @Pattern(regexp = "^(?:(?<visa>4[0-9]{12}(?:[0-9]{3})?)|"
+            + "(?<mastercard>5[1-5][0-9]{14})|"
+            + "(?<discover>6(?:011|5[0-9]{2})[0-9]{12})|"
+            + "(?<amex>3[47][0-9]{13})|"
+            + "(?<diners>3(?:0[0-5]|[68][0-9])?[0-9]{11})|"
+            + "(?<jcb>(?:2131|1800|35[0-9]{3})[0-9]{11}))$", message = "The bank card number is incorrect.")
     private String cbNumber;
 
+    @NotNull
+    @NotEmpty
+    @Pattern(regexp = "(^[1-9]$)|(^0[1-9]|1[0-2]$)", message = "The card expiration month must be a number between 01 & 12.")
     private String cbExpirationDateMonth;
 
+    @NotNull
+    @NotEmpty
+    @Pattern(regexp = "([2-9][0-9])|([1-9])", message = "The card expiration year must be a number between 20 & 99.")
     private String cbExpirationDateYear;
 
+    @NotNull
+    @NotEmpty
+    @Pattern(regexp = "([0-9][0-9][0-9])|([1-9])", message = "The card security key must be a number between 000 & 999.")
     private String cbSecurityKey;
 
-    /**
-     * Empty class constructor.
-     */
     public PersonalPayment() {
         super();
     }
 
-    /**
-     * @param myAmount
-     * @param cardNumber
-     * @param cbExpirationMonth
-     * @param cbExpirationYear
-     * @param cbSecuKey
-     */
-    public PersonalPayment(final AppAccount appAccount, final BigDecimal myAmount, final String cardNumber,
-            final String cbExpirationMonth, final String cbExpirationYear, final String cbSecuKey) {
+    public PersonalPayment(final AppAccount appAccount,
+            final BigDecimal myAmount, final String cardNumber,
+            final String cbExpirationMonth, final String cbExpirationYear,
+            final String cbSecuKey) {
         super();
         this.myAppAccount = appAccount;
         this.amount = myAmount;
@@ -72,100 +90,58 @@ public class PersonalPayment implements Serializable {
         this.cbSecurityKey = cbSecuKey;
     }
 
-    /**
-     * @return the id
-     */
     public Long getId() {
         return id;
     }
 
-    /**
-     * @param id the id to set
-     */
-    public void setId(final Long id) {
-        this.id = id;
+    public void setId(final Long pId) {
+        this.id = pId;
     }
 
-    /**
-     * @return the myAppAccount
-     */
     public AppAccount getMyAppAccount() {
         return myAppAccount;
     }
 
-    /**
-     * @param appAccount the myAppAccount to set
-     */
     public void setMyAppAccount(final AppAccount appAccount) {
         this.myAppAccount = appAccount;
     }
 
-    /**
-     * @return the amount
-     */
     public BigDecimal getAmount() {
         return amount;
     }
 
-    /**
-     * @param myAmount the amount to set
-     */
     public void setAmount(final BigDecimal myAmount) {
         this.amount = myAmount;
     }
 
-    /**
-     * @return the cbNumber
-     */
     public String getCbNumber() {
         return cbNumber;
     }
 
-    /**
-     * @param cardNumber the cbNumber to set
-     */
     public void setCbNumber(final String cardNumber) {
         this.cbNumber = cardNumber;
     }
 
-    /**
-     * @return the cbExpirationDateMonth
-     */
     public String getCbExpirationDateMonth() {
         return cbExpirationDateMonth;
     }
 
-    /**
-     * @param cbExpirationMonth the cbExpirationDateMonth to set
-     */
     public void setCbExpirationDateMonth(final String cbExpirationMonth) {
         this.cbExpirationDateMonth = cbExpirationMonth;
     }
 
-    /**
-     * @return the cbExpirationDateYear
-     */
     public String getCbExpirationDateYear() {
         return cbExpirationDateYear;
     }
 
-    /**
-     * @param cbExpirationDateYear the cbExpirationDateYear to set
-     */
     public void setCbExpirationDateYear(final String cbExpirationYear) {
         this.cbExpirationDateYear = cbExpirationYear;
     }
 
-    /**
-     * @return the cbSecurityKey
-     */
     public String getCbSecurityKey() {
         return cbSecurityKey;
     }
 
-    /**
-     * @param cbSecuKey the cbSecurityKey to set
-     */
     public void setCbSecurityKey(final String cbSecuKey) {
         this.cbSecurityKey = cbSecuKey;
     }

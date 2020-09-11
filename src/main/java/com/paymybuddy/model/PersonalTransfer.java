@@ -13,6 +13,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Positive;
 
 /**
@@ -35,27 +38,27 @@ public class PersonalTransfer implements Serializable {
     @JoinColumn(name = "app_account_id", referencedColumnName = "id")
     private AppAccount myAppAccount;
 
+    @NotNull
     @Positive
+    @Column(columnDefinition = "DECIMAL(7,2)")
     private BigDecimal amount;
 
+    @NotNull
+    @NotEmpty
+    @Pattern(regexp = "^[0-9A-Z]{15,31}$", message = "The european IBAN entered is invalid. Please check it (only letters and numbers, size must be between 15 and 31)")
     private String iban;
 
+    @NotNull
+    @NotEmpty
+    @Pattern(regexp = "^[0-9A-Z]{8,11}$", message = "The european BIC entered is invalid. Please check it (only letters and numbers, size must be between 8 and 11)")
     private String bic;
 
-    /**
-     * Empty class constructor.
-     */
     public PersonalTransfer() {
         super();
     }
 
-    /**
-     * @param appAccount
-     * @param myAmount
-     * @param myIban
-     * @param myBic
-     */
-    public PersonalTransfer(final AppAccount appAccount, final BigDecimal myAmount, final String myIban,
+    public PersonalTransfer(final AppAccount appAccount,
+            final BigDecimal myAmount, final String myIban,
             final String myBic) {
         super();
         this.myAppAccount = appAccount;
@@ -64,72 +67,42 @@ public class PersonalTransfer implements Serializable {
         this.bic = myBic;
     }
 
-    /**
-     * @return the id
-     */
     public Long getId() {
         return id;
     }
 
-    /**
-     * @param id the id to set
-     */
-    public void setId(final Long id) {
-        this.id = id;
+    public void setId(final Long pId) {
+        this.id = pId;
     }
 
-    /**
-     * @return the myAppAccount
-     */
     public AppAccount getMyAppAccount() {
         return myAppAccount;
     }
 
-    /**
-     * @param appAccount the myAppAccount to set
-     */
     public void setMyAppAccount(final AppAccount appAccount) {
         this.myAppAccount = appAccount;
     }
 
-    /**
-     * @return the amount
-     */
     public BigDecimal getAmount() {
         return amount;
     }
 
-    /**
-     * @param myAmount the amount to set
-     */
     public void setAmount(final BigDecimal myAmount) {
         this.amount = myAmount;
     }
 
-    /**
-     * @return the iban
-     */
     public String getIban() {
         return iban;
     }
 
-    /**
-     * @param myIban the iban to set
-     */
     public void setIban(final String myIban) {
         this.iban = myIban;
     }
 
-    /**
-     * @return the bic
-     */
     public String getBic() {
         return bic;
     }
 
-    /**
-     * @param myBic the bic to set
-     */
     public void setBic(final String myBic) {
         this.bic = myBic;
     }
