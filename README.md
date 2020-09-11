@@ -58,12 +58,14 @@ https://dev.mysql.com/downloads/installer/
 
 **Launch: mvn site** : for checkstyle, findbugs, surefire and jacoco reports (available in *"target/site"*).
 
-## UML 
-
--
-
 ## MPD
 
--
+![Screenshot](MPD.png)
 
+## Modèle métier
 
+![Screenshot](Modele_metier.png)
+
+## Modèle Java
+
+![Screenshot](Modele_java.png)
