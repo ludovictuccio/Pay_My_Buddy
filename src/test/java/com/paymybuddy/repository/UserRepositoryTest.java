@@ -17,14 +17,17 @@ import com.paymybuddy.model.User;
 @SpringBootTest
 @TestPropertySource(locations = "classpath:application.properties")
 @Sql(scripts = "classpath:dropAndCreate.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-@Sql(scripts = { "classpath:dbTest.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(scripts = {
+        "classpath:dbTest.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 public class UserRepositoryTest {
 
     @Autowired
     private UserRepository userRepository;
 
-    private static User userGeneric1 = new User("GENERIC1", "USER1", "generic1@gmail.com", "gen1", "0101010101");
-    private static User userGeneric2 = new User("GENERIC2", "USER2", "generic2@gmail.com", "gen2", "0202020202");
+    private static User userGeneric1 = new User("GENERIC1", "USER1",
+            "generic1@gmail.com", "gen1", "0101010101");
+    private static User userGeneric2 = new User("GENERIC2", "USER2",
+            "generic2@gmail.com", "gen2", "0202020202");
 
     @Test
     @Tag("FindAllUsers")
@@ -65,9 +68,12 @@ public class UserRepositoryTest {
 
         // THEN
         assertThat(userRepository.findByEmail("unknowEmail@mail.com")).isNull(); // Inexistent
-        assertThat(userRepository.findByEmail("generic1@gmail.com")).isNotNull(); // saved
-        assertThat(userRepository.findByEmail("generic2@gmail.com")).isNull(); // not saved
-        assertThat(userRepository.findByEmail("kim.jong@gmail.com")).isNotNull();// existing in dbTest
+        assertThat(userRepository.findByEmail("generic1@gmail.com"))
+                .isNotNull(); // saved
+        assertThat(userRepository.findByEmail("generic2@gmail.com")).isNull(); // not
+                                                                               // saved
+        assertThat(userRepository.findByEmail("kim.jong@gmail.com"))
+                .isNotNull();// existing in dbTest
     }
 
     @Test
@@ -79,57 +85,5 @@ public class UserRepositoryTest {
         assertThat(userRepository.findById(5L)).isNotNull();
         assertThat(userRepository.findById(999L)).isEmpty();
     }
-
-//    @Test
-//    @Tag("deleteUserByEmail")
-//    @DisplayName("deleteUserByEmail - OK")
-//    public void givenUserInDb_whenDeleteAnEmail_thenReturnUserWithThisEmailDeleted() {
-//        // GIVEN
-//        userRepository.save(userGeneric1);
-//
-//        // WHEN
-//        userRepository.deleteUserByEmail("generic1@gmail.com");
-//
-//        // THEN
-//        List<User> users = userRepository.findAll();
-//        assertThat(users.size()).isEqualTo(5); // 5 in dbTest
-//
-//        List<AppAccount> appAccounts = appAccountRepository.findAll();
-//        assertThat(appAccounts.size()).isEqualTo(5); // 5 in dbTest
-//    }
-//
-//    @Test
-//    @Tag("deleteUserByEmail")
-//    @DisplayName("deleteUserByEmail - OK - AppAccount deleted")
-//    public void givenUserInDb_whenDeleteAnEmailInDb_thenReturnUserWithThisEmailDeleted() {
-//        // GIVEN
-//
-//        // WHEN
-//        userRepository.deleteUserByEmail("lady.gaga@gmail.com");
-//
-//        // THEN
-//        List<User> users = userRepository.findAll();
-//        assertThat(users.size()).isEqualTo(4); // was 5 in dbTest
-//
-//        List<AppAccount> appAccounts = appAccountRepository.findAll();
-//        assertThat(appAccounts.size()).isEqualTo(4); // was 5 in dbTest
-//    }
-//
-//    @Test
-//    @Tag("deleteUserByEmail")
-//    @DisplayName("deleteUserByEmail - ERROR - Unknow email")
-//    public void givenUsersInDb_whenDeleteUnknowEmail_thenReturnDbSizeUnchanged() {
-//        // GIVEN
-//
-//        // WHEN
-//        userRepository.deleteUserByEmail("UNKNOW-email@gmail.com");
-//
-//        // THEN
-//        List<User> users = userRepository.findAll();
-//        assertThat(users.size()).isEqualTo(5); // 5 in dbTest
-//
-//        List<AppAccount> appAccounts = appAccountRepository.findAll();
-//        assertThat(appAccounts.size()).isEqualTo(5); // 5 in dbTest
-//    }
 
 }

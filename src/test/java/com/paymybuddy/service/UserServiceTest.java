@@ -41,21 +41,21 @@ public class UserServiceTest {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     private static String encryptedPassword = "encrypted_password";
-    private static String encryptedEmail = "encrypted_email";
 
     @Test
     @Tag("CREATE")
     @DisplayName("Create new user - OK")
     public void givenNewPerson_whenCreation_thenReturnPersonSavedInDb() {
         // GIVEN
-        User user = new User("New", "User", "new-user@gmail.com", "love5", "0676990578");
+        User user = new User("New", "User", "new-user@gmail.com", "love5",
+                "0676990578");
         AppAccount userAccount = new AppAccount(user, new BigDecimal("0.00"));
         userAccount.setUserId(user);
 
         when(userRepository.save(user)).thenReturn(user);
         when(appAccountRepository.save(userAccount)).thenReturn(userAccount);
-        when(bCryptPasswordEncoder.encode(user.getEmail())).thenReturn(encryptedEmail);
-        when(bCryptPasswordEncoder.encode(user.getPassword())).thenReturn(encryptedPassword);
+        when(bCryptPasswordEncoder.encode(user.getPassword()))
+                .thenReturn(encryptedPassword);
 
         // WHEN
         User result = userService.addNewUser(user);
@@ -66,8 +66,6 @@ public class UserServiceTest {
         assertThat(result.getFirstname()).isEqualTo("User");
         assertThat(result.getPassword().equals("love")).isFalse();// encrypted
         assertThat(result.getPassword()).isEqualTo(encryptedPassword);
-        assertThat(result.getEmail().equals("new-user@gmail.com")).isFalse();// encrypted
-        assertThat(result.getEmail()).isEqualTo(encryptedEmail);
         assertThat(result.getPhone()).isEqualTo("0676990578");
         assertThat(result.getPmbFriends()).isEmpty();
         assertThat(userAccount.getBalance()).isEqualTo(new BigDecimal("0.00"));
@@ -79,14 +77,17 @@ public class UserServiceTest {
     @DisplayName("Create new user - Ok - + insered")
     public void givenValidPhoneEntry_whenCreationWithSymbol_thenReturnNull() {
         // GIVEN
-        User donaldTrump = new User("Trump", "Donald", "donald@gmail.com", "lovit", "+33679608456");
-        AppAccount donaldAccount = new AppAccount(donaldTrump, new BigDecimal("0.00"));
+        User donaldTrump = new User("Trump", "Donald", "donald@gmail.com",
+                "lovit", "+33679608456");
+        AppAccount donaldAccount = new AppAccount(donaldTrump,
+                new BigDecimal("0.00"));
         donaldAccount.setUserId(donaldTrump);
 
         when(userRepository.save(donaldTrump)).thenReturn(donaldTrump);
-        when(appAccountRepository.save(donaldAccount)).thenReturn(donaldAccount);
-        when(bCryptPasswordEncoder.encode(donaldTrump.getEmail())).thenReturn(encryptedEmail);
-        when(bCryptPasswordEncoder.encode(donaldTrump.getPassword())).thenReturn(encryptedPassword);
+        when(appAccountRepository.save(donaldAccount))
+                .thenReturn(donaldAccount);
+        when(bCryptPasswordEncoder.encode(donaldTrump.getPassword()))
+                .thenReturn(encryptedPassword);
 
         // WHEN
         User result = userService.addNewUser(donaldTrump);
@@ -95,14 +96,14 @@ public class UserServiceTest {
         assertThat(result).isNotNull();
         assertThat(result.getLastname()).isEqualTo("Trump");
         assertThat(result.getFirstname()).isEqualTo("Donald");
-        assertThat(result.getEmail().equals("new-user@gmail.com")).isFalse();// encrypted
-        assertThat(result.getEmail()).isEqualTo(encryptedEmail);
         assertThat(result.getPassword().equals("love")).isFalse();// encrypted
         assertThat(result.getPassword()).isEqualTo(encryptedPassword);
         assertThat(result.getPhone()).isEqualTo("+33679608456");
         assertThat(result.getPmbFriends()).isEmpty();
-        assertThat(donaldAccount.getBalance()).isEqualTo(new BigDecimal("0.00"));
-        assertThat(donaldAccount.getAppAccountId()).isEqualTo(donaldTrump.getId());
+        assertThat(donaldAccount.getBalance())
+                .isEqualTo(new BigDecimal("0.00"));
+        assertThat(donaldAccount.getAppAccountId())
+                .isEqualTo(donaldTrump.getId());
     }
 
     @Test
@@ -110,14 +111,19 @@ public class UserServiceTest {
     @DisplayName("Create new user - ERROR - Email already exist")
     public void givenAlreadyExistingEmailPersonInDb_whenCreation_thenReturnPersonNotSavedInDb() {
         // GIVEN
-        User donaldTrump = new User("Trump", "Donald", "donald.trump@gmail.com", "love", "000111222");
-        AppAccount donaldAccount = new AppAccount(donaldTrump, new BigDecimal("0.00"));
+        User donaldTrump = new User("Trump", "Donald", "donald.trump@gmail.com",
+                "love", "000111222");
+        AppAccount donaldAccount = new AppAccount(donaldTrump,
+                new BigDecimal("0.00"));
         donaldAccount.setUserId(donaldTrump);
         when(userRepository.save(donaldTrump)).thenReturn(donaldTrump);
-        when(appAccountRepository.save(donaldAccount)).thenReturn(donaldAccount);
+        when(appAccountRepository.save(donaldAccount))
+                .thenReturn(donaldAccount);
 
-        User existingEmailInDb = new User("Trumpidou", "Donaldidou", "donald.trump@gmail.com", "lovidou", "000111000");
-        when(userRepository.findByEmail("donald.trump@gmail.com")).thenReturn(donaldTrump);
+        User existingEmailInDb = new User("Trumpidou", "Donaldidou",
+                "donald.trump@gmail.com", "lovidou", "000111000");
+        when(userRepository.findByEmail("donald.trump@gmail.com"))
+                .thenReturn(donaldTrump);
         // WHEN
         User result = userService.addNewUser(existingEmailInDb);
 
@@ -132,7 +138,8 @@ public class UserServiceTest {
     @DisplayName("Create new user - ERROR - Unexisting email insered")
     public void givenNullEmailAddressEntry_whenCreation_thenReturnNull() {
         // GIVEN
-        User donaldTrump = new User("Trump", "Donald", null, "love-usa", "000111222");
+        User donaldTrump = new User("Trump", "Donald", null, "love-usa",
+                "000111222");
 
         // WHEN
         User result = userService.addNewUser(donaldTrump);
@@ -148,7 +155,8 @@ public class UserServiceTest {
     @DisplayName("Create new user - ERROR - Invalid email insered")
     public void givenInvalidEmailAddressEntry_whenCreation_thenReturnNull() {
         // GIVEN
-        User donaldTrump = new User("Trump", "Donald", "dodo", "love-usa", "000111222");
+        User donaldTrump = new User("Trump", "Donald", "dodo", "love-usa",
+                "000111222");
 
         // WHEN
         User result = userService.addNewUser(donaldTrump);
@@ -164,7 +172,8 @@ public class UserServiceTest {
     @DisplayName("Create new user - ERROR - Characters for phone number")
     public void givenInvalidPhoneNumberEntry_whenCreation_thenReturnNull() {
         // GIVEN
-        User donaldTrump = new User("Trump", "Donald", "dodo", "love-usa", "bad-number");
+        User donaldTrump = new User("Trump", "Donald", "dodo", "love-usa",
+                "bad-number");
 
         // WHEN
         User result = userService.addNewUser(donaldTrump);
@@ -180,7 +189,8 @@ public class UserServiceTest {
     @DisplayName("Create new user - ERROR - Null firstanme insered")
     public void givenNullFirstnameEntry_whenCreation_thenReturnNull() {
         // GIVEN
-        User donaldTrump = new User("Trump", "", "donald@gmail.com", "love-usa", "000111222");
+        User donaldTrump = new User("Trump", "", "donald@gmail.com", "love-usa",
+                "000111222");
 
         // WHEN
         User result = userService.addNewUser(donaldTrump);
@@ -196,7 +206,8 @@ public class UserServiceTest {
     @DisplayName("Create new user - ERROR - Null lastname insered")
     public void givenNullFLastnameEntry_whenCreation_thenReturnNull() {
         // GIVEN
-        User donaldTrump = new User("", "Donald", "donald@gmail.com", "love-usa", "000111222");
+        User donaldTrump = new User("", "Donald", "donald@gmail.com",
+                "love-usa", "000111222");
 
         // WHEN
         User result = userService.addNewUser(donaldTrump);
@@ -212,7 +223,8 @@ public class UserServiceTest {
     @DisplayName("Create new user - ERROR - Null lastname insered")
     public void givenNullPasswordEntry_whenCreation_thenReturnNull() {
         // GIVEN
-        User donaldTrump = new User("Trump", "Donald", "donald@gmail.com", "", "000111222");
+        User donaldTrump = new User("Trump", "Donald", "donald@gmail.com", "",
+                "000111222");
 
         // WHEN
         User result = userService.addNewUser(donaldTrump);
@@ -228,7 +240,8 @@ public class UserServiceTest {
     @DisplayName("Create new user - ERROR - Null phone insered")
     public void givenNullPhoneEntry_whenCreation_thenReturnNull() {
         // GIVEN
-        User donaldTrump = new User("Trump", "Donald", "donald@gmail.com", "lovit", "");
+        User donaldTrump = new User("Trump", "Donald", "donald@gmail.com",
+                "lovit", "");
 
         // WHEN
         User result = userService.addNewUser(donaldTrump);
@@ -244,7 +257,8 @@ public class UserServiceTest {
     @DisplayName("Create new user - ERROR - Invalid minimum size phone insered")
     public void givenInvalidPhoneEntry_whenCreation_thenReturnNull() {
         // GIVEN
-        User donaldTrump = new User("Trump", "Donald", "donald@gmail.com", "lovit", "023");
+        User donaldTrump = new User("Trump", "Donald", "donald@gmail.com",
+                "lovit", "023");
 
         // WHEN
         User result = userService.addNewUser(donaldTrump);
@@ -260,7 +274,8 @@ public class UserServiceTest {
     @DisplayName("Create new user - ERROR - Invalid maximum size phone insered (17)")
     public void givenInvalidMaximumPhoneEntry_whenCreation_thenReturnNull() {
         // GIVEN
-        User donaldTrump = new User("Trump", "Donald", "donald@gmail.com", "lovit", "12345678123456789");
+        User donaldTrump = new User("Trump", "Donald", "donald@gmail.com",
+                "lovit", "12345678123456789");
 
         // WHEN
         User result = userService.addNewUser(donaldTrump);
@@ -277,18 +292,23 @@ public class UserServiceTest {
     public void givenExistingUser_whenUpdateCorrectValues_thenReturnTrue() {
 
         // GIVEN
-        User user = new User("Trump", "Donald", "donald@gmail.com", "love-usa", "000111222");
+        User user = new User("Trump", "Donald", "donald@gmail.com", "love-usa",
+                "000111222");
         userRepository.save(user);
-        User userToUpdate = new User("Trump", "Donald", "donald@gmail.com", "other", "9999");
+        User userToUpdate = new User("Trump", "Donald", "donald@gmail.com",
+                "other", "9999");
 
         // WHEN
         when(userRepository.findByEmail("donald@gmail.com")).thenReturn(user);
+        when(bCryptPasswordEncoder.encode(userToUpdate.getPassword()))
+                .thenReturn(encryptedPassword);
         boolean isUpdated = userService.updateUserInfos(userToUpdate);
 
         // THEN
         assertThat(isUpdated).isTrue();
         verify(userRepository, times(1)).findByEmail(anyString());
-        assertThat(userRepository.findByEmail("donald@gmail.com").getPassword()).isEqualTo("other");
+        assertThat(userRepository.findByEmail("donald@gmail.com").getPassword())
+                .isEqualTo(encryptedPassword);
     }
 
     @Test
@@ -296,9 +316,11 @@ public class UserServiceTest {
     @DisplayName("Update user - ERROR - Infos not allowed changes (name)")
     public void givenExistingUser_whenUpdateBadValues_thenReturnFalse() {
         // GIVEN
-        User user = new User("Trump", "Donald", "donald@gmail.com", "love-usa", "000111222");
+        User user = new User("Trump", "Donald", "donald@gmail.com", "love-usa",
+                "000111222");
         userRepository.save(user);
-        User userToUpdate = new User("Georges", "Bush", "donald@gmail.com", "love-usa", "000111222");
+        User userToUpdate = new User("Georges", "Bush", "donald@gmail.com",
+                "love-usa", "000111222");
 
         // WHEN
         when(userRepository.findByEmail("donald@gmail.com")).thenReturn(user);
@@ -306,8 +328,11 @@ public class UserServiceTest {
 
         // THEN
         assertThat(isUpdated).isFalse();
-        assertThat(userRepository.findByEmail("donald@gmail.com").getFirstname()).isEqualTo("Donald");
-        assertThat(userRepository.findByEmail("donald@gmail.com").getLastname()).isEqualTo("Trump");
+        assertThat(
+                userRepository.findByEmail("donald@gmail.com").getFirstname())
+                        .isEqualTo("Donald");
+        assertThat(userRepository.findByEmail("donald@gmail.com").getLastname())
+                .isEqualTo("Trump");
     }
 
     @Test
@@ -315,12 +340,15 @@ public class UserServiceTest {
     @DisplayName("Update user - ERROR - Unknow user in DB")
     public void givenUnexistingUser_whenUpdateBadValues_thenReturnFalse() {
         // GIVEN
-        User user = new User("Trump", "Donald", "donald@gmail.com", "love-usa", "000111222");
+        User user = new User("Trump", "Donald", "donald@gmail.com", "love-usa",
+                "000111222");
         userRepository.save(user);
-        User userToUpdate = new User("Georges", "Bush", "georgybushi@gmail.com", "other", "9999");
+        User userToUpdate = new User("Georges", "Bush", "georgybushi@gmail.com",
+                "other", "9999");
 
         // WHEN
-        when(userRepository.findByEmail("georgybushi@gmail.com")).thenReturn(null);
+        when(userRepository.findByEmail("georgybushi@gmail.com"))
+                .thenReturn(null);
         boolean isUpdated = userService.updateUserInfos(userToUpdate);
 
         // THEN
@@ -334,13 +362,17 @@ public class UserServiceTest {
         // GIVEN
         String password = BCrypt.hashpw("love", BCrypt.gensalt());
 
-        User donaldTrump = new User("Trump", "Donald", "d.trump@gmail.com", password, "000111222");
-        AppAccount donaldAccount = new AppAccount(donaldTrump, new BigDecimal("0.00"));
+        User donaldTrump = new User("Trump", "Donald", "d.trump@gmail.com",
+                password, "000111222");
+        AppAccount donaldAccount = new AppAccount(donaldTrump,
+                new BigDecimal("0.00"));
         donaldAccount.setUserId(donaldTrump);
 
         when(userRepository.save(donaldTrump)).thenReturn(donaldTrump);
-        when(appAccountRepository.save(donaldAccount)).thenReturn(donaldAccount);
-        when(userRepository.findByEmail("d.trump@gmail.com")).thenReturn(donaldTrump);
+        when(appAccountRepository.save(donaldAccount))
+                .thenReturn(donaldAccount);
+        when(userRepository.findByEmail("d.trump@gmail.com"))
+                .thenReturn(donaldTrump);
 
         // WHEN
         User result = userService.login("d.trump@gmail.com", "love");
@@ -354,8 +386,10 @@ public class UserServiceTest {
         assertThat(result.getPassword().equals(password)).isTrue();// encrypted
         assertThat(result.getPhone()).isEqualTo("000111222");
         assertThat(result.getPmbFriends()).isEmpty();
-        assertThat(donaldAccount.getBalance()).isEqualTo(new BigDecimal("0.00"));
-        assertThat(donaldAccount.getAppAccountId()).isEqualTo(donaldTrump.getId());
+        assertThat(donaldAccount.getBalance())
+                .isEqualTo(new BigDecimal("0.00"));
+        assertThat(donaldAccount.getAppAccountId())
+                .isEqualTo(donaldTrump.getId());
     }
 
     @Test
@@ -365,13 +399,17 @@ public class UserServiceTest {
         // GIVEN
         String password = BCrypt.hashpw("love", BCrypt.gensalt());
 
-        User donaldTrump = new User("Trump", "Donald", "d.trump@gmail.com", password, "000111222");
-        AppAccount donaldAccount = new AppAccount(donaldTrump, new BigDecimal("0.00"));
+        User donaldTrump = new User("Trump", "Donald", "d.trump@gmail.com",
+                password, "000111222");
+        AppAccount donaldAccount = new AppAccount(donaldTrump,
+                new BigDecimal("0.00"));
         donaldAccount.setUserId(donaldTrump);
 
         when(userRepository.save(donaldTrump)).thenReturn(donaldTrump);
-        when(appAccountRepository.save(donaldAccount)).thenReturn(donaldAccount);
-        when(userRepository.findByEmail("d.trump@gmail.com")).thenReturn(donaldTrump);
+        when(appAccountRepository.save(donaldAccount))
+                .thenReturn(donaldAccount);
+        when(userRepository.findByEmail("d.trump@gmail.com"))
+                .thenReturn(donaldTrump);
 
         // WHEN
         User result = userService.login("donald.trumpidou@gmail.com", "love");
@@ -387,13 +425,17 @@ public class UserServiceTest {
         // GIVEN
         String password = BCrypt.hashpw("love", BCrypt.gensalt());
 
-        User donaldTrump = new User("Trump", "Donald", "d.trump@gmail.com", password, "000111222");
-        AppAccount donaldAccount = new AppAccount(donaldTrump, new BigDecimal("0.00"));
+        User donaldTrump = new User("Trump", "Donald", "d.trump@gmail.com",
+                password, "000111222");
+        AppAccount donaldAccount = new AppAccount(donaldTrump,
+                new BigDecimal("0.00"));
         donaldAccount.setUserId(donaldTrump);
 
         when(userRepository.save(donaldTrump)).thenReturn(donaldTrump);
-        when(appAccountRepository.save(donaldAccount)).thenReturn(donaldAccount);
-        when(userRepository.findByEmail("d.trump@gmail.com")).thenReturn(donaldTrump);
+        when(appAccountRepository.save(donaldAccount))
+                .thenReturn(donaldAccount);
+        when(userRepository.findByEmail("d.trump@gmail.com"))
+                .thenReturn(donaldTrump);
 
         // WHEN
         User result = userService.login("d.trump@gmail.com", "bad-password");
@@ -409,13 +451,17 @@ public class UserServiceTest {
         // GIVEN
         String password = BCrypt.hashpw("love", BCrypt.gensalt());
 
-        User donaldTrump = new User("Trump", "Donald", "d.trump@gmail.com", password, "000111222");
-        AppAccount donaldAccount = new AppAccount(donaldTrump, new BigDecimal("0.00"));
+        User donaldTrump = new User("Trump", "Donald", "d.trump@gmail.com",
+                password, "000111222");
+        AppAccount donaldAccount = new AppAccount(donaldTrump,
+                new BigDecimal("0.00"));
         donaldAccount.setUserId(donaldTrump);
 
         when(userRepository.save(donaldTrump)).thenReturn(donaldTrump);
-        when(appAccountRepository.save(donaldAccount)).thenReturn(donaldAccount);
-        when(userRepository.findByEmail("d.trump@gmail.com")).thenReturn(donaldTrump);
+        when(appAccountRepository.save(donaldAccount))
+                .thenReturn(donaldAccount);
+        when(userRepository.findByEmail("d.trump@gmail.com"))
+                .thenReturn(donaldTrump);
 
         // WHEN
         User result = userService.login(null, "love");
@@ -431,13 +477,17 @@ public class UserServiceTest {
         // GIVEN
         String password = BCrypt.hashpw("love", BCrypt.gensalt());
 
-        User donaldTrump = new User("Trump", "Donald", "d.trump@gmail.com", password, "000111222");
-        AppAccount donaldAccount = new AppAccount(donaldTrump, new BigDecimal("0.00"));
+        User donaldTrump = new User("Trump", "Donald", "d.trump@gmail.com",
+                password, "000111222");
+        AppAccount donaldAccount = new AppAccount(donaldTrump,
+                new BigDecimal("0.00"));
         donaldAccount.setUserId(donaldTrump);
 
         when(userRepository.save(donaldTrump)).thenReturn(donaldTrump);
-        when(appAccountRepository.save(donaldAccount)).thenReturn(donaldAccount);
-        when(userRepository.findByEmail("d.trump@gmail.com")).thenReturn(donaldTrump);
+        when(appAccountRepository.save(donaldAccount))
+                .thenReturn(donaldAccount);
+        when(userRepository.findByEmail("d.trump@gmail.com"))
+                .thenReturn(donaldTrump);
 
         // WHEN
         User result = userService.login("", "love");
@@ -453,13 +503,17 @@ public class UserServiceTest {
         // GIVEN
         String password = BCrypt.hashpw("love", BCrypt.gensalt());
 
-        User donaldTrump = new User("Trump", "Donald", "d.trump@gmail.com", password, "000111222");
-        AppAccount donaldAccount = new AppAccount(donaldTrump, new BigDecimal("0.00"));
+        User donaldTrump = new User("Trump", "Donald", "d.trump@gmail.com",
+                password, "000111222");
+        AppAccount donaldAccount = new AppAccount(donaldTrump,
+                new BigDecimal("0.00"));
         donaldAccount.setUserId(donaldTrump);
 
         when(userRepository.save(donaldTrump)).thenReturn(donaldTrump);
-        when(appAccountRepository.save(donaldAccount)).thenReturn(donaldAccount);
-        when(userRepository.findByEmail("d.trump@gmail.com")).thenReturn(donaldTrump);
+        when(appAccountRepository.save(donaldAccount))
+                .thenReturn(donaldAccount);
+        when(userRepository.findByEmail("d.trump@gmail.com"))
+                .thenReturn(donaldTrump);
 
         // WHEN
         User result = userService.login("d.trump@gmail.com", null);
@@ -475,13 +529,17 @@ public class UserServiceTest {
         // GIVEN
         String password = BCrypt.hashpw("love", BCrypt.gensalt());
 
-        User donaldTrump = new User("Trump", "Donald", "d.trump@gmail.com", password, "000111222");
-        AppAccount donaldAccount = new AppAccount(donaldTrump, new BigDecimal("0.00"));
+        User donaldTrump = new User("Trump", "Donald", "d.trump@gmail.com",
+                password, "000111222");
+        AppAccount donaldAccount = new AppAccount(donaldTrump,
+                new BigDecimal("0.00"));
         donaldAccount.setUserId(donaldTrump);
 
         when(userRepository.save(donaldTrump)).thenReturn(donaldTrump);
-        when(appAccountRepository.save(donaldAccount)).thenReturn(donaldAccount);
-        when(userRepository.findByEmail("d.trump@gmail.com")).thenReturn(donaldTrump);
+        when(appAccountRepository.save(donaldAccount))
+                .thenReturn(donaldAccount);
+        when(userRepository.findByEmail("d.trump@gmail.com"))
+                .thenReturn(donaldTrump);
 
         // WHEN
         User result = userService.login("d.trump@gmail.com", "");
@@ -497,10 +555,12 @@ public class UserServiceTest {
         // GIVEN
         String password = BCrypt.hashpw("love", BCrypt.gensalt());
         BigDecimal amount = new BigDecimal("0.00");
-        User user = new User("Trump", "Donald", "d.trump@gmail.com", password, "000111222");
+        User user = new User("Trump", "Donald", "d.trump@gmail.com", password,
+                "000111222");
 
         // WHEN
-        AppAccount x = new AppAccount(user, amount); // equals and hashCode check name field value
+        AppAccount x = new AppAccount(user, amount); // equals and hashCode
+                                                     // check name field value
         AppAccount y = new AppAccount(user, amount);
 
         // THEN

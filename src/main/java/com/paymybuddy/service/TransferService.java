@@ -147,7 +147,7 @@ public class TransferService implements ITransferService {
             int compare = amount.compareTo(checkAccountAmountAvailable);
 
             // if amount > user's account balance available
-            if (compare == 1) {
+            if (compare > 0) {
                 LOGGER.error(
                         "Transfer impossible: your account is not sufficiently funded. Amount available: {}"
                                 + checkAccountAmountAvailable);
@@ -218,15 +218,15 @@ public class TransferService implements ITransferService {
                 int compare = amount.compareTo(checkAccountAmountAvailable);
 
                 // if amount > appAccount amount available
-                if (compare == 1) {
+                if (compare > 0) {
                     LOGGER.error(
                             "Transaction impossible: your account is not sufficiently funded. Amount available: {}"
                                     + checkAccountAmountAvailable);
                     return null;
                 }
-                LocalDate date = LocalDate.now();
                 Transaction transaction = new Transaction(myAppAccount,
-                        myFriendsAppAccount, amount, description, date);
+                        myFriendsAppAccount, amount, description,
+                        LocalDate.now());
 
                 // Check constraints violations
                 ValidatorFactory factory = Validation

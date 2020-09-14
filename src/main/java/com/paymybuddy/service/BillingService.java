@@ -76,12 +76,10 @@ public class BillingService implements IBillingService {
                             allInvoices.add(percentToInvoice);
                         }
                     }
-                    if (allInvoices.isEmpty()) {
-                        LOGGER.debug("No transaction found for this dates");
-                        return Constants.INITIAL_ACCOUNT_AMOUNT;
-                    }
                     BigDecimal totalForFacturation = allInvoices.stream()
-                            .reduce((x, y) -> x.add(y)).get();
+                            .reduce((x, y) -> x.add(y))
+                            .orElse(Constants.INITIAL_ACCOUNT_AMOUNT);
+
                     LOGGER.info("Success billing transactions for user: "
                             + user.getEmail());
                     totalForFacturation = totalForFacturation.setScale(2,

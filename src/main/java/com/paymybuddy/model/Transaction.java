@@ -30,9 +30,6 @@ public class Transaction implements Serializable {
 
     private static final long serialVersionUID = 7547368168259612613L;
 
-    /**
-     * To above magic number.
-     */
     private static final int DESCRIPTION_MAX_SIZE = 80;
 
     @Id

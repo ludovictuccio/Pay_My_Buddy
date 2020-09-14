@@ -16,7 +16,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -37,10 +36,6 @@ public class User implements Serializable {
     private static final int FIRSTNAME_MAX_SIZE = 50;
 
     private static final int LASTNAME_MAX_SIZE = 50;
-
-    private static final int EMAIL_MIN_SIZE = 8;
-
-    private static final int EMAIL_MAX_SIZE = 80;
 
     private static final int PASSWORD_MIN_SIZE = 4;
 
@@ -63,8 +58,6 @@ public class User implements Serializable {
 
     @NotNull
     @NotEmpty
-    @Length(min = EMAIL_MIN_SIZE, max = EMAIL_MAX_SIZE)
-    @Email(regexp = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$", message = "Invalid email entry. The size must be between 8 and 80.")
     private String email;
 
     @NotNull

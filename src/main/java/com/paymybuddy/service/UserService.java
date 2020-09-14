@@ -44,6 +44,16 @@ public class UserService implements IUserService {
      */
     private Validator validator;
 
+    public User checkIfExistsByEmail(final String email) {
+        User userToRetrieve = userRepository.findByEmail(email);
+
+        if (userToRetrieve == null) {
+            LOGGER.info("Invalid email. Please check the email entered.");
+            return null;
+        }
+        return userToRetrieve;
+    }
+
     /**
      * This method service is used to add a new user. Email and password are
      * encrypted.
@@ -54,7 +64,7 @@ public class UserService implements IUserService {
     public User addNewUser(final User user) {
         try {
 
-            if (userRepository.findByEmail(user.getEmail()) != null) {
+            if (checkIfExistsByEmail(user.getEmail()) != null) {
                 LOGGER.error(
                         "ERROR: An user already exists with the email entered.");
                 return null;
@@ -66,24 +76,25 @@ public class UserService implements IUserService {
 
             Set<ConstraintViolation<User>> constraintViolations = validator
                     .validate(user);
-            if (constraintViolations.size() > 0) {
+
+            if (!user.getEmail().matches(Constants.EMAIL_REGEX)
+                    || user.getEmail().length() < 8
+                    || user.getEmail().length() > 80
+                    || constraintViolations.size() > 0) {
                 LOGGER.error(
                         "ERROR: a constraint was violated. Please check the informations entered.");
                 return null;
             }
+            user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 
-            User newUser = new User(user.getLastname(), user.getFirstname(),
-                    bCryptPasswordEncoder.encode(user.getEmail()),
-                    bCryptPasswordEncoder.encode(user.getPassword()),
-                    user.getPhone());
-            userRepository.save(newUser);
-
-            AppAccount appAccount = new AppAccount(newUser,
+            AppAccount appAccount = new AppAccount(user,
                     Constants.INITIAL_ACCOUNT_AMOUNT);
             appAccountRepository.save(appAccount);
 
+            user.setOwnAppAccount(appAccount);
+            userRepository.save(user);
             LOGGER.info("Succes new user acccount creation");
-            return newUser;
+            return user;
 
         } catch (NullPointerException np) {
             LOGGER.error("ERROR: Please verify email. " + np);
@@ -101,7 +112,8 @@ public class UserService implements IUserService {
     public boolean updateUserInfos(final User user) {
         boolean isUpdated = false;
         LOGGER.info("Only password or phone number can and will be changed.");
-        User userToFind = userRepository.findByEmail(user.getEmail());
+
+        User userToFind = checkIfExistsByEmail(user.getEmail());
 
         if (userToFind == null) {
             LOGGER.error("ERROR: user with this email not found.");
@@ -111,8 +123,8 @@ public class UserService implements IUserService {
             LOGGER.error("ERROR: Only password & phone changes are allowed.");
             return isUpdated;
         }
-
-        userToFind.setPassword(user.getPassword());
+        userToFind
+                .setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         userToFind.setPhone(user.getPhone());
 
         userRepository.save(userToFind);
@@ -131,7 +143,8 @@ public class UserService implements IUserService {
      */
     public User login(final String email, final String password) {
         try {
-            User userToLogin = userRepository.findByEmail(email);
+
+            User userToLogin = checkIfExistsByEmail(email);
 
             if (userToLogin == null) {
                 LOGGER.info("Invalid email. Please check the email entered.");
