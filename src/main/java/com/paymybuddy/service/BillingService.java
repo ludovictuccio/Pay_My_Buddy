@@ -89,7 +89,8 @@ public class BillingService implements IBillingService {
             }
         } catch (Exception e) {
             LOGGER.error(
-                    "Billing service impossible. Please check the entered dates, with format dd/MM/yyyy");
+                    "Billing service impossible. Please check the entered dates, with format dd/MM/yyyy"
+                            + e);
             return null;
         }
         LOGGER.error("FAIL billing transactions for user: {} , unknow email !",

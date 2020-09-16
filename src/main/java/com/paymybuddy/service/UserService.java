@@ -76,15 +76,12 @@ public class UserService implements IUserService {
 
             Set<ConstraintViolation<User>> constraintViolations = validator
                     .validate(user);
-
-            if (!user.getEmail().matches(Constants.EMAIL_REGEX)
-                    || user.getEmail().length() < 8
-                    || user.getEmail().length() > 80
-                    || constraintViolations.size() > 0) {
+            if (constraintViolations.size() > 0) {
                 LOGGER.error(
                         "ERROR: a constraint was violated. Please check the informations entered.");
                 return null;
             }
+
             user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 
             AppAccount appAccount = new AppAccount(user,

@@ -37,6 +37,10 @@ public class User implements Serializable {
 
     private static final int LASTNAME_MAX_SIZE = 50;
 
+    private static final int EMAIL_MIN_SIZE = 8;
+
+    private static final int EMAIL_MAX_SIZE = 80;
+
     private static final int PASSWORD_MIN_SIZE = 4;
 
     private static final int PASSWORD_MAX_SIZE = 60;
@@ -58,6 +62,8 @@ public class User implements Serializable {
 
     @NotNull
     @NotEmpty
+    @Length(min = EMAIL_MIN_SIZE, max = EMAIL_MAX_SIZE, message = "Invalid email entry. The size must be betwwen 8 and 80.")
+    @Pattern(regexp = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$", message = " Invalid entry email.")
     private String email;
 
     @NotNull
@@ -67,7 +73,7 @@ public class User implements Serializable {
 
     @NotNull
     @NotEmpty
-    @Pattern(regexp = "^(\\+\\d{1,3}( )?)?((\\(\\d{3}\\))|\\d{3})[- .]?\\d{3}[- .]?\\d{4}$", message = " Invalid phone number entry.")
+    @Pattern(regexp = "^(\\+\\d{1,3}( )?)?((\\(\\d{3}\\))|\\d{3})[- .]?\\d{3}[- .]?\\d{4}$", message = " Invalid entry phone number.")
     private String phone;
 
     @OneToOne(cascade = CascadeType.REMOVE, mappedBy = "userId", fetch = FetchType.EAGER)
