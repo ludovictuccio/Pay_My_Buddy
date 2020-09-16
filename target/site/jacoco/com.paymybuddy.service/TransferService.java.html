@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TransferService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">PayMyBuddy</a> &gt; <a href="index.source.html" class="el_package">com.paymybuddy.service</a> &gt; <span class="el_source">TransferService.java</span></div><h1>TransferService.java</h1><pre class="source lang-java linenums">package com.paymybuddy.service;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDate;
+import java.util.Set;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.paymybuddy.model.AppAccount;
+import com.paymybuddy.model.PersonalPayment;
+import com.paymybuddy.model.PersonalTransfer;
+import com.paymybuddy.model.Transaction;
+import com.paymybuddy.model.User;
+import com.paymybuddy.repository.AppAccountRepository;
+import com.paymybuddy.repository.PersonalPaymentRepository;
+import com.paymybuddy.repository.PersonalTransferRepository;
+import com.paymybuddy.repository.TransactionRepository;
+import com.paymybuddy.repository.UserRepository;
+
+/**
+ * TransferService class.
+ *
+ * @author Ludovic Tuccio
+ */
+@Service
+<span class="fc" id="L36">public class TransferService implements ITransferService {</span>
+
+<span class="fc" id="L38">    private static final Logger LOGGER = LoggerFactory</span>
+<span class="fc" id="L39">            .getLogger(&quot;TransferService&quot;);</span>
+
+    @Autowired
+    private IRelationService relationService;
+
+    @Autowired
+    private PersonalPaymentRepository personalPaymentRepository;
+
+    @Autowired
+    private AppAccountRepository appAccountRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private PersonalTransferRepository personalTransferRepository;
+
+    @Autowired
+    private TransactionRepository transactionRepository;
+
+    /**
+     * Validator used to validate javax constraints in model classes.
+     */
+    private Validator validator;
+
+    /**
+     * This method service is used to make a personal payment with his bank card
+     * informations.
+     *
+     * @param myEmail
+     * @param amount
+     * @param cbNumber
+     * @param cbExpirationDateMonth
+     * @param cbExpirationDateYear
+     * @param cbSecurityKey
+     * @return isDone boolean, true if personal payment success
+     */
+    @Transactional
+    public boolean makePersonalPayment(final String myEmail, BigDecimal amount,
+            final String cbNumber, final String cbExpirationDateMonth,
+            final String cbExpirationDateYear, final String cbSecurityKey) {
+<span class="fc" id="L80">        boolean isDone = false;</span>
+
+        try {
+<span class="fc" id="L83">            User user = userRepository.findByEmail(myEmail);</span>
+<span class="fc" id="L84">            AppAccount myAppAccount = user.getOwnAppAccount();</span>
+
+<span class="pc bpc" id="L86" title="1 of 2 branches missed.">            if (myAppAccount != null) {</span>
+
+<span class="fc" id="L88">                amount = amount.setScale(2, RoundingMode.HALF_UP);</span>
+
+<span class="fc" id="L90">                PersonalPayment myPayment = new PersonalPayment(myAppAccount,</span>
+<span class="fc" id="L91">                        amount, cbNumber, cbExpirationDateMonth,</span>
+<span class="fc" id="L92">                        cbExpirationDateYear, cbSecurityKey);</span>
+
+                // Check constraints violations
+<span class="fc" id="L95">                ValidatorFactory factory = Validation</span>
+<span class="fc" id="L96">                        .buildDefaultValidatorFactory();</span>
+<span class="fc" id="L97">                validator = factory.getValidator();</span>
+<span class="fc" id="L98">                Set&lt;ConstraintViolation&lt;PersonalPayment&gt;&gt; constraintViolations = validator</span>
+<span class="fc" id="L99">                        .validate(myPayment);</span>
+<span class="fc bfc" id="L100" title="All 2 branches covered.">                if (constraintViolations.size() &gt; 0) {</span>
+<span class="fc" id="L101">                    LOGGER.error(</span>
+<span class="fc" id="L102">                            &quot;ERROR: a constraint was violated. Please check the informations entered.&quot;);</span>
+<span class="fc" id="L103">                    return isDone;</span>
+                }
+<span class="fc" id="L105">                personalPaymentRepository.save(myPayment);</span>
+
+<span class="fc" id="L107">                BigDecimal beforeBalance = myAppAccount.getBalance();</span>
+<span class="fc" id="L108">                myAppAccount.setBalance(beforeBalance.add(amount));</span>
+<span class="fc" id="L109">                appAccountRepository.save(myAppAccount);</span>
+
+<span class="fc" id="L111">                LOGGER.info(</span>
+<span class="fc" id="L112">                        &quot;Personal payment done ! {}€ will be credited to your account.&quot;,</span>
+<span class="fc" id="L113">                        amount);</span>
+<span class="fc" id="L114">                isDone = true;</span>
+<span class="fc" id="L115">                return isDone;</span>
+            }
+<span class="fc" id="L117">        } catch (NullPointerException np) {</span>
+<span class="fc" id="L118">            LOGGER.error(&quot;Null Pointer Exception&quot; + np);</span>
+<span class="fc" id="L119">            return isDone;</span>
+        }
+<span class="nc" id="L121">        LOGGER.error(</span>
+<span class="nc" id="L122">                &quot;Personal payment failed. Please check the informations entered.&quot;);</span>
+<span class="nc" id="L123">        return isDone;</span>
+    }
+
+    /**
+     * This method service is used to make a personal transfer with his bank
+     * informations (iban &amp; bic).
+     *
+     * @param myEmail
+     * @param amount
+     * @param iban
+     * @param bic
+     * @return isDone boolean, true if personal transfer success
+     */
+    @Transactional
+    public boolean makePersonalTransfer(final String myEmail, BigDecimal amount,
+            final String iban, final String bic) {
+<span class="fc" id="L139">        boolean isDone = false;</span>
+
+        try {
+<span class="fc" id="L142">            User user = userRepository.findByEmail(myEmail);</span>
+<span class="fc" id="L143">            AppAccount myAppAccount = user.getOwnAppAccount();</span>
+
+<span class="fc" id="L145">            amount = amount.setScale(2, RoundingMode.HALF_UP);</span>
+<span class="fc" id="L146">            BigDecimal checkAccountAmountAvailable = myAppAccount.getBalance();</span>
+<span class="fc" id="L147">            int compare = amount.compareTo(checkAccountAmountAvailable);</span>
+
+            // if amount &gt; user's account balance available
+<span class="fc bfc" id="L150" title="All 2 branches covered.">            if (compare &gt; 0) {</span>
+<span class="fc" id="L151">                LOGGER.error(</span>
+<span class="fc" id="L152">                        &quot;Transfer impossible: your account is not sufficiently funded. Amount available: {}&quot;</span>
+<span class="fc" id="L153">                                + checkAccountAmountAvailable);</span>
+<span class="fc" id="L154">                return isDone;</span>
+            }
+
+<span class="fc" id="L157">            PersonalTransfer myTransfer = new PersonalTransfer(myAppAccount,</span>
+<span class="fc" id="L158">                    amount, iban, bic);</span>
+
+            // Check constraints violations
+<span class="fc" id="L161">            ValidatorFactory factory = Validation</span>
+<span class="fc" id="L162">                    .buildDefaultValidatorFactory();</span>
+<span class="fc" id="L163">            validator = factory.getValidator();</span>
+<span class="fc" id="L164">            Set&lt;ConstraintViolation&lt;PersonalTransfer&gt;&gt; constraintViolations = validator</span>
+<span class="fc" id="L165">                    .validate(myTransfer);</span>
+<span class="fc bfc" id="L166" title="All 2 branches covered.">            if (constraintViolations.size() &gt; 0) {</span>
+<span class="fc" id="L167">                LOGGER.error(</span>
+<span class="fc" id="L168">                        &quot;ERROR: a constraint was violated. Please check the informations entered.&quot;);</span>
+<span class="fc" id="L169">                return isDone;</span>
+            }
+<span class="fc" id="L171">            personalTransferRepository.save(myTransfer);</span>
+
+<span class="fc" id="L173">            BigDecimal beforeBalance = myAppAccount.getBalance();</span>
+<span class="fc" id="L174">            myAppAccount.setBalance(beforeBalance.subtract(amount));</span>
+<span class="fc" id="L175">            appAccountRepository.save(myAppAccount);</span>
+
+<span class="fc" id="L177">            LOGGER.info(</span>
+<span class="fc" id="L178">                    &quot;Personal transfer done ! {}€ will be credited to your bank account.&quot;,</span>
+<span class="fc" id="L179">                    amount);</span>
+<span class="fc" id="L180">            isDone = true;</span>
+<span class="fc" id="L181">            return isDone;</span>
+
+<span class="fc" id="L183">        } catch (NullPointerException np) {</span>
+<span class="fc" id="L184">            LOGGER.error(&quot;Null Pointer Exception&quot; + np);</span>
+        }
+<span class="fc" id="L186">        LOGGER.error(</span>
+<span class="fc" id="L187">                &quot;Personal transfer failed. Please check the informations entered.&quot;);</span>
+<span class="fc" id="L188">        return isDone;</span>
+    }
+
+    /**
+     * This method service is used to make transaction between two user's app
+     * accounts.
+     *
+     * @param myEmail
+     * @param emailBeneficiary
+     * @param amount
+     * @param description
+     * @param transactionDate
+     * @return transaction a Transaction object
+     */
+    @Transactional
+    public Transaction makeTransaction(final String myEmail,
+            final String emailBeneficiary, BigDecimal amount,
+            final String description) throws NumberFormatException {
+        try {
+<span class="fc" id="L207">            User user = userRepository.findByEmail(myEmail);</span>
+<span class="fc" id="L208">            AppAccount myAppAccount = user.getOwnAppAccount();</span>
+
+<span class="fc" id="L210">            AppAccount myFriendsAppAccount = relationService</span>
+<span class="fc" id="L211">                    .getRelationAppAccount(myEmail, emailBeneficiary);</span>
+
+<span class="pc bpc" id="L213" title="1 of 4 branches missed.">            if (myAppAccount != null &amp;&amp; myFriendsAppAccount != null) {</span>
+
+<span class="fc" id="L215">                amount = amount.setScale(2, RoundingMode.HALF_UP);</span>
+<span class="fc" id="L216">                BigDecimal checkAccountAmountAvailable = myAppAccount</span>
+<span class="fc" id="L217">                        .getBalance();</span>
+<span class="fc" id="L218">                int compare = amount.compareTo(checkAccountAmountAvailable);</span>
+
+                // if amount &gt; appAccount amount available
+<span class="fc bfc" id="L221" title="All 2 branches covered.">                if (compare &gt; 0) {</span>
+<span class="fc" id="L222">                    LOGGER.error(</span>
+<span class="fc" id="L223">                            &quot;Transaction impossible: your account is not sufficiently funded. Amount available: {}&quot;</span>
+<span class="fc" id="L224">                                    + checkAccountAmountAvailable);</span>
+<span class="fc" id="L225">                    return null;</span>
+                }
+<span class="fc" id="L227">                Transaction transaction = new Transaction(myAppAccount,</span>
+<span class="fc" id="L228">                        myFriendsAppAccount, amount, description,</span>
+<span class="fc" id="L229">                        LocalDate.now());</span>
+
+                // Check constraints violations
+<span class="fc" id="L232">                ValidatorFactory factory = Validation</span>
+<span class="fc" id="L233">                        .buildDefaultValidatorFactory();</span>
+<span class="fc" id="L234">                validator = factory.getValidator();</span>
+<span class="fc" id="L235">                Set&lt;ConstraintViolation&lt;Transaction&gt;&gt; constraintViolations = validator</span>
+<span class="fc" id="L236">                        .validate(transaction);</span>
+<span class="fc bfc" id="L237" title="All 2 branches covered.">                if (constraintViolations.size() &gt; 0) {</span>
+<span class="fc" id="L238">                    LOGGER.error(</span>
+<span class="fc" id="L239">                            &quot;ERROR: a constraint was violated. Please check the informations entered.&quot;);</span>
+<span class="fc" id="L240">                    return null;</span>
+                }
+<span class="fc" id="L242">                transactionRepository.save(transaction);</span>
+
+<span class="fc" id="L244">                BigDecimal ownerBeforeBalance = myAppAccount.getBalance();</span>
+<span class="fc" id="L245">                myAppAccount.setBalance(ownerBeforeBalance.subtract(amount));</span>
+<span class="fc" id="L246">                appAccountRepository.save(myAppAccount);</span>
+
+<span class="fc" id="L248">                BigDecimal friendsBeforeBalance = myFriendsAppAccount</span>
+<span class="fc" id="L249">                        .getBalance();</span>
+<span class="fc" id="L250">                myFriendsAppAccount</span>
+<span class="fc" id="L251">                        .setBalance(friendsBeforeBalance.add(amount));</span>
+<span class="fc" id="L252">                appAccountRepository.save(myFriendsAppAccount);</span>
+
+<span class="fc" id="L254">                LOGGER.info(</span>
+<span class="fc" id="L255">                        &quot;Transaction done ! {}€ will be credited to your friend's account.&quot;,</span>
+<span class="fc" id="L256">                        amount);</span>
+<span class="fc" id="L257">                return transaction;</span>
+            }
+<span class="fc" id="L259">        } catch (NullPointerException np) {</span>
+<span class="fc" id="L260">            LOGGER.error(&quot;Null Pointer Exception&quot; + np);</span>
+<span class="fc" id="L261">            return null;</span>
+        }
+<span class="fc" id="L263">        LOGGER.error(</span>
+<span class="fc" id="L264">                &quot;Transaction failed. Please check the informations entered.&quot;);</span>
+<span class="fc" id="L265">        return null;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

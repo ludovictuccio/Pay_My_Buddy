@@ -1,0 +1,16 @@
+
+Jcom.paymybuddy.model.Transaction#getTransactionDate()Ljava/time/LocalDate;t
+jC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/model/Transaction.javau u('"1*ç
+1t
+jC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/model/Transaction.javav v(Õ
+Ò
+t
+jC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/model/Transaction.javav v(
+%0java.time.LocalDate"__id*9*7"
+ com.paymybuddy.model.Transaction"
+transactionDate"“
+t
+jC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/model/Transaction.javav v(
+
+%0java.time.LocalDateB$"
+ com.paymybuddy.model.Transaction

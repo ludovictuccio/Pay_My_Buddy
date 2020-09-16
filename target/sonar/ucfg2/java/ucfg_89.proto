@@ -1,0 +1,120 @@
+
+Ycom.paymybuddy.service.RelationService#addRelation(Ljava/lang/String;Ljava/lang/String;)Zz
+pC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/RelationService.java$ $("4*ë
+2z
+pC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/RelationService.java," ,(&„
+z
+pC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/RelationService.java," ,(6
+%4java.util.Set"8com.paymybuddy.model.User#getPmbFriends()Ljava/util/Set;*#
+!
+usercom.paymybuddy.model.User2getPmbFriends()¸
+µ
+z
+pC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/RelationService.java, ,(7
+	relationsjava.util.Set"__id*
+
+%4java.util.SetÑÎ
+z
+pC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/RelationService.java- -(-
+
+%5void"Ecom.paymybuddy.model.User#addPmbFriends(Lcom/paymybuddy/model/User;)V*#
+!
+usercom.paymybuddy.model.User*,
+*
+userToConnectcom.paymybuddy.model.User2*addPmbFriends(Lcom/paymybuddy/model/User;)©¦
+z
+pC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/RelationService.java. .()
+
+%6void"9com.paymybuddy.model.User#setPmbFriends(Ljava/util/Set;)V*#
+!
+usercom.paymybuddy.model.User*
+
+	relationsjava.util.Set2setPmbFriends(Ljava/util/Set;)õ
+ò
+z
+pC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/RelationService.java0 0(.
+%7(com.paymybuddy.repository.UserRepository"__id*>*<(
+&com.paymybuddy.service.RelationService"
+userRepositoryðí
+z
+pC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/RelationService.java0 0(%
+%8com.paymybuddy.model.User"]org.springframework.data.repository.CrudRepository#save(Ljava/lang/Object;)Ljava/lang/Object;*0
+.
+%7(com.paymybuddy.repository.UserRepository*#
+!
+usercom.paymybuddy.model.User2save(Ljava/lang/Object;)¥
+¢
+z
+pC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/RelationService.java1 1(
+%9org.slf4j.Logger"__id*
+""Š
+z
+pC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/RelationService.java1 1(6
+%10void"*org.slf4j.Logger#info(Ljava/lang/String;)V*
+
+%9org.slf4j.Logger*
+Successful add connection !2info(Ljava/lang/String;)"„
+z
+pC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/RelationService.java3 3(
+""*—
+4z
+pC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/RelationService.java& &(õ
+ò
+z
+pC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/RelationService.java' '(".
+%0(com.paymybuddy.repository.UserRepository"__id*>*<(
+&com.paymybuddy.service.RelationService"
+userRepository÷ô
+z
+pC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/RelationService.java' '(7
+%1com.paymybuddy.model.User"ccom.paymybuddy.repository.UserRepository#findByEmail(Ljava/lang/String;)Lcom/paymybuddy/model/User;*0
+.
+%0(com.paymybuddy.repository.UserRepository*
+
+myEmailjava.lang.String2findByEmail(Ljava/lang/String;)Ë
+È
+z
+pC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/RelationService.java' '(8!
+usercom.paymybuddy.model.User"__id*!
+
+%1com.paymybuddy.model.Userõ
+ò
+z
+pC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/RelationService.java( ((+.
+%2(com.paymybuddy.repository.UserRepository"__id*>*<(
+&com.paymybuddy.service.RelationService"
+userRepositoryþû
+z
+pC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/RelationService.java( ((G
+%3com.paymybuddy.model.User"ccom.paymybuddy.repository.UserRepository#findByEmail(Ljava/lang/String;)Lcom/paymybuddy/model/User;*0
+.
+%2(com.paymybuddy.repository.UserRepository*$
+"
+emailToConnectjava.lang.String2findByEmail(Ljava/lang/String;)Ô
+Ñ
+z
+pC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/RelationService.java( ((H*
+userToConnectcom.paymybuddy.model.User"__id*!
+
+%3com.paymybuddy.model.User*
+2
+1*Þ
+1z
+pC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/RelationService.java5 5(¦
+£
+z
+pC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/RelationService.java5 5(
+%11org.slf4j.Logger"__id*
+""¬©
+z
+pC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/RelationService.java5 5(O
+%12void"+org.slf4j.Logger#error(Ljava/lang/String;)V*
+
+%11org.slf4j.Logger*;9
+7Fail to add connection. Please check the email entered.2error(Ljava/lang/String;)"„
+z
+pC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/RelationService.java6 6(
+"":
+myEmailjava.lang.String:"
+emailToConnectjava.lang.StringB*(
+&com.paymybuddy.service.RelationService

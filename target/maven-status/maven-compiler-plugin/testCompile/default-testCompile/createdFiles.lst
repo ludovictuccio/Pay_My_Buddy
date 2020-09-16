@@ -1,0 +1,7 @@
+com\paymybuddy\service\RelationServiceTest.class
+com\paymybuddy\repository\UserRepositoryTest.class
+com\paymybuddy\integration\PaymybuddyDatabaseIT.class
+com\paymybuddy\service\UserServiceTest.class
+com\paymybuddy\service\TransferServiceTest.class
+com\paymybuddy\PayMyBuddyApplicationTests.class
+com\paymybuddy\service\BillingServiceTest.class

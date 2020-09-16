@@ -1,0 +1,20 @@
+
+Lcom.paymybuddy.PayMyBuddyApplication#validator()Ljavax/validation/Validator;x
+nC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/PayMyBuddyApplication.java ("1*ò
+1x
+nC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/PayMyBuddyApplication.java (¦
+£
+x
+nC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/PayMyBuddyApplication.java (8'
+%0!javax.validation.ValidatorFactory"]javax.validation.Validation#buildDefaultValidatorFactory()Ljavax/validation/ValidatorFactory;*"
+javax.validation.Validation¨¥
+x
+nC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/PayMyBuddyApplication.java (G 
+%1javax.validation.Validator"Ljavax.validation.ValidatorFactory#getValidator()Ljavax/validation/Validator;*)
+'
+%0!javax.validation.ValidatorFactory2getValidator()"ž
+x
+nC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/PayMyBuddyApplication.java (H"
+ 
+%1javax.validation.ValidatorB(&
+$com.paymybuddy.PayMyBuddyApplication

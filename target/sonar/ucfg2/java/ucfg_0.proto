@@ -1,0 +1,51 @@
+
+fcom.paymybuddy.service.UserService#checkIfExistsByEmail(Ljava/lang/String;)Lcom/paymybuddy/model/User;v
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.java/ /($"3*À
+2v
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.java3 3(¡
+ž
+v
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.java3 3(
+%2org.slf4j.Logger"__id*
+""›˜
+v
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.java3 3(I
+
+%3void"*org.slf4j.Logger#info(Ljava/lang/String;)V*
+
+%2org.slf4j.Logger*20
+.Invalid email. Please check the email entered.2info(Ljava/lang/String;)"€
+v
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.java4 4(
+""*»
+3v
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.java0 0(,í
+ê
+v
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.java0 0(,.
+%0(com.paymybuddy.repository.UserRepository"__id*:*8$
+"com.paymybuddy.service.UserService"
+userRepositoryñî
+v
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.java0 0(?
+%1com.paymybuddy.model.User"ccom.paymybuddy.repository.UserRepository#findByEmail(Ljava/lang/String;)Lcom/paymybuddy/model/User;*0
+.
+%0(com.paymybuddy.repository.UserRepository*
+
+emailjava.lang.String2findByEmail(Ljava/lang/String;)Ñ
+Î
+v
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.java0 0(@+
+userToRetrievecom.paymybuddy.model.User"__id*!
+
+%1com.paymybuddy.model.User*
+2
+1*¥
+1v
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.java6 6("§
+v
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.java6 6(-
++
+userToRetrievecom.paymybuddy.model.User:
+emailjava.lang.StringB&$
+"com.paymybuddy.service.UserService

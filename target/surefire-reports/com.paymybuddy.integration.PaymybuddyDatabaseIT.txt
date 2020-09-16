@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.paymybuddy.integration.PaymybuddyDatabaseIT
+-------------------------------------------------------------------------------
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 17.782 s - in com.paymybuddy.integration.PaymybuddyDatabaseIT

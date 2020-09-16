@@ -1,0 +1,144 @@
+
+icom.paymybuddy.service.UserService#login(Ljava/lang/String;Ljava/lang/String;)Lcom/paymybuddy/model/User;x
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.javaå å("15* 
+13x
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.javaí í(£
+†
+x
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.javaí í(
+%1org.slf4j.Logger"__id*
+""ùö
+x
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.javaí í(M
+
+%2void"*org.slf4j.Logger#info(Ljava/lang/String;)V*
+
+%1org.slf4j.Logger*20
+.Invalid email. Please check the email entered.2info(Ljava/lang/String;)*
+12*€
+14x
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.javaè è(;–
+Õ
+x
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.javaè è(;(
+userToLogincom.paymybuddy.model.User"__id*!
+
+%0com.paymybuddy.model.User*
+13
+11*Ç
+3x
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.javaö ö("Ç
+x
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.javaö ö(
+""*¸
+15x
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.javaè è(3ıÚ
+x
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.javaè è(:
+%0com.paymybuddy.model.User"fcom.paymybuddy.service.UserService#checkIfExistsByEmail(Ljava/lang/String;)Lcom/paymybuddy/model/User;*&$
+"com.paymybuddy.service.UserService*
+
+emailjava.lang.String2(checkIfExistsByEmail(Ljava/lang/String;)*
+14*¿
+4x
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.javaô ô(§
+°
+x
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.javaô ô(
+%12org.slf4j.Logger"__id*
+""îë
+x
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.javaô ô(B
+%13void"*org.slf4j.Logger#info(Ljava/lang/String;)V*
+
+%12org.slf4j.Logger*'%
+#Invalid password. Please try again.2info(Ljava/lang/String;)*
+3*¶
+5x
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.javaó ó(""¶
+x
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.javaó ó(#*
+(
+userToLogincom.paymybuddy.model.User*ó
+6x
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.javañ ñ(A≈
+¬
+x
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.javañ ñ(A
+%9java.lang.String"__concat*
+
+Hello *
+
+%8java.lang.String¬
+ø
+x
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.javañ ñ(H
+%10java.lang.String"__concat*
+
+%9java.lang.String*
+ !ÖÇ
+x
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.javañ ñ(I
+%11void"*org.slf4j.Logger#info(Ljava/lang/String;)V*
+
+%7org.slf4j.Logger*
+
+%10java.lang.String2info(Ljava/lang/String;)*
+5*∏
+7x
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.javañ ñ(£
+†
+x
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.javañ ñ(
+%7org.slf4j.Logger"__id*
+""çä
+x
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.javañ' ñ(A
+%8java.lang.String":com.paymybuddy.model.User#getFirstname()Ljava/lang/String;**
+(
+userToLogincom.paymybuddy.model.User2getFirstname()*
+6*©
+8x
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.javaï ï(£
+†
+x
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.javaï ï(
+%5org.slf4j.Logger"__id*
+""˛˚
+x
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.javaï ï(-
+
+%6void"+org.slf4j.Logger#debug(Ljava/lang/String;)V*
+
+%5org.slf4j.Logger*
+Login success2debug(Ljava/lang/String;)*
+7*Ë
+10x
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.javaî î(Jﬂ
+‹
+x
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.javaî î(J
+%4boolean"`org.springframework.security.crypto.bcrypt.BCrypt#checkpw(Ljava/lang/String;Ljava/lang/String;)Z*5"3
+1org.springframework.security.crypto.bcrypt.BCrypt*
+
+passwordjava.lang.String*
+
+%3java.lang.String*
+4
+8*í
+11x
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.javaî î(ãà
+x
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.javaî0 î(I
+%3java.lang.String"9com.paymybuddy.model.User#getPassword()Ljava/lang/String;**
+(
+userToLogincom.paymybuddy.model.User2getPassword()*
+10*É
+12x
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.javaì ì("Ç
+x
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.javaì ì(
+"":
+emailjava.lang.String:
+passwordjava.lang.StringB&$
+"com.paymybuddy.service.UserService

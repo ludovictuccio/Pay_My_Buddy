@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BillingService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">PayMyBuddy</a> &gt; <a href="index.source.html" class="el_package">com.paymybuddy.service</a> &gt; <span class="el_source">BillingService.java</span></div><h1>BillingService.java</h1><pre class="source lang-java linenums">package com.paymybuddy.service;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import com.paymybuddy.config.Constants;
+import com.paymybuddy.model.AppAccount;
+import com.paymybuddy.model.Transaction;
+import com.paymybuddy.model.User;
+import com.paymybuddy.repository.UserRepository;
+
+@Service
+<span class="fc" id="L23">public class BillingService implements IBillingService {</span>
+
+<span class="fc" id="L25">    private static final Logger LOGGER = LoggerFactory</span>
+<span class="fc" id="L26">            .getLogger(&quot;BillingService&quot;);</span>
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Value(&quot;${application.fee.rate}&quot;)
+    private BigDecimal percentForFacturation;
+
+    /**
+     * Method used to retrieve all user's transaction between two dates
+     * includes, and calculate the invoices (only for sender's transactions).
+     *
+     * @param email
+     * @param beginDateString
+     * @param endDateString
+     * @return totalForFacturation a BigDecimal
+     */
+    public BigDecimal getInvoiceOfUsersTransactions(final String email,
+            final String beginDateString, final String endDateString)
+            throws NullPointerException {
+
+<span class="fc" id="L47">        User user = userRepository.findByEmail(email);</span>
+<span class="fc" id="L48">        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(&quot;dd/MM/yyyy&quot;);</span>
+
+        try {
+<span class="fc" id="L51">            LocalDate beginDate = LocalDate.parse(beginDateString, formatter);</span>
+<span class="fc" id="L52">            LocalDate endDate = LocalDate.parse(endDateString, formatter);</span>
+
+<span class="pc bpc" id="L54" title="1 of 2 branches missed.">            if (user != null) {</span>
+<span class="fc" id="L55">                AppAccount userAppAccount = user.getOwnAppAccount();</span>
+<span class="fc" id="L56">                List&lt;Transaction&gt; allTransactions = userAppAccount</span>
+<span class="fc" id="L57">                        .getSenderTransactions();</span>
+
+<span class="fc bfc" id="L59" title="All 2 branches covered.">                if (allTransactions.isEmpty()) {</span>
+<span class="fc" id="L60">                    LOGGER.debug(&quot;No transaction found&quot;);</span>
+<span class="fc" id="L61">                    return Constants.INITIAL_ACCOUNT_AMOUNT;</span>
+                } else {
+<span class="fc" id="L63">                    List&lt;BigDecimal&gt; allInvoices = new ArrayList&lt;&gt;();</span>
+
+<span class="fc bfc" id="L65" title="All 2 branches covered.">                    for (Transaction transaction : allTransactions) {</span>
+
+<span class="fc" id="L67">                        if (transaction.getTransactionDate()</span>
+<span class="fc bfc" id="L68" title="All 2 branches covered.">                                .isAfter(beginDate.minusDays(1))</span>
+<span class="fc" id="L69">                                &amp;&amp; transaction.getTransactionDate()</span>
+<span class="fc bfc" id="L70" title="All 2 branches covered.">                                        .isBefore(endDate.plusDays(1))) {</span>
+
+<span class="fc" id="L72">                            BigDecimal amountTransaction = transaction</span>
+<span class="fc" id="L73">                                    .getAmount();</span>
+<span class="fc" id="L74">                            BigDecimal percentToInvoice = amountTransaction</span>
+<span class="fc" id="L75">                                    .multiply(percentForFacturation);</span>
+<span class="fc" id="L76">                            allInvoices.add(percentToInvoice);</span>
+                        }
+                    }
+<span class="fc" id="L79">                    BigDecimal totalForFacturation = allInvoices.stream()</span>
+<span class="fc" id="L80">                            .reduce((x, y) -&gt; x.add(y))</span>
+<span class="fc" id="L81">                            .orElse(Constants.INITIAL_ACCOUNT_AMOUNT);</span>
+
+<span class="fc" id="L83">                    LOGGER.info(&quot;Success billing transactions for user: &quot;</span>
+<span class="fc" id="L84">                            + user.getEmail());</span>
+<span class="fc" id="L85">                    totalForFacturation = totalForFacturation.setScale(2,</span>
+<span class="fc" id="L86">                            RoundingMode.HALF_UP);</span>
+<span class="fc" id="L87">                    return totalForFacturation;</span>
+                }
+            }
+<span class="fc" id="L90">        } catch (Exception e) {</span>
+<span class="fc" id="L91">            LOGGER.error(</span>
+<span class="fc" id="L92">                    &quot;Billing service impossible. Please check the entered dates, with format dd/MM/yyyy&quot;);</span>
+<span class="fc" id="L93">            return null;</span>
+        }
+<span class="nc" id="L95">        LOGGER.error(&quot;FAIL billing transactions for user: {} , unknow email !&quot;,</span>
+<span class="nc" id="L96">                email);</span>
+<span class="nc" id="L97">        return null;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

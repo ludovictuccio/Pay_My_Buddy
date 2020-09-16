@@ -1,0 +1,19 @@
+
+|com.paymybuddy.config.ActuatorConfig#htttpTraceRepository()Lorg/springframework/boot/actuate/trace/http/HttpTraceRepository;x
+nC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/config/ActuatorConfig.java (3"1*ç
+1x
+nC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/config/ActuatorConfig.java (0ïí
+x
+nC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/config/ActuatorConfig.java (.M
+%0Gorg.springframework.boot.actuate.trace.http.InMemoryHttpTraceRepository"Gorg.springframework.boot.actuate.trace.http.InMemoryHttpTraceRepositoryß
+§
+x
+nC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/config/ActuatorConfig.java (0
+%1"Qorg.springframework.boot.actuate.trace.http.InMemoryHttpTraceRepository#<init>()V*O
+M
+%0Gorg.springframework.boot.actuate.trace.http.InMemoryHttpTraceRepository"À
+x
+nC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/config/ActuatorConfig.java (1O
+M
+%0Gorg.springframework.boot.actuate.trace.http.InMemoryHttpTraceRepositoryB(&
+$com.paymybuddy.config.ActuatorConfig

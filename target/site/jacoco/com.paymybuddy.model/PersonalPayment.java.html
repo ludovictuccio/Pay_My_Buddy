@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PersonalPayment.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">PayMyBuddy</a> &gt; <a href="index.source.html" class="el_package">com.paymybuddy.model</a> &gt; <span class="el_source">PersonalPayment.java</span></div><h1>PersonalPayment.java</h1><pre class="source lang-java linenums">package com.paymybuddy.model;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Positive;
+
+/**
+ * PersonalPayment model class, used to transfer money to their app account with
+ * their bank card.
+ *
+ * @author Ludovic Tuccio
+ */
+@Entity
+@Table(name = &quot;personal_payment&quot;)
+public class PersonalPayment implements Serializable {
+
+    private static final long serialVersionUID = 1267461539173079092L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = &quot;id&quot;)
+    private Long id;
+
+    @ManyToOne(cascade = { CascadeType.MERGE }, fetch = FetchType.EAGER)
+    @JoinColumn(name = &quot;app_account_id&quot;, referencedColumnName = &quot;id&quot;)
+    private AppAccount myAppAccount;
+
+    @NotNull
+    @Positive
+    @DecimalMax(value = &quot;9999.99&quot;)
+    @DecimalMin(value = &quot;0.10&quot;)
+    @Column(columnDefinition = &quot;DECIMAL(7,2)&quot;)
+    private BigDecimal amount;
+
+    @NotNull
+    @NotEmpty
+    @Pattern(regexp = &quot;^(?:(?&lt;visa&gt;4[0-9]{12}(?:[0-9]{3})?)|&quot;
+            + &quot;(?&lt;mastercard&gt;5[1-5][0-9]{14})|&quot;
+            + &quot;(?&lt;discover&gt;6(?:011|5[0-9]{2})[0-9]{12})|&quot;
+            + &quot;(?&lt;amex&gt;3[47][0-9]{13})|&quot;
+            + &quot;(?&lt;diners&gt;3(?:0[0-5]|[68][0-9])?[0-9]{11})|&quot;
+            + &quot;(?&lt;jcb&gt;(?:2131|1800|35[0-9]{3})[0-9]{11}))$&quot;, message = &quot;The bank card number is incorrect.&quot;)
+    private String cbNumber;
+
+    @NotNull
+    @NotEmpty
+    @Pattern(regexp = &quot;(^[1-9]$)|(^0[1-9]|1[0-2]$)&quot;, message = &quot;The card expiration month must be a number between 01 &amp; 12.&quot;)
+    private String cbExpirationDateMonth;
+
+    @NotNull
+    @NotEmpty
+    @Pattern(regexp = &quot;([2-9][0-9])|([1-9])&quot;, message = &quot;The card expiration year must be a number between 20 &amp; 99.&quot;)
+    private String cbExpirationDateYear;
+
+    @NotNull
+    @NotEmpty
+    @Pattern(regexp = &quot;([0-9][0-9][0-9])|([1-9])&quot;, message = &quot;The card security key must be a number between 000 &amp; 999.&quot;)
+    private String cbSecurityKey;
+
+    public PersonalPayment() {
+<span class="fc" id="L77">        super();</span>
+<span class="fc" id="L78">    }</span>
+
+    public PersonalPayment(final AppAccount appAccount,
+            final BigDecimal myAmount, final String cardNumber,
+            final String cbExpirationMonth, final String cbExpirationYear,
+            final String cbSecuKey) {
+<span class="fc" id="L84">        super();</span>
+<span class="fc" id="L85">        this.myAppAccount = appAccount;</span>
+<span class="fc" id="L86">        this.amount = myAmount;</span>
+<span class="fc" id="L87">        this.cbNumber = cardNumber;</span>
+<span class="fc" id="L88">        this.cbExpirationDateMonth = cbExpirationMonth;</span>
+<span class="fc" id="L89">        this.cbExpirationDateYear = cbExpirationYear;</span>
+<span class="fc" id="L90">        this.cbSecurityKey = cbSecuKey;</span>
+<span class="fc" id="L91">    }</span>
+
+    public Long getId() {
+<span class="fc" id="L94">        return id;</span>
+    }
+
+    public void setId(final Long pId) {
+<span class="nc" id="L98">        this.id = pId;</span>
+<span class="nc" id="L99">    }</span>
+
+    public AppAccount getMyAppAccount() {
+<span class="nc" id="L102">        return myAppAccount;</span>
+    }
+
+    public void setMyAppAccount(final AppAccount appAccount) {
+<span class="nc" id="L106">        this.myAppAccount = appAccount;</span>
+<span class="nc" id="L107">    }</span>
+
+    public BigDecimal getAmount() {
+<span class="nc" id="L110">        return amount;</span>
+    }
+
+    public void setAmount(final BigDecimal myAmount) {
+<span class="nc" id="L114">        this.amount = myAmount;</span>
+<span class="nc" id="L115">    }</span>
+
+    public String getCbNumber() {
+<span class="nc" id="L118">        return cbNumber;</span>
+    }
+
+    public void setCbNumber(final String cardNumber) {
+<span class="nc" id="L122">        this.cbNumber = cardNumber;</span>
+<span class="nc" id="L123">    }</span>
+
+    public String getCbExpirationDateMonth() {
+<span class="nc" id="L126">        return cbExpirationDateMonth;</span>
+    }
+
+    public void setCbExpirationDateMonth(final String cbExpirationMonth) {
+<span class="nc" id="L130">        this.cbExpirationDateMonth = cbExpirationMonth;</span>
+<span class="nc" id="L131">    }</span>
+
+    public String getCbExpirationDateYear() {
+<span class="nc" id="L134">        return cbExpirationDateYear;</span>
+    }
+
+    public void setCbExpirationDateYear(final String cbExpirationYear) {
+<span class="nc" id="L138">        this.cbExpirationDateYear = cbExpirationYear;</span>
+<span class="nc" id="L139">    }</span>
+
+    public String getCbSecurityKey() {
+<span class="nc" id="L142">        return cbSecurityKey;</span>
+    }
+
+    public void setCbSecurityKey(final String cbSecuKey) {
+<span class="nc" id="L146">        this.cbSecurityKey = cbSecuKey;</span>
+<span class="nc" id="L147">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

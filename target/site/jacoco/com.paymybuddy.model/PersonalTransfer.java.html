@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PersonalTransfer.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">PayMyBuddy</a> &gt; <a href="index.source.html" class="el_package">com.paymybuddy.model</a> &gt; <span class="el_source">PersonalTransfer.java</span></div><h1>PersonalTransfer.java</h1><pre class="source lang-java linenums">package com.paymybuddy.model;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Positive;
+
+/**
+ * PersonalTransfer model class.
+ *
+ * @author Ludovic Tuccio
+ */
+@Entity
+@Table(name = &quot;personal_transfer&quot;)
+public class PersonalTransfer implements Serializable {
+
+    private static final long serialVersionUID = 2429213757228328443L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = &quot;id&quot;)
+    private Long id;
+
+    @ManyToOne(cascade = { CascadeType.MERGE }, fetch = FetchType.EAGER)
+    @JoinColumn(name = &quot;app_account_id&quot;, referencedColumnName = &quot;id&quot;)
+    private AppAccount myAppAccount;
+
+    @NotNull
+    @Positive
+    @Column(columnDefinition = &quot;DECIMAL(7,2)&quot;)
+    private BigDecimal amount;
+
+    @NotNull
+    @NotEmpty
+    @Pattern(regexp = &quot;^[0-9A-Z]{15,31}$&quot;, message = &quot;The european IBAN entered is invalid. Please check it (only letters and numbers, size must be between 15 and 31)&quot;)
+    private String iban;
+
+    @NotNull
+    @NotEmpty
+    @Pattern(regexp = &quot;^[0-9A-Z]{8,11}$&quot;, message = &quot;The european BIC entered is invalid. Please check it (only letters and numbers, size must be between 8 and 11)&quot;)
+    private String bic;
+
+    public PersonalTransfer() {
+<span class="fc" id="L57">        super();</span>
+<span class="fc" id="L58">    }</span>
+
+    public PersonalTransfer(final AppAccount appAccount,
+            final BigDecimal myAmount, final String myIban,
+            final String myBic) {
+<span class="fc" id="L63">        super();</span>
+<span class="fc" id="L64">        this.myAppAccount = appAccount;</span>
+<span class="fc" id="L65">        this.amount = myAmount;</span>
+<span class="fc" id="L66">        this.iban = myIban;</span>
+<span class="fc" id="L67">        this.bic = myBic;</span>
+<span class="fc" id="L68">    }</span>
+
+    public Long getId() {
+<span class="fc" id="L71">        return id;</span>
+    }
+
+    public void setId(final Long pId) {
+<span class="nc" id="L75">        this.id = pId;</span>
+<span class="nc" id="L76">    }</span>
+
+    public AppAccount getMyAppAccount() {
+<span class="nc" id="L79">        return myAppAccount;</span>
+    }
+
+    public void setMyAppAccount(final AppAccount appAccount) {
+<span class="nc" id="L83">        this.myAppAccount = appAccount;</span>
+<span class="nc" id="L84">    }</span>
+
+    public BigDecimal getAmount() {
+<span class="nc" id="L87">        return amount;</span>
+    }
+
+    public void setAmount(final BigDecimal myAmount) {
+<span class="nc" id="L91">        this.amount = myAmount;</span>
+<span class="nc" id="L92">    }</span>
+
+    public String getIban() {
+<span class="nc" id="L95">        return iban;</span>
+    }
+
+    public void setIban(final String myIban) {
+<span class="nc" id="L99">        this.iban = myIban;</span>
+<span class="nc" id="L100">    }</span>
+
+    public String getBic() {
+<span class="nc" id="L103">        return bic;</span>
+    }
+
+    public void setBic(final String myBic) {
+<span class="nc" id="L107">        this.bic = myBic;</span>
+<span class="nc" id="L108">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

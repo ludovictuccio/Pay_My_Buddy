@@ -1,0 +1,187 @@
+
+Pcom.paymybuddy.service.UserService#updateUserInfos(Lcom/paymybuddy/model/User;)Zv
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.javal l(""6*»
+2v
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.javaw w(¢
+ü
+v
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.javaw w(
+%12org.slf4j.Logger"__id*
+""¢ü
+v
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.javaw w(M
+%13void"+org.slf4j.Logger#error(Ljava/lang/String;)V*
+
+%12org.slf4j.Logger*53
+1ERROR: Only password & phone changes are allowed.2error(Ljava/lang/String;)"Ä
+v
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.javax x(
+""*•
+3v
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.javav v(äá
+v
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.javav v(-
+%9java.lang.String":com.paymybuddy.model.User#getFirstname()Ljava/lang/String;*)
+'
+
+userToFindcom.paymybuddy.model.User2getFirstname()ÖÇ
+v
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.javav5 v(H
+%10java.lang.String":com.paymybuddy.model.User#getFirstname()Ljava/lang/String;*#
+!
+usercom.paymybuddy.model.User2getFirstname()äá
+v
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.javav v(I
+%11boolean",java.lang.String#equals(Ljava/lang/Object;)Z*
+
+%9java.lang.String*
+
+%10java.lang.String2equals(Ljava/lang/Object;)*
+2
+1*û
+4v
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.javau u(àÖ
+v
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.javau u(,
+%6java.lang.String"9com.paymybuddy.model.User#getLastname()Ljava/lang/String;*)
+'
+
+userToFindcom.paymybuddy.model.User2getLastname()Çˇ
+v
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.javau4 u(F
+%7java.lang.String"9com.paymybuddy.model.User#getLastname()Ljava/lang/String;*#
+!
+usercom.paymybuddy.model.User2getLastname()àÖ
+v
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.javau u(G
+%8boolean",java.lang.String#equals(Ljava/lang/Object;)Z*
+
+%6java.lang.String*
+
+%7java.lang.String2equals(Ljava/lang/Object;)*
+2
+3*∫
+5v
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.javas s(°
+û
+v
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.javas s(
+%4org.slf4j.Logger"__id*
+""ïí
+v
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.javas s(B
+
+%5void"+org.slf4j.Logger#error(Ljava/lang/String;)V*
+
+%4org.slf4j.Logger**(
+&ERROR: user with this email not found.2error(Ljava/lang/String;)"Ä
+v
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.javat t(
+""*è
+6v
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.javam m(!°
+û
+v
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.javan n(
+%0org.slf4j.Logger"__id*
+""£†
+v
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.javan n(M
+
+%1void"*org.slf4j.Logger#info(Ljava/lang/String;)V*
+
+%0org.slf4j.Logger*:8
+6Only password or phone number can and will be changed.2info(Ljava/lang/String;)¸˘
+v
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.javap/ p(>
+%2java.lang.String"6com.paymybuddy.model.User#getEmail()Ljava/lang/String;*#
+!
+usercom.paymybuddy.model.User2
+getEmail()Ì
+v
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.javap p(?
+%3com.paymybuddy.model.User"fcom.paymybuddy.service.UserService#checkIfExistsByEmail(Ljava/lang/String;)Lcom/paymybuddy/model/User;*&$
+"com.paymybuddy.service.UserService*
+
+%2java.lang.String2(checkIfExistsByEmail(Ljava/lang/String;)Õ
+ 
+v
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.javap p(@'
+
+userToFindcom.paymybuddy.model.User"__id*!
+
+%3com.paymybuddy.model.User*
+4
+5*°
+1v
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.javaz z(ç
+ä
+v
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.java{ {(2G
+%14@org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"__id*A*?$
+"com.paymybuddy.service.UserService"
+bCryptPasswordEncoderÉÄ
+v
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.java{: {(L
+%15java.lang.String"9com.paymybuddy.model.User#getPassword()Ljava/lang/String;*#
+!
+usercom.paymybuddy.model.User2getPassword()ëé
+v
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.java{ {(M
+%16java.lang.String"sorg.springframework.security.crypto.bcrypt.BCryptPasswordEncoder#encode(Ljava/lang/CharSequence;)Ljava/lang/String;*I
+G
+%14@org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder*
+
+%15java.lang.String2 encode(Ljava/lang/CharSequence;)´®
+v
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.javaz {(N
+%17void":com.paymybuddy.model.User#setPassword(Ljava/lang/String;)V*)
+'
+
+userToFindcom.paymybuddy.model.User*
+
+%16java.lang.String2setPassword(Ljava/lang/String;)˝˙
+v
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.java| |(+
+%18java.lang.String"6com.paymybuddy.model.User#getPhone()Ljava/lang/String;*#
+!
+usercom.paymybuddy.model.User2
+getPhone()•¢
+v
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.java| |(,
+%19void"7com.paymybuddy.model.User#setPhone(Ljava/lang/String;)V*)
+'
+
+userToFindcom.paymybuddy.model.User*
+
+%18java.lang.String2setPhone(Ljava/lang/String;)Ó
+Î
+v
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.java~ ~(/
+%20(com.paymybuddy.repository.UserRepository"__id*:*8$
+"com.paymybuddy.service.UserService"
+userRepositoryÙÒ
+v
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.java~ ~(' 
+%21com.paymybuddy.model.User"]org.springframework.data.repository.CrudRepository#save(Ljava/lang/Object;)Ljava/lang/Object;*1
+/
+%20(com.paymybuddy.repository.UserRepository*)
+'
+
+userToFindcom.paymybuddy.model.User2save(Ljava/lang/Object;)§
+°
+x
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.javaÄ Ä(
+%22org.slf4j.Logger"__id*
+""èå
+x
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.javaÄ Ä(5
+%23void"*org.slf4j.Logger#info(Ljava/lang/String;)V*
+
+%22org.slf4j.Logger*" 
+SUCCESS: Informations changes.2info(Ljava/lang/String;)"Ç
+x
+lC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/service/UserService.javaÇ Ç(
+"":!
+usercom.paymybuddy.model.UserB&$
+"com.paymybuddy.service.UserService

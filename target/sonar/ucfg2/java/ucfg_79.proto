@@ -1,0 +1,121 @@
+
+;com.paymybuddy.model.AppAccount#equals(Ljava/lang/Object;)Zs
+iC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/model/AppAccount.javax x("startingBlock*˚
+2u
+iC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/model/AppAccount.javaÑ Ñ("
+u
+iC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/model/AppAccount.javaÑ Ñ(
+""*œ
+3u
+iC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/model/AppAccount.javaÉ É(“
+œ
+u
+iC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/model/AppAccount.javaÉ É(
+%4com.paymybuddy.model.User"__id*/*-!
+com.paymybuddy.model.AppAccount"
+userIdŸ
+÷
+u
+iC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/model/AppAccount.javaÉ" É(.
+%5com.paymybuddy.model.User"__id*6*4
+(
+othercom.paymybuddy.model.AppAccount"
+userIdôñ
+u
+iC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/model/AppAccount.javaÉ É(/
+%6boolean",java.lang.Object#equals(Ljava/lang/Object;)Z*!
+
+%4com.paymybuddy.model.User*!
+
+%5com.paymybuddy.model.User2equals(Ljava/lang/Object;)*
+2
+1*˙
+startingBlocks
+iC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/model/AppAccount.javax x(+Ω
+∫
+s
+iC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/model/AppAccount.javaw w(
+%7"
+__annotate*
+java.lang.Override*
+
+objjava.lang.Objectß
+§
+s
+iC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/model/AppAccount.javax' x(*
+objjava.lang.Object"__annotation*
+
+%7*
+
+8
+9
+11*˚
+4u
+iC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/model/AppAccount.javaÇ Ç("
+u
+iC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/model/AppAccount.javaÇ Ç(
+""*ﬁ
+5u
+iC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/model/AppAccount.javaÅ Å(Ÿ
+÷
+u
+iC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/model/AppAccount.javaÅ Å(
+%3com.paymybuddy.model.User"__id*6*4
+(
+othercom.paymybuddy.model.AppAccount"
+userId*
+4
+1*õ
+6s
+iC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/model/AppAccount.java( (+√
+¿
+s
+iC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/model/AppAccount.java (,(
+othercom.paymybuddy.model.AppAccount"__id*
+
+objjava.lang.Object“
+œ
+u
+iC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/model/AppAccount.javaÄ Ä(
+%2com.paymybuddy.model.User"__id*/*-!
+com.paymybuddy.model.AppAccount"
+userId*
+3
+5*˜
+7s
+iC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/model/AppAccount.java~ ~("}
+s
+iC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/model/AppAccount.java~ ~(
+""*ÿ
+8s
+iC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/model/AppAccount.java} }(ÓÎ
+s
+iC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/model/AppAccount.java} }(
+%0java.lang.Class",java.lang.Object#getClass()Ljava/lang/Class;*#!
+com.paymybuddy.model.AppAccount2
+getClass()‰·
+s
+iC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/model/AppAccount.java} }((
+%1java.lang.Class",java.lang.Object#getClass()Ljava/lang/Class;*
+
+objjava.lang.Object2
+getClass()*
+6
+7*˜
+9s
+iC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/model/AppAccount.java| |("}
+s
+iC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/model/AppAccount.java| |(
+""*¯
+11s
+iC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/model/AppAccount.javaz z("}
+s
+iC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/model/AppAccount.javaz z(
+""*˚
+1u
+iC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/model/AppAccount.javaÖ Ö("
+u
+iC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/model/AppAccount.javaÖ Ö(
+"":
+objjava.lang.ObjectB#!
+com.paymybuddy.model.AppAccount

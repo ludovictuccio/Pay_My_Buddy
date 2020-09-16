@@ -1,0 +1,7 @@
+organization=ludovictuccio
+projectKey=ludovictuccio_Pay_My_Buddy
+serverUrl=https://sonarcloud.io
+serverVersion=8.0.0.12026
+dashboardUrl=https://sonarcloud.io/dashboard?id=ludovictuccio_Pay_My_Buddy
+ceTaskId=AXSSOFf3kM2S5KtpeYzL
+ceTaskUrl=https://sonarcloud.io/api/ce/task?id=AXSSOFf3kM2S5KtpeYzL
