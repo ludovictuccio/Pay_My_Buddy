@@ -1,4 +1,4 @@
-package com.paymybuddy.integration;
+package com.paymybuddy;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -31,7 +31,7 @@ import com.paymybuddy.service.IUserService;
 @Sql(scripts = "classpath:dropAndCreate.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 @Sql(scripts = {
         "classpath:dbTest.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-public class PaymybuddyDatabaseIT {
+public class PaymybuddyDatabaseTest {
 
     @Autowired
     public IBillingService billingService;

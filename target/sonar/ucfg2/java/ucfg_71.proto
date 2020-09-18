@@ -1,16 +1,0 @@
-
-Lcom.paymybuddy.model.AppAccount#getBeneficiaryTransactions()Ljava/util/List;s
-iC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/model/AppAccount.javaR R(7"1*·
-1s
-iC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/model/AppAccount.javaS S(&÷
-”
-s
-iC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/model/AppAccount.javaS S(&
-%0java.util.List"__id*@*>!
-com.paymybuddy.model.AppAccount"
-beneficiaryTransactions"ç
-s
-iC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/model/AppAccount.javaS S('
-
-%0java.util.ListB#!
-com.paymybuddy.model.AppAccount

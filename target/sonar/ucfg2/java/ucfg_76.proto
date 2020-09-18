@@ -1,16 +1,0 @@
-
-Bcom.paymybuddy.model.AppAccount#getBalance()Ljava/math/BigDecimal;s
-iC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/model/AppAccount.javag g( "1*Ý
-1s
-iC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/model/AppAccount.javah h(Ì
-É
-s
-iC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/model/AppAccount.javah h(
-%0java.math.BigDecimal"__id*0*.!
-com.paymybuddy.model.AppAccount"	
-balance"“
-s
-iC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/model/AppAccount.javah h(
-
-%0java.math.BigDecimalB#!
-com.paymybuddy.model.AppAccount

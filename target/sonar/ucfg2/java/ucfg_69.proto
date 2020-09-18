@@ -1,16 +1,0 @@
-
-Gcom.paymybuddy.model.AppAccount#getSenderTransactions()Ljava/util/List;s
-iC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/model/AppAccount.javaJ J(2"1*‹
-1s
-iC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/model/AppAccount.javaK K(!—
-Œ
-s
-iC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/model/AppAccount.javaK K(!
-%0java.util.List"__id*;*9!
-com.paymybuddy.model.AppAccount"
-senderTransactions"ç
-s
-iC:/Users/Ludo/Documents/Eclipse/workspace/Pay_My_Buddy/src/main/java/com/paymybuddy/model/AppAccount.javaK K("
-
-%0java.util.ListB#!
-com.paymybuddy.model.AppAccount
